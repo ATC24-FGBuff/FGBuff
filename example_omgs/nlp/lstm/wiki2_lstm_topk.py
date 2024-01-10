@@ -13,11 +13,8 @@ import datahelper
 import model
 from torch.optim import lr_scheduler
 import numpy as np 
-# is it faster?
 torch.backends.cudnn.benchmark = True
 
-# 环境变量HOROVOD_FUSION_THRESHOLD实际上以字节为单位.
-# 然而, 当使用horovodrun时, 有一个--fusion-threshold-mb以MB为单位的参数.
 os.environ['HOROVOD_FUSION_THRESHOLD'] = '0'
 os.environ['HOROVOD_CACHE_CAPACITY'] = '0'
 os.environ['HOROVOD_CYCLE_TIME'] = '0'
@@ -32,7 +29,7 @@ from compression import compressors
 
 # same hyperparameter scheme as word-language-model
 parser = argparse.ArgumentParser(description='PyTorch Wikitext-2 RNN/LSTM Language Model')
-# parser.add_argument('--data', type=str, default='/home/user/mzq/workspaces/project/grace/examples/torch/nlp/data/wikitext-2',
+# parser.add_argument('--data', type=str, default='/home/user/nlp/data/wikitext-2',
 #                     help='location of the data corpus')
 
 parser.add_argument('--data', type=str, default='/data/dataset/nlp/lstm/wikitext-2',
@@ -105,10 +102,6 @@ parser.add_argument('--name', type=str, default=None,
 parser.add_argument('--fp16', action='store_true', default=False,
                     help='use fp16 compression during allreduce')
 
-# parser.add_argument('--model', type=str, default='resnet50',
-#                     help='model to benchmark')
-# parser.add_argument('--batch-size', type=int, default=32,
-#                     help='input batch size')
 
 parser.add_argument('--num-warmup-batches', type=int, default=20,
                     help='number of warm-up batches that don\'t count towards benchmark')
@@ -117,47 +110,20 @@ parser.add_argument('--num-batches-per-iter', type=int, default=10,
 parser.add_argument('--num-iters', type=int, default=50,
                     help='number of benchmark iterations')
 
-# parser.add_argument('--no-cuda', action='store_true', default=False,
-#                     help='disables CUDA training')
-
-# parser.add_argument('--use-adasum', action='store_true', default=False,
-#                     help='use adasum algorithm to do reduction')
-
 parser.add_argument('--mgwfbp', action='store_true', default=False, help='Use MG-WFBP')
 parser.add_argument('--asc', action='store_true', default=False, help='Use MG-WFBP')
 parser.add_argument('--nstreams', type=int, default=1, help='Number of communication streams')
 
-# 设置合并的阈值大小,default=23705252为ResNet50所有层梯度元素数量的总和
-# parser.add_argument('--threshold', type=int, default=536870912, help='Set threshold if mgwfbp is False')
-# parser.add_argument('--threshold', type=int, default=671080, help='Set threshold if mgwfbp is False')
 parser.add_argument('--threshold', type=int, default=2370520, help='Set threshold if mgwfbp is False')
 
-# parser.add_argument('--threshold', type=int, default=1000520, help='Set threshold if mgwfbp is False')
-
-
-# parser.add_argument('--threshold', type=int, default=23705252, help='ResNet-50 Set threshold if mgwfbp is False')
 
 parser.add_argument('--rdma', action='store_true', default=False, help='Use RDMA')
 
-# Baseline
-# parser.add_argument('--compressor', type=str, default='none', choices=compressors.keys(), help='Specify the compressors if density < 1.0')
-# parser.add_argument('--density', type=float, default=1, help='Density for sparsification')
-
-# Top-k + EF
 parser.add_argument('--compressor', type=str, default = 'eftopk', help='Specify the compressors if density < 1.0')
 parser.add_argument('--memory', type=str, default = 'residual', help='Error-feedback')
 
 
 parser.add_argument('--density', type=float, default=0.1, help='Density for sparsification')
-# parser.add_argument('--density', type=float, default=0.0101, help='Density for sparsification')
-# parser.add_argument('--density', type=float, default=0.0099, help='Density for sparsification')
-
-
-# Gaussiank + EF
-# parser.add_argument('--compressor', type=str, default='gaussian', choices=compressors.keys(), help='Specify the compressors if density < 1.0')
-# parser.add_argument('--density', type=float, default=0.01, help='Density for sparsification')
-
-
 
 args = parser.parse_args()
 
@@ -389,19 +355,10 @@ def train(optimizer, train_data):
     hook_time=sum(optimizer.hook_time)
     
     if hvd.rank() == 0:
-        # datapath='/home/user/eurosys23/workspace/ACTopk/examples/plot_eurosys/compression_time/'
-        # np.savetxt(datapath + "topk_time/topk_time_"+str(epoch)+"_rank_"+str(hvd.rank())+".txt", topk_time_array)
-        # np.savetxt(datapath + "threshold_time/threshold_time_"+str(epoch)+"_rank_"+str(hvd.rank())+".txt", topk_time_array)
-        
-        # print('compression_time = ', compression_time)
                
         print('topk_time = ', topk_time)
         print('threshold_time = ', threshold_time)
-                     
-        # print('send_time = ', send_time)        
-        # print('decompression_time = ', decompression_time)
-        # print('receive_time = ', receive_time)
-        # print('synchronize_time = ', synchronize_time)
+                    
         
         print('io_time = ', io_time)
         print('forward_time = ', forward_time)
@@ -434,16 +391,8 @@ if args.density<1:
 else:
     communicator_str = 'allreduce'
     
-# params = {'compressor': args.compressor, 'memory': args.memory, 'density': args.density,'communicator': 'allgather','model_named_parameters':model.named_parameters()}
-
-# # communicator = get_communicator(params)
-# communicator = get_communicator(params)
-
-# optimizer = hvd.DistributedOptimizer(optimizer, communicator, named_parameters=model.named_parameters(), op=hvd.Average) 
-
 seq_layernames, layerwise_times = None, None
-# optimizer = hvd.DistributedOptimizer(args.model_net, optimizer, 
-#                                          named_parameters=model.named_parameters(), compression=compressors[args.compressor](), is_sparse=args.density<1, density=args.density, seq_layernames=seq_layernames, layerwise_times=layerwise_times, norm_clip=None, threshold=args.threshold, writer=None, gradient_path='./', momentum_correction=False, fp16=args.fp16, mgwfbp=args.mgwfbp, rdma=args.rdma, asc=args.asc)
+
 dnn=None
 norm_clip = None
 if dnn == 'lstm':
@@ -459,23 +408,6 @@ optimizer = hvd.DistributedOptimizer(args.model_net, optimizer, named_parameters
 
 
 hvd.broadcast_parameters(model.state_dict(), root_rank=0) 
-# hvd.broadcast_optimizer_state(optimizer, root_rank=0) 
-
-
-# comm_params = {
-#         'comm_mode':'allgather_fast',
-#         'compressor':'actopk_lstm',
-#         'memory':'residual',
-#         'send_size_aresame':True,
-#         'model_named_parameters': model.named_parameters()
-#     }
-# import ADTopklib
-
-# # Horovod: wrap optimizer with DistributedOptimizer.
-# # 得到一个分布式的SGD优化器
-# optimizer = ADTopklib.DistributedOptimizer(
-#     optimizer, comm_params=comm_params, named_parameters=model.named_parameters())
-
 
 
 if hvd.rank() == 0:
@@ -515,15 +447,6 @@ try:
             time_list.append(tmp)            
             print('-' * 89)  
         
-        # Save the model if the validation loss is the best we've seen so far.
-        # if not best_val_loss or val_loss < best_val_loss:
-        #     with open(args.save, 'wb') as f:
-        #         torch.save(model, f)
-        #     best_val_loss = val_loss
-        # else:
-        #     # Anneal the learning rate if no improvement has been seen in the validation dataset.
-        #     lr /= 4.0
-    
     if hvd.rank() == 0:
         # torch.cuda.synchronize()
         end_time = time.time()

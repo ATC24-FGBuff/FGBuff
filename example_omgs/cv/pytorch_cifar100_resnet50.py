@@ -20,8 +20,6 @@ import matplotlib.pyplot as plt
 import time
 import os
 
-# 环境变量HOROVOD_FUSION_THRESHOLD实际上以字节为单位.
-# 然而, 当使用horovodrun时, 有一个--fusion-threshold-mb以MB为单位的参数.
 os.environ['HOROVOD_FUSION_THRESHOLD'] = '0'
 os.environ['HOROVOD_CACHE_CAPACITY'] = '0'
 os.environ['HOROVOD_CYCLE_TIME'] = '0'
@@ -43,9 +41,6 @@ from profiling_omgs import benchmark
 parser = argparse.ArgumentParser(description='PyTorch Cifar100 + ResNet-50 Example',
                                  formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
-# Horovod
-# parser.add_argument('--net', default='resnet50',type=str, required=True, help='net type')
-# parser.add_argument('--model-net', default='resnet50',type=str, help='net type')
 parser.add_argument('--model-net', default='resnet50',type=str, help='net type')
 
 parser.add_argument('--train-dir', default=os.path.expanduser('~/cifar100/train'),
@@ -66,9 +61,6 @@ parser.add_argument('--use-adasum', action='store_true', default=False,
                     help='use adasum algorithm to do reduction')
 parser.add_argument('--gradient-predivide-factor', type=float, default=1.0,
                     help='apply gradient predivide factor in optimizer (default: 1.0)')
-
-
-# Default settings from https://arxiv.org/abs/1706.02677.
 parser.add_argument('--batch-size', type=int, default=32,
                     help='input batch size for training')
 parser.add_argument('--val-batch-size', type=int, default=32,
@@ -98,54 +90,22 @@ parser.add_argument('--fp16', action='store_true', default=False,
 
 parser.add_argument('--model', type=str, default='resnet50',
                     help='model to benchmark')
-# parser.add_argument('--batch-size', type=int, default=32,
-#                     help='input batch size')
-
 parser.add_argument('--num-warmup-batches', type=int, default=20,
                     help='number of warm-up batches that don\'t count towards benchmark')
 parser.add_argument('--num-batches-per-iter', type=int, default=10,
                     help='number of batches per benchmark iteration')
 parser.add_argument('--num-iters', type=int, default=50,
                     help='number of benchmark iterations')
-
-# parser.add_argument('--no-cuda', action='store_true', default=False,
-#                     help='disables CUDA training')
-
-# parser.add_argument('--use-adasum', action='store_true', default=False,
-#                     help='use adasum algorithm to do reduction')
-
 parser.add_argument('--mgwfbp', action='store_true', default=False, help='Use MG-WFBP')
 parser.add_argument('--asc', action='store_true', default=False, help='Use MG-WFBP')
 parser.add_argument('--nstreams', type=int, default=1, help='Number of communication streams')
-
-# 设置合并的阈值大小,default=23705252为ResNet50所有层梯度元素数量的总和
-# parser.add_argument('--threshold', type=int, default=536870912, help='Set threshold if mgwfbp is False')
-# parser.add_argument('--threshold', type=int, default=671080, help='Set threshold if mgwfbp is False')
 parser.add_argument('--threshold', type=int, default=2370520, help='Set threshold if mgwfbp is False')
 
-# parser.add_argument('--threshold', type=int, default=1000520, help='Set threshold if mgwfbp is False')
-
-
-# parser.add_argument('--threshold', type=int, default=23705252, help='ResNet-50 Set threshold if mgwfbp is False')
 
 parser.add_argument('--rdma', action='store_true', default=False, help='Use RDMA')
 
-# Baseline
-# parser.add_argument('--compressor', type=str, default='none', choices=compressors.keys(), help='Specify the compressors if density < 1.0')
-# parser.add_argument('--density', type=float, default=1, help='Density for sparsification')
-
-# Top-k + EF
 parser.add_argument('--compressor', type=str, default='eftopk', choices=compressors.keys(), help='Specify the compressors if density < 1.0')
 parser.add_argument('--density', type=float, default=0.1, help='Density for sparsification')
-# parser.add_argument('--density', type=float, default=0.0101, help='Density for sparsification')
-# parser.add_argument('--density', type=float, default=0.0099, help='Density for sparsification')
-
-
-# Gaussiank + EF
-# parser.add_argument('--compressor', type=str, default='gaussian', choices=compressors.keys(), help='Specify the compressors if density < 1.0')
-# parser.add_argument('--density', type=float, default=0.01, help='Density for sparsification')
-
-
 
 y_loss = {}  # loss history
 y_loss['train'] = []
@@ -720,11 +680,7 @@ if __name__ == '__main__':
     for epoch in range(resume_from_epoch, args.epochs):
         train(epoch)
         validate(epoch)
-
-        # 保存最后一个训练模型
-        # if epoch==args.epochs-1:
-        #     save_checkpoint(epoch)
-
+        
     if hvd.rank() == 0:
         # torch.cuda.synchronize()
         end_time = time.time()

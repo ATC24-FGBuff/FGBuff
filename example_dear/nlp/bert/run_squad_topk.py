@@ -87,7 +87,6 @@ os.environ['HOROVOD_FUSION_THRESHOLD'] = '0'
 os.environ['HOROVOD_CACHE_CAPACITY'] = '0'
 os.environ['HOROVOD_CYCLE_TIME'] = '0'
 
-# 访问上层路径
 import sys
 sys.path.append("../../../..") 
 import Bayesian.hv_bayes_distributed_optimizer as hvd
@@ -1275,8 +1274,7 @@ def main():
                 update_time_array.append(time.time()-u_time)
                 optimizer_synchronize_time_array.append(optimizer.handle_synchronize_time)
                 optimizer.handle_synchronize_time= []
-                
-                # 设置打印步骤
+
                 if step % 100 == 0 and hvd.rank()==0:
                 # if step % args.log_freq == 0 and hvd.rank()==0:
                     dllogger.log(step=(epoch, global_step,), data={"step_loss": final_loss,

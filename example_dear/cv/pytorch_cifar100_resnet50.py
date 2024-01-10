@@ -32,16 +32,9 @@ from utils_model import get_network
 import timeit
 import numpy as np
 from profiling import benchmark
-
-
-
-# Training settings
 parser = argparse.ArgumentParser(description='PyTorch Cifar100 + ResNet-50 Example',
                                  formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
-# Horovod
-# parser.add_argument('--net', default='resnet50',type=str, required=True, help='net type')
-# parser.add_argument('--model-net', default='resnet50',type=str, help='net type')
 parser.add_argument('--model-net', default='resnet50',type=str, help='net type')
 
 parser.add_argument('--train-dir', default=os.path.expanduser('~/cifar100/train'),
@@ -104,43 +97,18 @@ parser.add_argument('--num-batches-per-iter', type=int, default=10,
 parser.add_argument('--num-iters', type=int, default=50,
                     help='number of benchmark iterations')
 
-# parser.add_argument('--no-cuda', action='store_true', default=False,
-#                     help='disables CUDA training')
-
-# parser.add_argument('--use-adasum', action='store_true', default=False,
-#                     help='use adasum algorithm to do reduction')
-
 parser.add_argument('--mgwfbp', action='store_true', default=False, help='Use MG-WFBP')
 parser.add_argument('--asc', action='store_true', default=False, help='Use MG-WFBP')
 parser.add_argument('--nstreams', type=int, default=1, help='Number of communication streams')
-
-# 设置合并的阈值大小,default=23705252为ResNet50所有层梯度元素数量的总和
-# parser.add_argument('--threshold', type=int, default=536870912, help='Set threshold if mgwfbp is False')
-# parser.add_argument('--threshold', type=int, default=671080, help='Set threshold if mgwfbp is False')
 parser.add_argument('--threshold', type=int, default=2370520, help='Set threshold if mgwfbp is False')
 
-# parser.add_argument('--threshold', type=int, default=1000520, help='Set threshold if mgwfbp is False')
-
-
-# parser.add_argument('--threshold', type=int, default=23705252, help='ResNet-50 Set threshold if mgwfbp is False')
 
 parser.add_argument('--rdma', action='store_true', default=False, help='Use RDMA')
 
-# Baseline
-# parser.add_argument('--compressor', type=str, default='none', choices=compressors.keys(), help='Specify the compressors if density < 1.0')
-# parser.add_argument('--density', type=float, default=1, help='Density for sparsification')
 
 # Top-k + EF
 parser.add_argument('--compressor', type=str, default='eftopk', choices=compressors.keys(), help='Specify the compressors if density < 1.0')
 parser.add_argument('--density', type=float, default=0.1, help='Density for sparsification')
-# parser.add_argument('--density', type=float, default=0.0101, help='Density for sparsification')
-# parser.add_argument('--density', type=float, default=0.0099, help='Density for sparsification')
-
-
-# Gaussiank + EF
-# parser.add_argument('--compressor', type=str, default='gaussian', choices=compressors.keys(), help='Specify the compressors if density < 1.0')
-# parser.add_argument('--density', type=float, default=0.01, help='Density for sparsification')
-
 
 
 y_loss = {}  # loss history
@@ -469,10 +437,6 @@ if __name__ == '__main__':
     for epoch in range(resume_from_epoch, args.epochs):
         train(epoch)
         validate(epoch)
-
-        # 保存最后一个训练模型
-        # if epoch==args.epochs-1:
-        #     save_checkpoint(epoch)
 
     if hvd.rank() == 0:
         # torch.cuda.synchronize()

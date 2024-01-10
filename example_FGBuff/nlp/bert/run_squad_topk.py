@@ -892,11 +892,6 @@ def main():
     # 聚合操作符
     parser.add_argument('--use-adasum', action='store_true', default=False,
                     help='use adasum algorithm to do reduction')
-
-    
-    # Gradient Merging
-    # parser.add_argument('--fp16', action='store_true', default=False,
-    #                     help='use fp16 compression during allreduce')
     parser.add_argument('--model-net', default='bert_base',type=str, help='net type')
     
     parser.add_argument('--num-warmup-batches', type=int, default=20,
@@ -910,13 +905,9 @@ def main():
     parser.add_argument('--asc', action='store_true', default=False, help='Use MG-WFBP')
     parser.add_argument('--nstreams', type=int, default=1, help='Number of communication streams')
 
-    # 设置合并的阈值大小,default=23705252为ResNet50所有层梯度元素数量的总和
     parser.add_argument('--threshold', type=int, default=34015396, help='Set threshold if mgwfbp is False')
-
     parser.add_argument('--rdma', action='store_true', default=False, help='Use RDMA')
 
-    # Top-k + EF
-    # parser.add_argument('--compressor', type=str, default='topkef', choices=compressors.keys(), help='Specify the compressors if density < 1.0')
     parser.add_argument('--compressor', type=str, default='topk', choices=compressors.keys(), help='Specify the compressors if density < 1.0')
     
     parser.add_argument('--memory', type=str, default = 'residual', help='Error-feedback')
@@ -929,7 +920,6 @@ def main():
     args.fp16 = args.fp16 or args.amp
     
     args.cuda = not args.no_cuda and torch.cuda.is_available()
-    #allreduce_batch_size = args.per_gpu_train_batch_size * args.batches_per_allreduce
 
     # Initialize Horovod
     hvd.init()

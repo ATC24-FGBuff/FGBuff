@@ -29,13 +29,10 @@ sys.path.append(os.path.join(os.path.dirname(__file__),'../'))
 import time
 import os
 
-# 环境变量HOROVOD_FUSION_THRESHOLD实际上以字节为单位.
-# 然而, 当使用horovodrun时, 有一个--fusion-threshold-mb以MB为单位的参数.
 os.environ['HOROVOD_FUSION_THRESHOLD'] = '0'
 os.environ['HOROVOD_CACHE_CAPACITY'] = '0'
 os.environ['HOROVOD_CYCLE_TIME'] = '0'
 
-# 访问上层路径
 import sys
 sys.path.append("../../..") 
 import hv_distributed_optimizer as  hvd
@@ -49,7 +46,7 @@ from profiling import benchmark
 
 
 parser = argparse.ArgumentParser(description='PyTorch Wikitext-2 RNN/LSTM/GRU/Transformer Language Model')
-parser.add_argument('--data', type=str, default='/home/user/mzq/workspaces/project/grace/examples/torch/nlp/data/wikitext-2',
+parser.add_argument('--data', type=str, default='/home/user/nlp/data/wikitext-2',
                     help='location of the data corpus')
 parser.add_argument('--model', type=str, default='Transformer',
                     help='type of network (RNN_TANH, RNN_RELU, LSTM, GRU, Transformer)')
@@ -107,8 +104,6 @@ parser.add_argument('--num-iters', type=int, default=50,
 parser.add_argument('--mgwfbp', action='store_true', default=False, help='Use MG-WFBP')
 parser.add_argument('--asc', action='store_true', default=False, help='Use MG-WFBP')
 parser.add_argument('--nstreams', type=int, default=1, help='Number of communication streams')
-
-# 设置合并的阈值大小,default=23705252为ResNet50所有层梯度元素数量的总和
 parser.add_argument('--threshold', type=int, default=34015396, help='Set threshold if mgwfbp is False')
 
 parser.add_argument('--rdma', action='store_true', default=False, help='Use RDMA')

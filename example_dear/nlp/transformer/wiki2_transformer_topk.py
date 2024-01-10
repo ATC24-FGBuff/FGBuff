@@ -30,7 +30,7 @@ from compression import compressors
 
 # same hyperparameter scheme as word-language-model
 parser = argparse.ArgumentParser(description='PyTorch Wikitext-2 RNN/LSTM Language Model')
-# parser.add_argument('--data', type=str, default='/home/user/mzq/workspaces/project/grace/examples/torch/nlp/data/wikitext-2',
+# parser.add_argument('--data', type=str, default='/home/user/nlp/data/wikitext-2',
 parser.add_argument('--data', type=str, default='/data/dataset/nlp/lstm/wikitext-2',help='location of the data corpus')
 
 # Docker
@@ -109,13 +109,9 @@ parser.add_argument('--mgwfbp', action='store_true', default=False, help='Use MG
 parser.add_argument('--asc', action='store_true', default=False, help='Use MG-WFBP')
 parser.add_argument('--nstreams', type=int, default=1, help='Number of communication streams')
 
-
-# 设置合并的阈值大小,default=23705252为ResNet50所有层梯度元素数量的总和
 parser.add_argument('--threshold', type=int, default=34015396, help='Set threshold if mgwfbp is False')
 parser.add_argument('--rdma', action='store_true', default=False, help='Use RDMA')
 
-
-# Top-k + EF
 parser.add_argument('--compressor', type=str, default = 'eftopk', help='Specify the compressors if density < 1.0')
 parser.add_argument('--memory', type=str, default = 'residual', help='Error-feedback')
 parser.add_argument('--density', type=float, default=0.1, help='Density for sparsification')
@@ -349,20 +345,10 @@ def train(optimizer, train_data):
     hook_time=sum(optimizer.hook_time)
     
     if hvd.rank() == 0:
-        # datapath='/home/user/eurosys23/workspace/ACTopk/examples/plot_eurosys/compression_time/'
-        # np.savetxt(datapath + "topk_time/topk_time_"+str(epoch)+"_rank_"+str(hvd.rank())+".txt", topk_time_array)
-        # np.savetxt(datapath + "threshold_time/threshold_time_"+str(epoch)+"_rank_"+str(hvd.rank())+".txt", topk_time_array)
-        
-        # print('compression_time = ', compression_time)
                
         print('topk_time = ', topk_time)
         print('threshold_time = ', threshold_time)
-                     
-        # print('send_time = ', send_time)        
-        # print('decompression_time = ', decompression_time)
-        # print('receive_time = ', receive_time)
-        # print('synchronize_time = ', synchronize_time)
-        
+
         print('io_time = ', io_time)
         print('forward_time = ', forward_time)
         print('backward_time = ', backward_time-topk_time)
@@ -371,12 +357,8 @@ def train(optimizer, train_data):
         print('communication_time = ', synchronize_time)
         print('para_update_time = ', para_update_time)
         print('hook_time = ', hook_time)
-        # print('buffer_time = ', buffer_time)
-        
-        
-        # print('backforward_time = ', forward_backforward_time-(send_time+receive_time+decompression_time+compression_time))
+
         print('---------------------------------')
-        # print('optimizer_synchronize_time_array= ', optimizer_synchronize_time_array[:15])
 
 
     
@@ -385,7 +367,6 @@ def train(optimizer, train_data):
 best_val_loss = None
 
 optimizer = torch.optim.Adam(model.parameters(), lr=args.lr*hvd.size(),weight_decay=1.2e-5) 
-# optimizer = torch.optim.SGD(model.parameters(), lr=args.lr, momentum=0.9, weight_decay=1.2e-6) 
 
 from torch.optim.lr_scheduler import _LRScheduler 
 class WarmupLR(_LRScheduler):
@@ -431,11 +412,6 @@ class WarmupLR(_LRScheduler):
         self.last_epoch = step
 
 scheduler_warmup = WarmupLR(optimizer, warmup_steps=100, last_epoch = -1)
-
-# scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'min', factor=0.5, patience=1)
-# scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 1.0, gamma=0.95)
-
-
 from adtopk_lib.helper import get_communicator
 
 if args.density<1:
@@ -622,12 +598,6 @@ try:
         hook_time=sum(optimizer.hook_time)
     
         if hvd.rank() == 0:
-            # datapath='/home/user/eurosys23/workspace/ACTopk/examples/plot_eurosys/compression_time/'
-            # np.savetxt(datapath + "topk_time/topk_time_"+str(epoch)+"_rank_"+str(hvd.rank())+".txt", topk_time_array)
-            # np.savetxt(datapath + "threshold_time/threshold_time_"+str(epoch)+"_rank_"+str(hvd.rank())+".txt", topk_time_array)
-        
-            # print('compression_time = ', compression_time)
-               
             print('topk_time = ', topk_time)
             print('threshold_time = ', threshold_time)
                      
@@ -650,20 +620,7 @@ try:
             # print('backforward_time = ', forward_backforward_time-(send_time+receive_time+decompression_time+compression_time))
             print('---------------------------------')
             # print('optimizer_synchronize_time_array= ', optimizer_synchronize_time_array[:15])
-        
 
-            # scheduler_warmup.step(epoch)
-            # train(optimizer, train_data)
-            # val_loss = evaluate(val_data)
-            # ppl_list.append(math.exp(val_loss))
-
-        # if hvd.rank() == 0:             
-        #     print('-' * 89)
-        #     tmp = time.time() - epoch_start_time           
-        #     print('| end of epoch {:3d} | time: {:5.2f}s | valid loss {:5.4f} | ' 'valid ppl {:8.2f}'.format(epoch, (time.time() - epoch_start_time), val_loss, math.exp(val_loss)))
-        #     time_list.append(tmp)            
-        #     print('-' * 89)  
-    
     if hvd.rank() == 0:
          # torch.cuda.synchronize()
         end_time = time.time()
