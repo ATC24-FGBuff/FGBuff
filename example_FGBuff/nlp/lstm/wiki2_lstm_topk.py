@@ -414,30 +414,11 @@ optimizer = hvd.DistributedOptimizer(args.model_net, optimizer,
 
 
 
-# comm_params = {
-#         'comm_mode':'allgather_fast',
-#         'compressor':'actopk_lstm',
-#         'memory':'residual',
-#         'send_size_aresame':True,
-#         'model_named_parameters': model.named_parameters()
-#     }
-# import ADTopklib
-
-# # Horovod: wrap optimizer with DistributedOptimizer.
-# # 得到一个分布式的SGD优化器
-# optimizer = ADTopklib.DistributedOptimizer(
-#     optimizer, comm_params=comm_params, named_parameters=model.named_parameters())
-
-
-
 if hvd.rank() == 0:
     print('===============model_named_parameters===============')
     for name,parameters in model.named_parameters():
         print(name,':',parameters.size()) 
 
-
-# hvd.broadcast_parameters(model.state_dict(), root_rank=0) 
-# hvd.broadcast_optimizer_state(optimizer, root_rank=0) 
 
 
 try:    
@@ -469,14 +450,6 @@ try:
             time_list.append(tmp)            
             print('-' * 89)  
         
-        # Save the model if the validation loss is the best we've seen so far.
-        # if not best_val_loss or val_loss < best_val_loss:
-        #     with open(args.save, 'wb') as f:
-        #         torch.save(model, f)
-        #     best_val_loss = val_loss
-        # else:
-        #     # Anneal the learning rate if no improvement has been seen in the validation dataset.
-        #     lr /= 4.0
     
     if hvd.rank() == 0:
         # torch.cuda.synchronize()

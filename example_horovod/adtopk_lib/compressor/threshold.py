@@ -28,7 +28,6 @@ class ThresholdCompressor(Compressor):
         tensor = tensor.flatten()
         numel = tensor.numel()
         
-        # 阈值计算
         tensor_flatten=tensor.flatten().cuda()
         k= max(1, int(numel * self.compress_ratio))
         values_global_abs, indices_flatten_global = torch.topk(tensor_flatten.abs(), k, sorted=False,)

@@ -22,7 +22,7 @@ class GaussiankCompressor(Compressor):
         return mu+zvalue*sigma, mu-zvalue*sigma
 
 
-    # tensor反稀疏化
+  
     def desparsify(self, tensors, numel, shape):
         values, indices = tensors
         # if True:
@@ -36,7 +36,7 @@ class GaussiankCompressor(Compressor):
             return tensor_decompressed
 
 
-    # 抽象方法重载compress
+    
     def compress(self, tensor, name):
         numel = tensor.numel()
         shape = tensor.size()
@@ -141,7 +141,6 @@ class GaussiankCompressor(Compressor):
         values, indices = tensors
         # if values.numel()==numel:
         #     return values
-        # 返回一个形状为为size,类型为torch.dtype,里面的每一个值都是0的tensor
         tensor_decompressed = torch.zeros(
             numel, dtype=values.dtype, layout=values.layout, device=values.device).cuda()
         tensor_decompressed = tensor_decompressed.scatter_add(0, indices, values)

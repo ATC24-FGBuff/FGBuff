@@ -67,7 +67,7 @@ class Communicator(ABC):
         
 
     def send_step(self, tensor, name):        
-        # 小梯度无需压缩和解压, 并且无需
+        
         if tensor.dim()==1 : 
             tensors_compressed,ctx =[tensor], None
             handles = self.async_send(tensors_compressed, name)

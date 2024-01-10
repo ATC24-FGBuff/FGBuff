@@ -1164,10 +1164,6 @@ def main():
         
         time_to_train = time.time() - train_start
         
-        if hvd.rank()==0:
-            import numpy as np          
-            ans = np.array(communicator.e_klist)          
-            np.savetxt("/home/user/eurosys23/workspace/ACTopk/examples/convergence_eval/data/bert_001.txt", ans)  
 
 
 

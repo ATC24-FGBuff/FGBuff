@@ -148,7 +148,7 @@ class _DistributedOptimizer(torch.optim.Optimizer):
         self._original_layerwise_times_kv = None
         self._norm_clip = norm_clip
         
-        # 阈值的设定
+ 
         self._threshold = threshold
         r"""Distributed optimizer with overlapping reduceScatter and allGather and tensor fusion.
         Args:

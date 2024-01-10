@@ -73,169 +73,37 @@ class ImbalanceTopkTimeCompressor(Compressor):
                             'tensors_aggregated':tensors_aggregated,'scale':scale,'tensors_aggregated_mean':tensors_aggregated_mean,\
                                 'tensors_residuals':tensors_residuals,'sign':sign} 
 
-    # tensor稀疏化得到top-k的稀疏值
+
     def sparsify(self,tensor, compress_ratio, epoch, name):
-        # 将tensor展平成一维向量
-        # compress_ratio_global=1.0
+
         tensor_flatten = tensor.flatten()
-        # print(tensor_flatten.type())
-        
-        # idx = torch.randperm(tensor_flatten.nelement())
-        # tensor_flatten = tensor_flatten.view(-1)[idx].view(tensor_flatten.size())
+       
         
         numel = tensor.numel()
-        # shape =tensor.shape
-        
-        # compress_ratio=0.001
-        # Rethinking：Top-k friendly to small k, but not big k?
-        # compress_ratio=0.001
-        # compress_ratio=0.01
-        # compress_ratio=0.01+0.0001
-        
-        # compress_ratio=0.009
-        # compress_ratio=0.011
-        
-        # compress_ratio=0.0099
-        # compress_ratio=0.0101
-        
-        # compress_ratio=0.05        
-        # compress_ratio=0.0009
-        # compress_ratio=0.0011
-        
-
+     
         time_start_=time.time()
         if tensor.dim()==2:
             values=tensor_flatten
             indices=torch.arange(0,numel).cuda(tensor.device)
             return values, indices
         
-        
-        # k= max(1, int(numel * compress_ratio * compress_ratio_global))
-        # values_abs, indices_flatten_global = torch.topk(tensor_flatten.abs(), k, sorted=False,)
+   
         
         thres=self.gaussiank_threshold_estimation(tensor_flatten, self.compress_ratio)
         # thres=self.dgc_threshold_estimation(tensor, compress_ratio)
         
         mask = tensor_flatten.abs() >=thres
         indices_flatten_global, = torch.where(mask)
-        
-        # k= max(1, int(numel * compress_ratio * compress_ratio_global))
-        # values_abs, indices_flatten_global = torch.topk(tensor_flatten.abs(), k, sorted=False,)
+     
 
 
         values_flatten_global = torch.gather(tensor_flatten, 0, indices_flatten_global)
         e_topk_time=time.time()-time_start_
-        # Top-k准确阈值估计
+   
         self.topk_time.append(e_topk_time)
         
         return values_flatten_global, indices_flatten_global
         
-        
-        # thres = values_abs.min()
-        
-        time_st=time.time()
-        
-        # if self.epoch<2:
-        #     k= max(1, int(numel * compress_ratio * compress_ratio_global))
-        #     values_abs, indices_flatten_global = torch.topk(tensor_flatten.abs(), k, sorted=False,)
-        #     values_flatten_global = torch.gather(tensor_flatten, 0, indices_flatten_global)
-        #     self.thresholds[name] = values_abs.min()
-        #     self.indices[name]=indices_flatten_global
-        #     return values_flatten_global, indices_flatten_global        
-        # # thres= self.thresholds[name]
-        # indices=self.indices[name]
-
-        # print('thres',thres)
-        
-        # ACC Threshold
-        # k= max(1, int(numel * compress_ratio * compress_ratio_global))
-        # values_abs, indices_flatten_global = torch.topk(tensor_flatten.abs(), k, sorted=False,)
-        # thres = values_abs.min()        
-        # indices_flatten_global_, = torch.where(tensor_flatten.abs()>=thres)
-        # self.threshold_time.append(time.time()-time_st)
-        
-        
-        # 阈值估计
-        # input=torch.nn.Threshold(thres,0)
-        # output=input(tensor_flatten.abs())
-        # indices_flatten_global,=torch.nonzero(output,as_tuple=True)
-
-
-        # 大梯度对阈值友好, 小梯度对阈值不友好
-        # 对大梯度采用阈值收益更高
-        # 小梯度使用传统Topk        
-        # if numel > 200000:
-        #     time_st=time.time()
-        #     mask = tensor_flatten.abs() >=thres
-        #     indices_flatten_global_, = torch.where(mask)
-        #     self.threshold_time.append(time.time()-time_st)
-        # else:
-        #     self.threshold_time.append(e_topk_time)
-        
-
-        # thres=self.gaussiank_threshold_estimation(tensor_flatten, compress_ratio)
-        thres=self.dgc_threshold_estimation(tensor, compress_ratio)
-        
-
-
-        mask = tensor_flatten.abs() >=thres
-        indices_flatten_global, = torch.where(mask)
-
-        real_num=indices_flatten_global.numel()
-        if k!=1 and real_num<k:
-            indices_flatten_global=torch.cat((indices_flatten_global, torch.randint(0, k-1, (k-real_num,)).cuda()), dim=0)
-            # indices_flatten_global=torch.cat((indices_flatten_global, indices[real_num:]), dim=0)
-            # indices_flatten_global=indices
-        elif real_num>k:
-            indices_flatten_global=indices_flatten_global[:k]
-        
-        # self.indices[name]=indices_flatten_global
-
-        # indices_flatten_global_, =  torch.where(tensor_flatten.abs()>=thres)        
-        # values_flatten_global = tensor_flatten[indices_flatten_global].contiguous()
-        
-        self.threshold_time.append(time.time()-time_st)
-
-        
-        # values_flatten_global = tensor_flatten[indices_flatten_global]        
-        values_flatten_global = torch.gather(tensor_flatten, 0, indices_flatten_global)
-        # torch.cuda.synchronize()
-        
-        # time_start=time.time()
-        # self.topk_time.append(time_start-time_start_)
-        
-        return values_flatten_global, indices_flatten_global
-
- 
-        # if True:
-        if tensor.dim() >1:
-            k= max(1, int(numel * compress_ratio*compress_ratio_global))
-            _, indices_flatten_global = torch.topk(tensor_flatten.abs(), k, sorted=False,)
-            values_flatten_global = torch.gather(tensor_flatten, 0, indices_flatten_global)
-            return values_flatten_global, indices_flatten_global
-            
-            if self.attributes[name]['sign']==-1 or 'fc' in name:
-                # case-1
-                k= max(1, int(shape[1] * compress_ratio))
-                _, indices_flatten_1 = torch.topk(tensor.abs(), k, dim=1,sorted=False,)
-                values_flatten_1 = torch.gather(tensor, 1, indices_flatten_1)
-                return values_flatten_1, indices_flatten_1  
-                   
-            else:
-                k= max(1, int(numel * compress_ratio*compress_ratio_global))
-                _, indices_flatten_global = torch.topk(tensor_flatten.abs(), k, sorted=False,)
-                values_flatten_global = torch.gather(tensor_flatten, 0, indices_flatten_global)
-                return values_flatten_global, indices_flatten_global
-
-        tensor = tensor.flatten().cuda()
-        numel = tensor.numel()
-        values=tensor
-        indices=torch.arange(0,numel).cuda(tensor.device)
-        # self.attributes[name]['sign']=(-1)*self.attributes[name]['sign']
-        
-        return values, indices
-
-    # tensor反稀疏化
     def desparsify(self,tensors, numel,shape,name):
         values, indices = tensors
         if values.numel()==numel:
@@ -247,20 +115,8 @@ class ImbalanceTopkTimeCompressor(Compressor):
             tensor_decompressed.scatter_(0, indices, values)
             return tensor_decompressed
             
-            if values.dim()==1:
-                tensor_decompressed = torch.zeros(
-                    numel, dtype=values.dtype, layout=values.layout, device=values.device).cuda()
-                tensor_decompressed.scatter_(0, indices, values)
-            else:
-                tensor_decompressed = torch.zeros(
-                    shape, dtype=values.dtype, layout=values.layout, device=values.device).cuda()
-                tensor_decompressed.scatter_(1, indices, values)
 
-            # self.attributes[name]['sign']=(-1)*self.attributes[name]['sign']
-            
-        return tensor_decompressed
-
-    # 抽象方法重载compress
+    
     def compress(self, tensor, name):
         tensors = self.sparsify(tensor, self.compress_ratio,self.epoch, name)
         self.attributes[name]['sign']=(-1)*self.attributes[name]['sign']

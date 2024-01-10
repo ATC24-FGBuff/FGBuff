@@ -47,35 +47,6 @@ class TopKEFCompressor(Compressor):
                 assert isinstance(param, (list, tuple))
                 numel, shape = param[0], param[1]
             
-            afa=0.2
-            thres_global=None
-            compression_global=None
-            indices_global= None
-            values_global=None
-            indices_channel_1=None
-            values_channel_1=None
-            tensor_original=None
-            tensor_mean_global=None
-            tensor_mean_channel=None
-            tensors_aggregated=None
-            scale=None
-            tensors_aggregated_mean=None
-            tensors_residuals=None
-            # self.compress_ratio=0.01
-            sign=-1
-            # self.attributes[name] ={'numel':numel,'shape': shape, 'compress_ratio':self.compress_ratio,'rank':self.rank,'thres_global':thres_global,'afa':afa,\
-            #     'compression_global':compression_global,'indices_global':indices_global,'values_global':values_global,\
-            #         'indices_channel_1':indices_channel_1,'values_channel_1':values_channel_1,\
-            #             'tensor_original':tensor_original,'tensor_mean_global':tensor_mean_global,'tensor_mean_channel':tensor_mean_channel,\
-            #                 'tensors_aggregated':tensors_aggregated,'scale':scale,'tensors_aggregated_mean':tensors_aggregated_mean,\
-            #                     'tensors_residuals':tensors_residuals,'sign':sign} 
-            
-            
-            # self.residuals[str(hvd.rank())][name]=None
-            # for i in range(hvd.size()): 
-            #     self.residuals[str(i)]={}
-
-    # tensor稀疏化得到top-k的稀疏值
     def sparsify(self,tensor, compress_ratio,epoch, name):
         tensor_flatten = tensor.flatten()
         numel = tensor.numel()
@@ -94,7 +65,7 @@ class TopKEFCompressor(Compressor):
         return values, indices
 
 
-    # tensor反稀疏化
+  
     def desparsify(self,tensors, numel,shape,name):
         values, indices = tensors
         if values.numel()==numel:
@@ -108,7 +79,6 @@ class TopKEFCompressor(Compressor):
 
         return tensor_decompressed
 
-    # 抽象方法重载compress
     def compress(self, tensor, name):
 
 
@@ -140,10 +110,8 @@ class TopKEFCompressor(Compressor):
         values, indices = tensors
         if values.numel()==numel:
             return values
-        # 返回一个形状为为size,类型为torch.dtype,里面的每一个值都是0的tensor
         tensor_decompressed = torch.zeros(
             numel, dtype=values.dtype, layout=values.layout, device=values.device).cuda()
-        # 填充稀疏值
         # if hvd.rank() == 0:
         #     print('values: ', values, 'indices: ', indices)
         # [a,b,    c,d]  [0,1,    0,2]

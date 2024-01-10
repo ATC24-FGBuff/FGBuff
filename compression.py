@@ -138,7 +138,7 @@ class TopKCompressor():
             values = None
             indexes = None  
             indexes_arr=[]
-            # 分层压缩
+            
             for i, s in enumerate(group_size):
                 k = max(int(s * ratio), 1)
                 values_, indexes_ = torch.topk(tensor_abs[pre_size:pre_size+s], k=k)
@@ -155,7 +155,7 @@ class TopKCompressor():
             indexes = torch.cat(indexes_arr, dim=0)
             values = tensor.data[indexes]
                       
-            # 分层压缩
+            
             # for i, s in enumerate(group_size):
             #     # layer_name=names[i]
             #     numel=s
@@ -210,7 +210,7 @@ class TopKCompressor():
             values = None
             indexes = None
             indexes_arr=[]
-            # 分层压缩
+            
             for i, s in enumerate(group_size):
                 
                 if group_dim[i]!=2:
@@ -580,7 +580,7 @@ class RedSyncCompressor(TopKCompressor):
         super().__init__()
         self.name="redsync"
 
-    # 抽象方法重载compress
+    
     def compress(self, tensor, name=None,  group_size=None, sigma_scale=3, ratio=0.01):
         with torch.no_grad():
             if name not in self.residuals:
@@ -664,7 +664,7 @@ class ExpCompressor(TopKCompressor):
         self.i_ratio = 0.25
         self.stages = 1
 
-    # 抽象方法重载compress
+    
     def compress(self, tensor, name=None,  group_size=None, sigma_scale=3, ratio=0.01):
         with torch.no_grad():
             if name not in self.residuals:

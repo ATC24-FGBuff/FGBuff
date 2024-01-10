@@ -177,17 +177,7 @@ def train(epoch):
             loss.backward()
             backward_time_array.append(time.time()-b_time)
             
-            # if hvd.rank() == 0 and batch_idx == 5 and epoch < 5:
-            #     # tensor_np_array=[]
-            #     index=1
-            #     for name_1, param_1 in model.named_parameters():
-            #         tensor = param_1.grad
-            #         tensor = tensor.flatten()
-            #         tensor_np = tensor.cpu().numpy()
-            #         # tensor_np_array.append(tensor_np)
-            #         np.savetxt("./examples/torch/resnet_layer_gradient/epoch" + str(epoch+1) + "/resnet18_grad_tensor_5_"+str(index)+".txt", tensor_np)
-            #         index = index + 1
-            
+
             s_time=time.time()               
             # Gradient is applied across all ranks
             optimizer.step()       
@@ -342,16 +332,7 @@ if __name__ == '__main__':
 
     # If set > 0, will resume training from a given checkpoint.
     resume_from_epoch = 0
-    # for try_epoch in range(args.epochs, 0, -1):
-    #     if os.path.exists(args.checkpoint_format.format(epoch=try_epoch)):
-    #         resume_from_epoch = try_epoch
-    #         break
-
-    # # Horovod: broadcast resume_from_epoch from rank 0 (which will have
-    # # checkpoints) to other ranks.
-    # resume_from_epoch = hvd.broadcast(torch.tensor(resume_from_epoch), root_rank=0,
-    #                                   name='resume_from_epoch').item()
-
+ 
     # Horovod: print logs on the first worker.
     verbose = 1 if hvd.rank() == 0 else 0
 
@@ -391,17 +372,7 @@ if __name__ == '__main__':
     train_loader = torch.utils.data.DataLoader(
         train_dataset, batch_size=allreduce_batch_size,
         sampler=train_sampler, **kwargs)
-    
-    # Imagenet
-    # val_dataset = \
-    #     datasets.ImageFolder(args.val_dir,
-    #                          transform=transforms.Compose([
-    #                              transforms.Resize(256),
-    #                              transforms.CenterCrop(224),
-    #                              transforms.ToTensor(),
-    #                              transforms.Normalize(mean=[0.485, 0.456, 0.406],
-    #                                                   std=[0.229, 0.224, 0.225])
-    #                          ]))    
+
     # CIFAR100
     val_dataset = \
         datasets.CIFAR100(args.val_dir,
@@ -459,31 +430,7 @@ if __name__ == '__main__':
     else:
         seq_layernames, layerwise_times = None, None
     
-    
-    # Horovod: (optional) compression algorithm.
-    # compression = hvd.Compression.fp16 if args.fp16_allreduce else hvd.Compression.none
-    # params = {'compressor': 'topk', 'memory': 'residual', 'communicator': 'allgather'}
-    # Horovod: wrap optimizer with DistributedOptimizer.
-    # 得到一个分布式的SGD优化器
-    # optimizer = hvd.DistributedOptimizer(
-    #     optimizer, grc, named_parameters=model.named_parameters())
-
-
-    # Horovod
-    # # Allgather
-    # # params = {'compressor': 'imbalancetopktime', 'memory': 'residual', 'communicator': 'allgather','model_named_parameters':model.named_parameters()}
-    # params = {'compressor': 'imbalancetopktime', 'memory': 'none', 'communicator': 'allgather','model_named_parameters':model.named_parameters()}
-    # # params = {'compressor': 'none', 'memory': 'none', 'communicator': 'allgather','model_named_parameters':model.named_parameters()}
-    # # params = {'compressor': 'none', 'memory': 'none', 'communicator': 'allreduce','model_named_parameters':model.named_parameters()}
-    
-    # # params = {'compressor': 'none', 'memory': 'none', 'communicator': 'allgather','model_named_parameters':model.named_parameters()}
-    # # params = {'compressor': 'none', 'memory': 'none', 'communicator': 'allreduce','model_named_parameters':model.named_parameters()}
-    
-    # communicator = get_communicator(params)
-    # optimizer = hvd.DistributedOptimizer(
-    #     optimizer, communicator, named_parameters=model.named_parameters())
-    
-    # MG-WFBP
+   
     optimizer = hvd.DistributedOptimizer(args.model_net, optimizer, 
                                          named_parameters=model.named_parameters(), compression=compressors[args.compressor](), is_sparse=args.density<1, density=args.density, seq_layernames=seq_layernames, layerwise_times=layerwise_times, norm_clip=None, threshold=args.threshold, writer=None, gradient_path='./', momentum_correction=False, fp16=args.fp16, mgwfbp=args.mgwfbp, rdma=args.rdma, asc=args.asc)
 
@@ -499,10 +446,6 @@ if __name__ == '__main__':
     for epoch in range(resume_from_epoch, args.epochs):
         train(epoch)
         validate(epoch)
-
-        # 保存最后一个训练模型
-        # if epoch==args.epochs-1:
-        #     save_checkpoint(epoch)
 
     if hvd.rank() == 0:
         # torch.cuda.synchronize()

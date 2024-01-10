@@ -59,21 +59,15 @@ class DgcCompressor(Compressor):
         return tensor_decompressed.view(shape)
     
     def decompress_add(self, tensors, ctx, name):
-        # numel, shape = ctx
-        # shape, _, numel = ctx
+     
         shape, numel = ctx
         values, indices = tensors
         if values.numel()==numel:
             return values
-        # 返回一个形状为为size,类型为torch.dtype,里面的每一个值都是0的tensor
+
         tensor_decompressed = torch.zeros(
             numel, dtype=values.dtype, layout=values.layout, device=values.device).cuda()
         
-        
-        # 填充稀疏值
-        # if hvd.rank() == 0:
-        #     print('values: ', values, 'indices: ', indices)
-        # [a,b,    c,d]  [0,1,    0,2]
-        # [c, b ,d ][a+c, b,d ]
+    
         tensor_decompressed = tensor_decompressed.scatter_add(0, indices, values)
         return tensor_decompressed.view(shape)

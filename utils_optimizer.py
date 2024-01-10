@@ -163,90 +163,6 @@ _100k_time = {
 
 
 
-# local 8 node
-# ResNet101
-
-# 0.1k
-# [1,0]<stdout>:backward_time_per_iteration:  0.05454230430174847
-# [1,0]<stdout>:arr_synchronize:  [0.005237102508544922, 0.005681753158569336, 0.0055239200592041016, 0.005110263824462891, 0.005494356155395508, 0.005931854248046875, 0.005964517593383789, 0.006237983703613281, 0.004880666732788086, 0.0040895938873291016]
-# [1,0]<stdout>:optimizer_synchronize_time_per_iteration:  0.005415201187133789
-# [1,0]<stdout>:compression_time_per_iteration:  0.0032399029147868255
-
-# 1k
-# [1,0]<stdout>:backward_time_per_iteration:  0.061224784169878275
-# [1,0]<stdout>:arr_synchronize: [0.005828142166137695, 0.00655674934387207, 0.0062198638916015625, 0.0056955814361572266, 0.006312131881713867, 0.00576019287109375, 0.006530046463012695, 0.003114938735961914, 0.0027985572814941406, 0.0028159618377685547]
-# [1,0]<stdout>:optimizer_synchronize_time_per_iteration:  0.005163216590881347
-# [1,0]<stdout>:compression_time_per_iteration:  0.003298274108341762
-
-# 10k
-# [1,0]<stdout>:backward_time_per_iteration:  0.05254584185931147
-# [1,0]<stdout>:arr_synchronize:  [0.010592460632324219, 0.01142573356628418, 0.011684417724609375, 0.0077970027923583984, 0.00798654556274414, 0.009929895401000977, 0.01174020767211914, 0.01100611686706543, 0.012333869934082031, 0.008604764938354492]
-# [1,0]<stdout>:optimizer_synchronize_time_per_iteration:  0.0045778751373291016
-# [1,0]<stdout>:compression_time_per_iteration:  0.0032529466006220604
-
-# 1e2
-# [1,0]<stdout>:backward_time_per_iteration:  0.05694400899264277
-# [1,0]<stdout>:arr_synchronize:  [0.004683017730712891, 0.00495457649230957, 0.0048792362213134766, 0.004877567291259766, 0.004823923110961914, 0.005283355712890625, 0.005013942718505859, 0.0048983097076416016, 0.0052700042724609375, 0.005072832107543945]
-# [1,0]<stdout>:optimizer_synchronize_time_per_iteration:  0.004975676536560059
-# [1,0]<stdout>:compression_time_per_iteration:  0.0034527474520157793
-
-# 1e3
-# [1,0]<stdout>:backward_time_per_iteration:  0.052428747926439555
-# [1,0]<stdout>:arr_synchronize:  [0.018227100372314453, 0.021815776824951172, 0.01922774314880371, 0.018830060958862305, 0.021184921264648438, 0.018942832946777344, 0.0191495418548584, 0.020770549774169922, 0.019158124923706055, 0.01921820640563965]
-# [1,0]<stdout>:optimizer_synchronize_time_per_iteration:  0.019652485847473145
-# [1,0]<stdout>:compression_time_per_iteration:  0.0033587764720527493
-
-# 1e4
-# [1,0]<stdout>:backward_time_per_iteration:  0.05349955388477871
-# [1,0]<stdout>:arr_synchronize:  [0.11219024658203125, 0.1106419563293457, 0.11024594306945801, 0.11354684829711914, 0.10981440544128418, 0.11090707778930664, 0.10956978797912598, 0.11919760704040527, 0.11316728591918945, 0.11435842514038086]
-# [1,0]<stdout>:optimizer_synchronize_time_per_iteration:  0.11236395835876464
-# [1,0]<stdout>:compression_time_per_iteration:  0.004661887275929354
-
-# 1e5
-# [1,0]<stdout>:backward_time_per_iteration:  0.05775994062423706
-# [1,0]<stdout>:arr_synchronize:  [1.0096287727355957, 1.0089318752288818, 1.0050272941589355, 1.005378246307373, 1.0091404914855957, 1.0046544075012207, 1.0053398609161377, 1.0032639503479004, 1.0004892349243164, 1.0052404403686523]
-# [1,0]<stdout>:optimizer_synchronize_time_per_iteration:  1.005709457397461
-# [1,0]<stdout>:compression_time_per_iteration:  0.019676954162364105
-
-# 1.5e5
-# [1,0]<stdout>:optimizer_synchronize_time_array=  [[1.508558750152588], [1.5127859115600586], [1.5094773769378662], [1.5134992599487305], [1.5203535556793213], [1.521660327911377], [1.5141375064849854], [1.5279905796051025], [1.5164282321929932], [1.519787311553955], [1.5180854797363281], [1.521669626235962], [1.5220615863800049], [1.5157928466796875], [1.5145854949951172], [1.5200247764587402], [1.515629529953003], [1.5089967250823975], [1.505366563796997], [1.518383502960205]]
-# [1,0]<stdout>:backward_time_per_iteration:  0.05490065959035134
-# [1,0]<stdout>:arr_synchronize:  [1.5180854797363281, 1.521669626235962, 1.5220615863800049, 1.5157928466796875, 1.5145854949951172, 1.5200247764587402, 1.515629529953003, 1.5089967250823975, 1.505366563796997, 1.518383502960205]
-# [1,0]<stdout>:optimizer_synchronize_time_per_iteration:  1.5160596132278443
-# [1,0]<stdout>:compression_time_per_iteration:  0.027759239381673385
-
-
-# 2e5 ResNet-101 
-# [1,0]<stdout>:optimizer_synchronize_time_array=  [[2.010416269302368], [2.0071349143981934], [1.9996306896209717], [2.0113894939422607], [1.9997689723968506], [2.0045714378356934], [1.9994926452636719], [2.02534818649292], [2.025491714477539], [2.019753932952881], [2.0184011459350586], [2.034968137741089], [2.016390323638916], [2.02777099609375], [2.0309395790100098], [2.034759759902954], [2.023261070251465], [2.041595935821533], [2.0140013694763184], [2.021557569503784]]
-# [1,0]<stdout>:backward_time_per_iteration:  0.07931486319522468
-# [1,0]<stdout>:arr_synchronize:  [2.0184011459350586, 2.034968137741089, 2.016390323638916, 2.02777099609375, 2.0309395790100098, 2.034759759902954, 2.023261070251465, 2.041595935821533, 2.0140013694763184, 2.021557569503784]
-# [1,0]<stdout>:optimizer_synchronize_time_per_iteration:  2.0263645887374877
-# [1,0]<stdout>:compression_time_per_iteration:  0.03750397356189027
-
-# 1e4
-# [1,0]<stdout>:optimizer_synchronize_time_array=  [[0.1247873306274414], [0.11812019348144531], [0.1149129867553711], [0.11902189254760742], [0.1261281967163086], [0.11945056915283203], [0.11274433135986328], [0.11494970321655273], [0.12337255477905273], [0.11670684814453125], [0.11228489875793457], [0.11229920387268066], [0.12546706199645996], [0.11500859260559082], [0.11153769493103027], [0.11829924583435059], [0.12503886222839355], [0.11738348007202148], [0.113616943359375], [0.1131899356842041]]
-# [1,0]<stdout>:backward_time_per_iteration:  0.029321138956108873
-# [1,0]<stdout>:backward_time_per_iteration:  0.03523650461313676
-# [1,0]<stdout>:arr_synchronize:  [0.11228489875793457, 0.11229920387268066, 0.12546706199645996, 0.11500859260559082, 0.11153769493103027, 0.11829924583435059, 0.12503886222839355, 0.11738348007202148, 0.113616943359375, 0.1131899356842041]
-# [1,0]<stdout>:optimizer_synchronize_time_per_iteration:  0.1164125919342041
-# [1,0]<stdout>:compression_time_per_iteration:  0.0048993959718821
-
-
-# # 实现分段函数
-# from scipy.interpolate import interp1d
-# # x = [100, 1000]
-# # y = [0.004975676536560059, 0.019652485847473145]
-# x = [0.1, 1, 10, 100, 1000, 10000, 100000, 200000]
-# y = [0.005115201187133789, 0.005463216590881347, 0.0055778751373291016, 0.005975676536560059, 0.019652485847473145, 0.11236395835876464, 1.005709457397461, 2.0263645887374877]
-# # 创建插值函数
-# f = interp1d(x, y) 
-# # 指定新的点进行插值
-# # new_points = np.linspace(min(x), max(x), num=100)  # 生成等间距的新点
-# new_points =900
-# result = f(new_points) 
-# print("分段线性插值结果：", result)
-
-
 
 def calculation_backward_time_local_8_nodes(sum_numel, numel, net_name):
     if net_name=='resnet50':
@@ -394,16 +310,11 @@ def optimal_gradient_merging_1231(gradient_size_array, net_name):
 
 
         diff = merging_time_wait_size_nocompression -group_layer_wise_time_nocompression
-        # 遍历贪心生成的group
         if diff < 0:
             abs_diff = abs(diff)
             abs_diff = diff            
             # if abs_diff < min_diff:
             if True:
-                # buffer-1的通信时间小于buffer-2的反向传播时间
-                
-                # if len(min_group_len_array) >0  and pre_merging_time_compression> (group_backward_time_size + group_compression_time):
-                #     continue
             
                 min_group_len = group_len
                 min_group_len_array.append(min_group_len)
@@ -432,19 +343,12 @@ def optimal_gradient_merging_1231(gradient_size_array, net_name):
                 sub_backward_time= calculation_backward_time_local_8_nodes(gradient_size_sum, sum(gradient_size_array[min_group_len_array[0]:]), net_name) 
                 sub_backward_time = sub_backward_time+sum(group_compression_time_array[1:])
                 
-                # if merging_communication_time_array_sum > backward_time:    
-                # if merging_communication_time_array_sum > sub_backward_time:  
-                #     flag= True
+       
                     
                 pre_merging_time_compression =  merging_time_size_compression
 
 
-        # print('Group len= ', group_len,',diff= ', diff)
     
-    
-    # print('min_diff = ', min_diff)
-    # # print('index_i= ', index_i)
-    # print('min_group_len = ', min_group_len)
     print('min_group_len_array = ', min_group_len_array)
 
     print('min_group_len_array_sum = ', sum(min_group_len_array))
@@ -454,7 +358,6 @@ def optimal_gradient_merging_1231(gradient_size_array, net_name):
     # print('len(merging_communication_time_array) = ', len(merging_communication_time_array))
 
 
-    # 遍历贪心生成的group
     groups = []
     groups_new = []
     buffer_backward_time = 0
@@ -526,153 +429,29 @@ def optimal_gradient_merging_1231(gradient_size_array, net_name):
     sum_x= 0
     for i, g in enumerate(groups_new):
         groups_new_.append(g)
-        
-        # print(groups_new[:i+1])
-        # print(sum(gradient_size_array[:i+1]))
+
         new_buffer_size = sum(gradient_size_array[sum(groups_new[:i]): sum(groups_new[:i+1])])
         new_buffer_size_ = sum(gradient_size_array[: sum(groups_new[:i+1])])
-        # print(x)
-        # sum_x =sum_x+x
-        
-        # sum_gradient = sum(groups_new_)
-        # group_backward_time_sum = group_backward_time_sum
-        # merging_communication_time_array_sum = sum(merging_time_compression_array[:i])
-        
-        # group_backward_time_sum = group_backward_time_sum + sum(group_backward_time_size_array[1:]) +sum(group_compression_time_array[1:])
-        # merging_communication_time_array_sum =sum(merging_time_compression_array[:i])
-        
-        # group_backward_time_sum =group_backward_time_sum+ calculation_backward_time_local_8_nodes(gradient_size_sum, new_buffer_size, net_name)+ calculation_compression_time_local_8_nodes(new_buffer_size)
-        
-        
-        
-        
-        # merging_communication_time_array_sum = merging_communication_time_array_sum+ calculation_communication_time_local_8_nodes(new_buffer_size, density) 
+       
         
         merging_communication_time_array_sum = calculation_communication_time_local_8_nodes(new_buffer_size_, density) 
         
         
         
-        # print(group_backward_time_sum)
-        # print(merging_communication_time_array_sum)
         
-        # 最后减小非重叠buffer数量
         if merging_communication_time_array_sum > group_backward_time_sum:
             last_min_group_len = len_gradient_size - sum(groups_new_) 
             groups_new_.append(last_min_group_len)
             # print('groups_new', i)
             break
         
-    
-    # print(sum_x)
-    # print(sum(gradient_size_array))
+
     print('groups_new_= ', groups_new_)  
     print('sum(groups_new_)= ', sum(groups_new_)) 
     
     
     return
     
-    for i, group in enumerate(min_group_len_array):
-        groups.append(group)
-        buffer_backward_time = group_backward_time_size_array[i] + group_compression_time_array[i]
-        buffer_backward_compression_time_array.append(buffer_backward_time)
-        
-        # merging_communication_time_array_sum =sum(merging_time_compression_array)                
-        # sub_backward_time= calculation_backward_time_local_8_nodes(gradient_size_sum, sum(gradient_size_array[min_group_len_array[0]:]), net_name) 
-        # sub_backward_time = sub_backward_time+sum(group_compression_time_array[1:])
-        
-        # print('--------------------')
-        
-        # group_backward_time_sum = sum(group_backward_time_size_array[1:]) +sum(group_compression_time_array[1:])
-        # merging_communication_time_array_sum =sum(merging_time_compression_array[:i])
-        # # groups.append(group)
-        
-        # # 最后减小非重叠buffer数量
-        # if merging_communication_time_array_sum > group_backward_time_sum:
-        #     last_min_group_len = len_gradient_size - sum(groups_new) 
-        #     groups_new.append(last_min_group_len)
-        #     print('groups_new', i)
-        #     break
-        
-        # groups_new.append(min_group_len_array[i])
-        if i > 0:
-            buffer_backward_compression_time_array_new.append(buffer_backward_compression_time_array[i-1])
-        # 减少小buffer的数量
-        
-        if i > 0:
-        # if i > 0 and i % 2 == 0:
-            # buffer_backward_time = group_backward_time_size_array[i] + group_compression_time_array[i]
-            # buffer_backward_compression_time_array.append(buffer_backward_time)
-            
-            # 前面一个buffer通信时间远小于后一个buffer的反向传播时间, 则将前一个buffer合并到后一个buffer当中, 
-            
-            # sub_buffer = [2, 5, 9, 17, ...]
-            # buffer_backward_compression_time_array[i-1]
-            # groups_new[-1]
-            # buffer_backward_compression_time_array_new[-1]
-            
-            if  buffer_backward_compression_time_array[i-1] < (merging_time_compression_array[i])*1/4:
-            # if sum(buffer_backward_compression_time_array) > pre_merging_time :
-                
-                temp_backward = buffer_backward_compression_time_array_new[-1]
-                del buffer_backward_compression_time_array_new[-1]
-                # temp_group = groups[-1]
-                # del groups_new[-1]
-                # del groups_new[-1]
-                
-                buffer_backward_compression_time_array_new.append(temp_backward + buffer_backward_compression_time_array[i])
-                
-                # del groups[len(group)-(i-merge_strat): ]
-                # for j in range(i-merge_strat):
-                #     del groups[-1]
-                new_buffer = min_group_len_array[i] +  min_group_len_array[i-1]
-                
-                # groups_new.append(new_buffer)
-                
-                
-                print('new_buffer ', new_buffer, 'groups_new ',groups_new)
-                # merge_strat = i
-                # pre_merging_time = merging_time_compression_array[i]
-                
-                
-                # buffer_backward_time= 0
-                # buffer_backward_compression_time_array= []
-                print('continue= ', i)
-            else:
-                groups_new.append(groups[i-1])
-                groups_new.append(groups[i])
-                buffer_backward_compression_time_array_new.append(buffer_backward_compression_time_array[i-2])
-                buffer_backward_compression_time_array_new.append(buffer_backward_compression_time_array[i-1])
-        
-        
-            
-        # 进一步合并
-        
-        
-        # groups_new.append(group)
-        
-        # print('--------------------')
-        
-        # group_backward_time_sum = sum(group_backward_time_size_array[1:]) +sum(group_compression_time_array[1:])
-        # merging_communication_time_array_sum =sum(merging_time_compression_array[:i])
-        # # groups.append(group)
-        
-        # # 最后减小非重叠buffer数量
-        # if merging_communication_time_array_sum > group_backward_time_sum:
-        #     last_min_group_len = len_gradient_size - sum(groups_new) 
-        #     groups_new.append(last_min_group_len)
-        #     break
-
-        
-            
-        # pre_merging_time =  merging_time_compression_array[i]
-    print('groups = ',groups)
-    
-    print('groups_new= ', groups_new)
-    
-    
-    return
-
-
 gradient_size_array_resnet50 = [100, 204800, 2048, 2048, 1048576, 512, 512, 2359296, 512, 512, 1048576, 2048, 2048, 1048576, 512, 512, 2359296, 512, 512, 1048576, 2048, 2048, 2097152, 2048, 2048, 1048576, 512, 512, 2359296, 512, 512, 524288, 1024, 1024, 262144, 256, 256, 589824, 256, 256, 262144, 1024, 1024, 262144, 256, 256, 589824, 256, 256, 262144, 1024, 1024, 262144, 256, 256, 589824, 256, 256, 262144, 1024, 1024, 262144, 256, 256, 589824, 256, 256, 262144, 1024, 1024, 262144, 256, 256, 589824, 256, 256, 262144, 1024, 1024, 524288, 1024, 1024, 262144, 256, 256, 589824, 256, 256, 131072, 512, 512, 65536, 128, 128, 147456, 128, 128, 65536, 512, 512, 65536, 128, 128, 147456, 128, 128, 65536, 512, 512, 65536, 128, 128, 147456, 128, 128, 65536, 512, 512, 131072, 512, 512, 65536, 128, 128, 147456, 128, 128, 32768, 256, 256, 16384, 64, 64, 36864, 64, 64, 16384, 256, 256, 16384, 64, 64, 36864, 64, 64, 16384, 256, 256, 16384, 256, 256, 16384, 64, 64, 36864, 64, 64, 4096, 64, 64, 1728]
 
 gradient_size_array_resnet101 = [100, 204800, 2048, 2048, 1048576, 512, 512, 2359296, 512, 512, 1048576, 2048, 2048, 1048576, 512, 512, 2359296, 512, 512, 1048576, 2048, 2048, 2097152, 2048, 2048, 1048576, 512, 512, 2359296, 512, 512, 524288, 1024, 1024, 262144, 256, 256, 589824, 256, 256, 262144, 1024, 1024, 262144, 256, 256, 589824, 256, 256, 262144, 1024, 1024, 262144, 256, 256, 589824, 256, 256, 262144, 1024, 1024, 262144, 256, 256, 589824, 256, 256, 262144, 1024, 1024, 262144, 256, 256, 589824, 256, 256, 262144, 1024, 1024, 262144, 256, 256, 589824, 256, 256, 262144, 1024, 1024, 262144, 256, 256, 589824, 256, 256, 262144, 1024, 1024, 262144, 256, 256, 589824, 256, 256, 262144, 1024, 1024, 262144, 256, 256, 589824, 256, 256, 262144, 1024, 1024, 262144, 256, 256, 589824, 256, 256, 262144, 1024, 1024, 262144, 256, 256, 589824, 256, 256, 262144, 1024, 1024, 262144, 256, 256, 589824, 256, 256, 262144, 1024, 1024, 262144, 256, 256, 589824, 256, 256, 262144, 1024, 1024, 262144, 256, 256, 589824, 256, 256, 262144, 1024, 1024, 262144, 256, 256, 589824, 256, 256, 262144, 1024, 1024, 262144, 256, 256, 589824, 256, 256, 262144, 1024, 1024, 262144, 256, 256, 589824, 256, 256, 262144, 1024, 1024, 262144, 256, 256, 589824, 256, 256, 262144, 1024, 1024, 262144, 256, 256, 589824, 256, 256, 262144, 1024, 1024, 262144, 256, 256, 589824, 256, 256, 262144, 1024, 1024, 262144, 256, 256, 589824, 256, 256, 262144, 1024, 1024, 262144, 256, 256, 589824, 256, 256, 262144, 1024, 1024, 524288, 1024, 1024, 262144, 256, 256, 589824, 256, 256, 131072, 512, 512, 65536, 128, 128, 147456, 128, 128, 65536, 512, 512, 65536, 128, 128, 147456, 128, 128, 65536, 512, 512, 65536, 128, 128, 147456, 128, 128, 65536, 512, 512, 131072, 512, 512, 65536, 128, 128, 147456, 128, 128, 32768, 256, 256, 16384, 64, 64, 36864, 64, 64, 16384, 256, 256, 16384, 64, 64, 36864, 64, 64, 16384, 256, 256, 16384, 256, 256, 16384, 64, 64, 36864, 64, 64, 4096, 64, 64, 1728]
@@ -775,10 +554,7 @@ def optimal_gradient_merging_0101(gradient_size_array, net_name, density = 0.1):
             abs_diff = abs(diff)
             abs_diff = diff            
             # if abs_diff < min_diff:
-            if True:
-                # buffer-1的通信时间小于buffer-2的反向传播时间                
-                # if len(min_group_len_array) >0  and pre_merging_time_compression> (group_backward_time_size + group_compression_time):
-                #     continue                            
+            if True:            
                 min_group_len = group_len
                 min_group_len_array.append(min_group_len)
             
@@ -857,26 +633,13 @@ def optimal_gradient_merging_0101(gradient_size_array, net_name, density = 0.1):
                 if count>0:
                     merging_time_compression_array_new.append(sum(merging_time_compression_array[i:count+i]))
                     groups_new.append(sum(min_group_len_array[i:count+i]))
-                # else:
-                    # count = 0
-                    # if sum(buffer_backward_compression_time_array)> current_merging_time:
-                    # print('i = ', i)
-                    # count = count +1
+           
                 i= count+i                
                 flag_ = False
             else:
                 count = count +1
                 # print('coun = ', count)
         
-        # print('count =', count)
-        # print('i =', i)  
-        # if count == 1:   
-        #     # print('i =', i)       
-        #     merging_time_compression_array_new.append(merging_time_compression_array[i])
-        #     groups_new.append(min_group_len_array[i])
-        #     i =i+1
-        #     print('count == 1', count)
-        #     break
         if not flag_ and count == 0:   
             # print('i =', i)       
             merging_time_compression_array_new.append(merging_time_compression_array[i])
@@ -933,47 +696,9 @@ def optimal_gradient_merging_0101(gradient_size_array, net_name, density = 0.1):
     print('groups_new_= ', groups_new_)  
     print('sum(groups_new_)= ', sum(groups_new_)) 
     
-    
-    # 当buffer的压缩时间总和超过梯度总和的压缩时间时候, 
-    # Backward时间>上一个buffer的通信时间的时候, 
-    # 当总梯度的通信时间小于等于Backward的反向传播时间时, 尽可能减小buffer的数量, 
-    # 
-    
-    # if density<0.1:
-    #     # groups_new_= [3, 5, 9, 17, 60, 68]
-    #     groups_new_ = [10, 15, 25, 28, 28, 28, 28]
-    
+ 
     return groups_new_
 
-
-
-# optimal_gradient_merging_0101(gradient_size_array_resnet50, 'resnet50', density=0.1)
-# optimal_gradient_merging_0101(gradient_size_array_resnet50, 'resnet50', density=0.01)
-# optimal_gradient_merging_0101(gradient_size_array_resnet50, 'resnet50', density=0.05)
-
-
-# optimal_gradient_merging_0101(gradient_size_array_lstm_wiki2, 'lstm', density=0.1)
-# optimal_gradient_merging_0101(gradient_size_array_lstm_wiki2, 'lstm', density=0.01)
-# optimal_gradient_merging_0101(gradient_size_array_lstm_wiki2, 'lstm', density=0.05)
-
-
-# optimal_gradient_merging_0101(gradient_size_array_vgg16, 'vgg16', density=0.1)
-# optimal_gradient_merging_0101(gradient_size_array_vgg16, 'vgg16', density=0.01)
-# optimal_gradient_merging_0101(gradient_size_array_vgg16, 'vgg16', density=0.05)
-
-
-# optimal_gradient_merging_0101(gradient_size_array_vgg19, 'vgg19', density=0.1)
-# optimal_gradient_merging_0101(gradient_size_array_vgg19, 'vgg19', density=0.01)
-# optimal_gradient_merging_0101(gradient_size_array_vgg19, 'vgg19', density=0.05)
-
-# optimal_gradient_merging_0101(gradient_size_array_transformer_wiki2, 'transformer', density=0.1)
-# optimal_gradient_merging_0101(gradient_size_array_transformer_wiki2, 'transformer', density=0.01)
-# optimal_gradient_merging_0101(gradient_size_array_transformer_wiki2, 'transformer', density=0.05)
-
-
-# optimal_gradient_merging_0101(gradient_size_array_bert_base, 'bert_base', density=0.1)
-# optimal_gradient_merging_0101(gradient_size_array_bert_base, 'bert_base', density=0.01)
-# optimal_gradient_merging_0101(gradient_size_array_bert_base, 'bert_base', density=0.05)
 
 
 
@@ -1100,15 +825,7 @@ def optimal_gradient_merging_0103(gradient_size_array, net_name, density = 0.1):
                 count = count +1
                 # print('coun = ', count)
         
-        # print('count =', count)
-        # print('i =', i)  
-        # if count == 1:   
-        #     # print('i =', i)       
-        #     merging_time_compression_array_new.append(merging_time_compression_array[i])
-        #     groups_new.append(min_group_len_array[i])
-        #     i =i+1
-        #     print('count == 1', count)
-        #     break
+
         if not flag_ and count == 0:   
             # print('i =', i)       
             merging_time_compression_array_new.append(merging_time_compression_array[i])
@@ -1155,169 +872,6 @@ def optimal_gradient_merging_0103(gradient_size_array, net_name, density = 0.1):
         groups_new_ = [10, 15, 25, 28, 28, 28, 28]
     
     return groups_new_
-
-
-
-# optimal_gradient_merging_0103(gradient_size_array, 'resnet50', density=0.05)
-
-# optimal_gradient_merging_0103(gradient_size_array, 'resnet50', density=0.01)
-
-
-# optimal_gradient_merging_0103(gradient_size_array_resnet50, 'resnet50', density=0.1)
-
-
-
-
-# local 
-# gradient_size = [100, 204800, 2048, 2048, 1048576, 512, 512, 2359296, 512, 512, 1048576, 2048, 2048, 1048576, 512, 512, 2359296, 512, 512, 1048576, 2048, 2048, 2097152, 2048, 2048, 1048576, 512, 512, 2359296, 512, 512, 524288, 1024, 1024, 262144, 256, 256, 589824, 256, 256, 262144, 1024, 1024, 262144, 256, 256, 589824, 256, 256, 262144, 1024, 1024, 262144, 256, 256, 589824, 256, 256, 262144, 1024, 1024, 262144, 256, 256, 589824, 256, 256, 262144, 1024, 1024, 262144, 256, 256, 589824, 256, 256, 262144, 1024, 1024, 524288, 1024, 1024, 262144, 256, 256, 589824, 256, 256, 131072, 512, 512, 65536, 128, 128, 147456, 128, 128, 65536, 512, 512, 65536, 128, 128, 147456, 128, 128, 65536, 512, 512, 65536, 128, 128, 147456, 128, 128, 65536, 512, 512, 131072, 512, 512, 65536, 128, 128, 147456, 128, 128, 32768, 256, 256, 16384, 64, 64, 36864, 64, 64, 16384, 256, 256, 16384, 64, 64, 36864, 64, 64, 16384, 256, 256, 16384, 256, 256, 16384, 64, 64, 36864, 64, 64, 4096, 64, 64, 1728]
-
-# iterations = 196
-# communication_time = 0.10785865783691406
-# startup_time = 0.0008780956268310547
-# backward_time = 6.499021768569946/iterations
-
-# len_gradient_size = len(gradient_size)
-# gradient_sum = sum(gradient_size)
-
-# # 反向传播时间按数量计算
-# per_elements_backward_time = backward_time/len_gradient_size
-# # 通信时间按数据量计算
-# per_elements_communication_time = (communication_time-startup_time)/gradient_sum
-# per_elements_backward_time_len = backward_time/len_gradient_size
-# per_elements_backward_time_size = backward_time/gradient_sum
-# buffer_compression_time= 0.06595400047302246/196
-
-
-
- 
-
-# 最优的梯度合并方案
-# def optimal_gradient_merging():
-#     group =[]
-#     group_len =0
-#     group_size =0
-    
-#     min_diff = 1
-#     min_group_len =0
-#     min_group_len_array= []
-#     merging_time_array= []
-#     merging_communication_time_array = []
-#     group_backward_time_size_array = []    
-#     pre_merging_time =0
-#     print(gradient_size)
-#     flag= False
-#     for i, s in enumerate(gradient_size):
-#         group.append(s)
-#         group_len = len(group)
-#         group_size = sum(group)
-        
-        
-#         # merging_time_len = startup_time + group_size * per_elements_communication_time + group_len * per_elements_backward_time_len 
-#         merging_time_size = startup_time + group_size * per_elements_communication_time   
-        
-#         merging_time_wait_size = startup_time + group_size * per_elements_communication_time + group_size * per_elements_backward_time_size          
-        
-#         merging_communication_time_size = startup_time + group_size * per_elements_communication_time
-        
-#         layer_time = startup_time * group_len + group_size* per_elements_communication_time 
-#         # + buffer_compression_time*group_len
-        
-#         group_backward_time_size = group_size * per_elements_backward_time_size 
-#         # group_backward_time_len = group_len * per_elements_backward_time_len+ buffer_compression_time
-        
-#         diff = merging_time_wait_size -layer_time
-#         # 遍历贪心生成的group
-#         if diff < 0:
-#             # abs_diff = abs(diff)
-#             abs_diff = diff            
-#             if abs_diff < min_diff:
-#             # if True:
-                
-#                 # buffer-1的通信时间小于buffer-2的反向传播时间, 
-#                 if len(min_group_len_array) >0  and pre_merging_time> group_backward_time_size:
-#                     continue
-
-#                 min_diff = abs_diff
-#                 min_group_len = group_len
-#                 min_group_len_array.append(min_group_len)
-#                 merging_time_array.append(merging_time_size)
-#                 merging_communication_time_array.append(merging_communication_time_size)
-#                 group_backward_time_size_array.append(group_backward_time_size)
-
-#                 # print('min_diff = ', min_diff)
-#                 # print('index_i= ', index_i)
-#                 # print('min_group_len = ', min_group_len)
-                
-#                 if flag:
-#                     last_min_group_len = len_gradient_size - sum(min_group_len_array) 
-#                     min_group_len_array.append(last_min_group_len)
-                    
-#                     print('break!')
-#                     break
-
-#                 group = []
-#                 group_len = 0
-#                 group_size = 0
-#                 min_diff = 1
-#                 min_group_len = 0
-                
-#                 # merging_time_array_sum= sum(merging_time_array)
-#                 merging_communication_time_array_sum =sum(merging_communication_time_array)
-                
-#                 sub_backward_time= sum(gradient_size[min_group_len_array[0]:])*per_elements_backward_time_size
-#                 # +buffer_compression_time*(len(min_group_len_array)-1)
-#                 # sub_backward_time= (group_len- min_group_len_array[0])*per_elements_backward_time_len+ buffer_compression_time
-                
-#                 # if merging_time_array_sum>sub_backward_time:
-#                 #     break
-                
-#                 # if merging_communication_time_array_sum > backward_time:    
-#                 if merging_communication_time_array_sum > sub_backward_time:    
-#                     flag= True
-                    
-#                 pre_merging_time =  merging_time_size
-        
-#             print('Group len= ', group_len,',diff= ', diff)
-    
-    
-#     # print('min_diff = ', min_diff)
-#     # # print('index_i= ', index_i)
-#     # print('min_group_len = ', min_group_len)
-#     print('min_group_len_array = ', min_group_len_array)
-
-#     print('min_group_len_array_sum = ', sum(min_group_len_array))
-
-#     print('len(min_group_len_array) = ', len(min_group_len_array))
-#     print('len(group_backward_time_size_array) = ', len(group_backward_time_size_array))
-#     print('len(merging_communication_time_array) = ', len(merging_communication_time_array))
-
-
-#     # 遍历贪心生成的group
-#     # pre_merging_time =  0
-#     # groups = []
-#     # for i, group in enumerate(min_group_len_array):        
-#     #     group_backward_time_sum = sum(group_backward_time_size_array[1:])
-#     #     merging_communication_time_array_sum =sum(merging_communication_time_array[:i])
-        
-#     #     groups.append(group)
-#     #     # 最后减小非重叠buffer数量
-#     #     if merging_communication_time_array_sum > group_backward_time_sum:
-#     #         last_min_group_len = len_gradient_size - sum(groups) 
-#     #         groups.append(last_min_group_len)
-#     #         break
-
-#     #     # groups.append(group)
-#     #     # 减少小buffer的数量
-#     #     if len(groups)>1 and sum(group_backward_time_size_array[:i])>pre_merging_time:
-#     #         continue
-#     #         # 进一步合并
-#     #     pre_merging_time =  merging_communication_time_array[i]
-#     # print('groups = ',groups)
-#     return
-
-
-# optimal_gradient_merging()
-
 
 
 
@@ -1368,17 +922,7 @@ def predict_density_with_size_and_computation(m, comp_time, P):
         rho = max(rho, 0.001)
         return rho
     return 0.001
-    #if m >= 1024*16:
-    #    return 0.001
-    #else:
-    #    return 1
 
-    #dense_time = _denseallreduce_model(P, m)
-    #density = 1
-    #if dense_time < comp_time:
-    #    return density
-    #else:
-    #    return _proper_rho_with_sparse_allreduce(P, m, comp_time)
 
 def predict_allreduce_time_with_size(alpha, beta, size, P):
     if size == 0:

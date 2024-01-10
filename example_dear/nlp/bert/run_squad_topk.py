@@ -742,24 +742,6 @@ class GradientClipper:
     """
     def __init__(self, max_grad_norm):
         self.max_norm = max_grad_norm
-        # if multi_tensor_applier.available:
-        # # if False:
-        #     import amp_C
-        #     self._overflow_buf = amp_C.IntTensor([0])
-        #     self.multi_tensor_l2norm = amp_C.multi_tensor_l2norm
-        #     self.multi_tensor_scale = amp_C.multi_tensor_scale
-        # else:
-        #     raise RuntimeError('Gradient clipping requires cuda extensions')
-
-    # def step(self, parameters):
-    #     l = [p.grad for p in parameters if p.grad is not None]
-    #     total_norm, _ = multi_tensor_applier(self.multi_tensor_l2norm, self._overflow_buf, [l], False)
-    #     total_norm = total_norm.item()
-    #     if (total_norm == float('inf')): return
-    #     clip_coef = self.max_norm / (total_norm + 1e-6)
-    #     if clip_coef < 1:
-    #         multi_tensor_applier(self.multi_tensor_scale, self._overflow_buf, [l, l], clip_coef)
-
 
 def main():
     parser = argparse.ArgumentParser()
@@ -820,7 +802,6 @@ def main():
                         default=42,
                         help="random seed for initialization")
     
-    # 控制打印次数
     parser.add_argument('--gradient_accumulation_steps',
                         type=int,
                         default=1,
@@ -919,13 +900,9 @@ def main():
     parser.add_argument('--asc', action='store_true', default=False, help='Use MG-WFBP')
     parser.add_argument('--nstreams', type=int, default=1, help='Number of communication streams')
 
-    # 设置合并的阈值大小,default=23705252为ResNet50所有层梯度元素数量的总和
     parser.add_argument('--threshold', type=int, default=34015396, help='Set threshold if mgwfbp is False')
 
     parser.add_argument('--rdma', action='store_true', default=False, help='Use RDMA')
-
-    # Top-k + EF
-    # parser.add_argument('--compressor', type=str, default='topkef', choices=compressors.keys(), help='Specify the compressors if density < 1.0')
     parser.add_argument('--compressor', type=str, default='topk', choices=compressors.keys(), help='Specify the compressors if density < 1.0')
     
     parser.add_argument('--memory', type=str, default = 'residual', help='Error-feedback')
@@ -1087,15 +1064,7 @@ def main():
                                     lr=args.learning_rate,
                                     warmup=args.warmup_proportion,
                                     t_total=num_train_optimization_steps)
-        # Multiply the learning rate by hvd.size() 
-        # optimizer = AdamW(optimizer_grouped_parameters, lr=args.learning_rate * hvd.size() , eps=args.adam_epsilon)
-        
-        
-        # optimizer = hvd.DistributedOptimizer(optimizer, named_parameters=model.named_parameters())
-        
-        
-        
-        # Horovod: broadcast parameters & optimizer state.
+
         hvd.broadcast_parameters(model.state_dict(), root_rank=0)
         
         optimizer = hvd.DistributedOptimizer(args.model_net, optimizer, named_parameters=model.named_parameters(), model= model,
@@ -1157,11 +1126,6 @@ def main():
         all_end_positions = torch.tensor([f.end_position for f in train_features], dtype=torch.long)
         train_data = TensorDataset(all_input_ids, all_input_mask, all_segment_ids,
                                    all_start_positions, all_end_positions)
-        # if args.local_rank == -1:
-        #     train_sampler = RandomSampler(train_data)
-        # else:
-        #     train_sampler = DistributedSampler(train_data)
-        # train_dataloader = DataLoader(train_data, sampler=train_sampler, batch_size=args.train_batch_size * n_gpu)
         
         # set batch size 
         # args.train_batch_size = args.train_batch_size * max(1, n_gpu)
@@ -1183,16 +1147,6 @@ def main():
         optimizer.synchronize_time= []
         optimizer.para_update_time= []
         optimizer.hook_time= []
-    
-        # optimizer._communicator.compressor.bias_gaussiank=[]
-        # optimizer._communicator.compressor.bias_dgc=[]
-        # optimizer._communicator.compressor.bias_redsync=[]
-    
-        # optimizer._communicator.compression_time_array=[]
-        # optimizer._communicator.decompression_time_array=[]
-        # optimizer._communicator.send_time_array=[]
-        # optimizer._communicator.receive_time_array=[]
-        # optimizer._communicator.synchronize_time_array=[]
 
         io_time_array= []
         forward_backforward_time_array= []
@@ -1296,19 +1250,11 @@ def main():
                     para_update_time=sum(optimizer.para_update_time)
                     hook_time=sum(optimizer.hook_time)
                     if hvd.rank() == 0:
-                        # datapath='/home/user/eurosys23/workspace/ACTopk/examples/plot_eurosys/compression_time/'
-                        # np.savetxt(datapath + "topk_time/topk_time_"+str(epoch)+"_rank_"+str(hvd.rank())+".txt", topk_time_array)
-                        # np.savetxt(datapath + "threshold_time/threshold_time_"+str(epoch)+"_rank_"+str(hvd.rank())+".txt", topk_time_array)
-        
-                        # print('compression_time = ', compression_time)
+                     
                
                         print('topk_time = ', topk_time)
                         print('threshold_time = ', threshold_time)
-                     
-                        # print('send_time = ', send_time)        
-                        # print('decompression_time = ', decompression_time)
-                        # print('receive_time = ', receive_time)
-                        # print('synchronize_time = ', synchronize_time)
+              
         
                         print('io_time = ', io_time)
                         print('forward_time = ', forward_time)

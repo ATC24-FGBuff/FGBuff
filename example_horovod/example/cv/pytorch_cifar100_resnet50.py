@@ -27,8 +27,6 @@ import time
 # Training settings
 parser = argparse.ArgumentParser(description='PyTorch Cifar100 Example',
                                  formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-# parser.add_argument('--net', default='resnet50',type=str, required=True, help='net type')
-# parser.add_argument('--model-net', default='resnet50',type=str, help='net type')
 
 parser.add_argument('--model-net', default='resnet50',type=str, help='net type')
 
@@ -78,14 +76,11 @@ parser.add_argument('--seed', type=int, default=42,
 
 
 
-# Gradient Merging
 parser.add_argument('--fp16', action='store_true', default=False,
                     help='use fp16 compression during allreduce')
 
 parser.add_argument('--model', type=str, default='resnet50',
                     help='model to benchmark')
-# parser.add_argument('--batch-size', type=int, default=32,
-#                     help='input batch size')
 
 parser.add_argument('--num-warmup-batches', type=int, default=20,
                     help='number of warm-up batches that don\'t count towards benchmark')
@@ -94,45 +89,20 @@ parser.add_argument('--num-batches-per-iter', type=int, default=10,
 parser.add_argument('--num-iters', type=int, default=50,
                     help='number of benchmark iterations')
 
-# parser.add_argument('--no-cuda', action='store_true', default=False,
-#                     help='disables CUDA training')
-
-# parser.add_argument('--use-adasum', action='store_true', default=False,
-#                     help='use adasum algorithm to do reduction')
 
 parser.add_argument('--mgwfbp', action='store_true', default=False, help='Use MG-WFBP')
 parser.add_argument('--asc', action='store_true', default=False, help='Use MG-WFBP')
 parser.add_argument('--nstreams', type=int, default=1, help='Number of communication streams')
 
-# 设置合并的阈值大小,default=23705252为ResNet50所有层梯度元素数量的总和
-# parser.add_argument('--threshold', type=int, default=536870912, help='Set threshold if mgwfbp is False')
-# parser.add_argument('--threshold', type=int, default=671080, help='Set threshold if mgwfbp is False')
 parser.add_argument('--threshold', type=int, default=2370520, help='Set threshold if mgwfbp is False')
 
-# parser.add_argument('--threshold', type=int, default=1000520, help='Set threshold if mgwfbp is False')
-
-
-# parser.add_argument('--threshold', type=int, default=23705252, help='ResNet-50 Set threshold if mgwfbp is False')
 
 parser.add_argument('--rdma', action='store_true', default=False, help='Use RDMA')
 
-# Baseline
-# parser.add_argument('--compressor', type=str, default='none', choices=compressors.keys(), help='Specify the compressors if density < 1.0')
-# parser.add_argument('--density', type=float, default=1, help='Density for sparsification')
-
-# Top-k + EF
 parser.add_argument('--compressor', type=str, default = 'eftopk', help='Specify the compressors if density < 1.0')
 parser.add_argument('--memory', type=str, default = 'residual', help='Error-feedback')
 
 parser.add_argument('--density', type=float, default=0.1, help='Density for sparsification')
-
-# parser.add_argument('--density', type=float, default=0.0101, help='Density for sparsification')
-# parser.add_argument('--density', type=float, default=0.0099, help='Density for sparsification')
-
-
-# Gaussiank + EF
-# parser.add_argument('--compressor', type=str, default='gaussian', choices=compressors.keys(), help='Specify the compressors if density < 1.0')
-# parser.add_argument('--density', type=float, default=0.01, help='Density for sparsification')
 
 
 
@@ -157,10 +127,6 @@ def train(epoch):
     
     optimizer._communicator.compressor.topk_time=[]
     optimizer._communicator.compressor.threshold_time=[]
-    
-    # optimizer._communicator.compressor.bias_gaussiank=[]
-    # optimizer._communicator.compressor.bias_dgc=[]
-    # optimizer._communicator.compressor.bias_redsync=[]
     
     optimizer._communicator.compression_time_array=[]
     optimizer._communicator.decompression_time_array=[]
@@ -187,35 +153,13 @@ def train(epoch):
             io_time_array.append(e_time-s_time)
             optimizer.zero_grad()
             
-            # Split data into sub-batches of size batch_size
-            # for i in range(0, len(data), args.batch_size):
-            #     data_batch = data[i:i + args.batch_size]
-            #     target_batch = target[i:i + args.batch_size]
-            #     output = model(data_batch)
-            #     train_accuracy.update(accuracy(output, target_batch))
-            #     loss = F.cross_entropy(output, target_batch)
-            #     train_loss.update(loss)
-            #     # Average gradients among sub-batches
-            #     loss.div_(math.ceil(float(len(data)) / args.batch_size))
-            #     loss.backward()
-            
+  
             output = model(data)
             train_accuracy.update(accuracy(output, target))
             loss = F.cross_entropy(output, target)
             train_loss.update(loss)
             forward_time_array.append(time.time()-e_time)
             loss.backward()
-            
-            # if hvd.rank() == 0 and batch_idx == 5 and epoch < 5:
-            #     # tensor_np_array=[]
-            #     index=1
-            #     for name_1, param_1 in model.named_parameters():
-            #         tensor = param_1.grad
-            #         tensor = tensor.flatten()
-            #         tensor_np = tensor.cpu().numpy()
-            #         # tensor_np_array.append(tensor_np)
-            #         np.savetxt("./examples/torch/resnet_layer_gradient/epoch" + str(epoch+1) + "/resnet18_grad_tensor_5_"+str(index)+".txt", tensor_np)
-            #         index = index + 1
                            
             # Gradient is applied across all ranks            
             forward_backforward_time_array.append(time.time()-e_time)
@@ -228,51 +172,6 @@ def train(epoch):
             t.set_postfix({'loss': train_loss.avg.item(),
                            'accuracy': 100. * train_accuracy.avg.item()})
             t.update(1)
-            
-            # bias_gaussiank=optimizer._communicator.compressor.bias_gaussiank  
-            # bias_dgc=optimizer._communicator.compressor.bias_dgc
-            # bias_redsync=optimizer._communicator.compressor.bias_redsync
-
-            # gaussiank_sum= sum(bias_gaussiank)/len(bias_gaussiank)
-            # dgc_sum= sum(bias_dgc)/len(bias_dgc)
-            # redsync_sum= sum(bias_redsync)/len(bias_dgc)
-
-            # bias_gaussiank_array.append(gaussiank_sum)
-            # bias_dgc_array.append(dgc_sum)
-            # bias_redsync_array.append(redsync_sum)
-
-            # optimizer._communicator.compressor.bias_gaussiank=[]
-            # optimizer._communicator.compressor.bias_dgc=[]
-            # optimizer._communicator.compressor.bias_redsync=[]
-            
-            # topk_time_array =optimizer._communicator.compressor.topk_time
-            # threshold_time_array =optimizer._communicator.compressor.threshold_time
-            # if hvd.rank() == 0:
-            #     datapath='/home/user/eurosys23/workspace/ACTopk/examples/plot_eurosys/compression_time/'
-            #     np.savetxt(datapath + "topk_time/topk_time_"+str(epoch)+"_rank_"+str(hvd.rank())+"_iteration_"+str(batch_idx)+".txt", topk_time_array)
-            #     np.savetxt(datapath + "threshold_time/threshold_time_"+str(epoch)+"_rank_"+str(hvd.rank())+"_iteration_"+str(batch_idx)+".txt", threshold_time_array)
-                
-            # optimizer._communicator.compressor.topk_time=[]
-            # optimizer._communicator.compressor.threshold_time=[]
-    
-    # datapath='/home/user/eurosys23/workspace/ACTopk/examples/plot_eurosys/bias_threshold/'
-    # np.savetxt(datapath + "average_inter_worker_bias_gaussiank_array_epoch_"+str(epoch)+"_rank_"+str(hvd.rank())+".txt", bias_gaussiank_array)
-    # np.savetxt(datapath + "average_inter_worker_bias_dgc_array_epoch_"+str(epoch)+"_rank_"+str(hvd.rank())+".txt", bias_dgc_array)
-    # np.savetxt(datapath + "average_inter_worker_bias_redsync_array_epoch_"+str(epoch)+"_rank_"+str(hvd.rank())+".txt", bias_redsync_array)
-
-
-    # if hvd.rank() == 0:
-    #     print('bias_gaussiank_array = ', bias_gaussiank_array)
-    #     print('bias_dgc_array = ', bias_dgc_array)
-    #     print('bias_redsync_array = ', bias_redsync_array)
-    
-    # bias_gaussiank_array=[]
-    # bias_dgc_array=[]
-    # bias_redsync_array=[]
-
-    # if log_writer:
-    #     log_writer.add_scalar('train/loss', train_loss.avg, epoch)
-    #     log_writer.add_scalar('train/accuracy', train_accuracy.avg, epoch)
 
     y_loss['train'].append(train_loss.avg.item())
     y_acc['train'].append(train_accuracy.avg.item())
@@ -482,16 +381,6 @@ if __name__ == '__main__':
     
     CIFAR100_TRAIN_MEAN = [0.5070751592371323, 0.48654887331495095, 0.4409178433670343]
     CIFAR100_TRAIN_STD = [0.2673342858792401, 0.2564384629170883, 0.27615047132568404]
-    # imagenet
-    # train_dataset = \
-    #     datasets.ImageFolder(args.train_dir,
-    #                          transform=transforms.Compose([
-    #                              transforms.RandomResizedCrop(224),
-    #                              transforms.RandomHorizontalFlip(),
-    #                              transforms.ToTensor(),
-    #                              transforms.Normalize(mean=[0.485, 0.456, 0.406],
-    #                                                   std=[0.229, 0.224, 0.225])
-    #                          ]))
     # CIFAR100
     train_dataset = \
         datasets.CIFAR100(args.train_dir,
@@ -514,16 +403,6 @@ if __name__ == '__main__':
         train_dataset, batch_size=allreduce_batch_size,
         sampler=train_sampler, **kwargs)
     
-    # Imagenet
-    # val_dataset = \
-    #     datasets.ImageFolder(args.val_dir,
-    #                          transform=transforms.Compose([
-    #                              transforms.Resize(256),
-    #                              transforms.CenterCrop(224),
-    #                              transforms.ToTensor(),
-    #                              transforms.Normalize(mean=[0.485, 0.456, 0.406],
-    #                                                   std=[0.229, 0.224, 0.225])
-    #                          ]))    
     # CIFAR100
     val_dataset = \
         datasets.CIFAR100(args.val_dir,
@@ -563,22 +442,6 @@ if __name__ == '__main__':
                               lr_scaler),
                           momentum=args.momentum, weight_decay=args.wd)
 
-    # Horovod: (optional) compression algorithm.
-    # compression = hvd.Compression.fp16 if args.fp16_allreduce else hvd.Compression.none
-
-
-    # params = {'compressor': 'topk', 'memory': 'residual', 'communicator': 'allgather'}
-    # Horovod: wrap optimizer with DistributedOptimizer.
-    # 得到一个分布式的SGD优化器
-    # optimizer = hvd.DistributedOptimizer(
-    #     optimizer, grc, named_parameters=model.named_parameters())
-
-
-    # Allgather
-    # params = {'compressor': 'imbalancetopktime', 'memory': 'residual', 'communicator': 'allgather','model_named_parameters':model.named_parameters()}
-    # params = {'compressor': 'imbalancetopktime', 'memory': 'residual', 'communicator': 'allgather','model_named_parameters':model.named_parameters()}
-    
-    
     
     if args.density<1:
         communicator_str = 'allgather'
@@ -593,23 +456,6 @@ if __name__ == '__main__':
     optimizer = hvd.DistributedOptimizer(
         optimizer, communicator, named_parameters=model.named_parameters())
 
-    # Horovod: wrap optimizer with DistributedOptimizer.
-    # All-reduce
-    # optimizer = hvd.DistributedOptimizer(
-    #     optimizer, named_parameters=model.named_parameters(),
-    #     compression=compression,
-    #     backward_passes_per_step=args.batches_per_allreduce,
-    #     op=hvd.Adasum if args.use_adasum else hvd.Average,
-    #     gradient_predivide_factor=args.gradient_predivide_factor)
-    
-    # Restore from a previous checkpoint, if initial_epoch is specified.
-    # Horovod: restore on the first worker which will broadcast weights to other workers.
-    # if resume_from_epoch > 0 and hvd.rank() == 0:
-    #     filepath = args.checkpoint_format.format(epoch=resume_from_epoch)
-    #     checkpoint = torch.load(filepath)
-    #     model.load_state_dict(checkpoint['model'])
-    #     optimizer.load_state_dict(checkpoint['optimizer'])
-
     # Horovod: broadcast parameters & optimizer state.
     hvd.broadcast_parameters(model.state_dict(), root_rank=0)
     hvd.broadcast_optimizer_state(optimizer, root_rank=0)
@@ -623,10 +469,6 @@ if __name__ == '__main__':
     for epoch in range(resume_from_epoch, args.epochs):
         train(epoch)
         validate(epoch)
-        
-        # 保存最后一个训练模型
-        # if epoch==args.epochs-1:
-        #     save_checkpoint(epoch)
 
     if hvd.rank() == 0:
         # torch.cuda.synchronize()

@@ -44,12 +44,9 @@ class Allgather(Communicator):
 
     def wait_receive(self, result, ctx, name):
 
-        # 基于阈值的方法
         if ctx != None:
             return self.block_wait_receive(result, ctx, name)
-
-        # 非阈值的方法  
-        # dim=1的梯度不压缩，按wait_receive处理
+        
         handles, tensor_sizes = result
         tensors_ag = []
         gathered_list = []
