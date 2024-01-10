@@ -3,7 +3,7 @@ import horovod.torch as hvd
 def get_compressor(params):
     comp = params.get('compressor', 'none')
     world_size = hvd.size()     
-    # 获取当前的rank     
+     
     cur_rank=hvd.rank()
 
     if comp == 'dgc':
@@ -93,10 +93,7 @@ def get_memory(params):
     elif mem == 'none':
         from adtopk_lib.memory.none import NoneMemory
         memory = NoneMemory()
-    # elif mem == 'powersgd':
-    #     from adtopk_lib.memory.powersgd import PowerSGDMemory
-    #     compress_rank = params.get('compress_rank', 1)
-    #     memory = PowerSGDMemory(compressor.q_memory, compress_rank)
+   
     elif mem == 'residual':
         from adtopk_lib.memory.residual import ResidualMemory
         memory = ResidualMemory()
@@ -111,21 +108,19 @@ def get_memory(params):
 
 
 def get_communicator(params):
-    # 获取当前的进程数
+   
     world_size = hvd.size()
-    # 获取当前的rank
+ 
     cur_rank=hvd.rank()
-    # 获得当前rank     
+ 
     rank=params.get('rank', 0)     
     cur_epoch=params.get('cur_epoch')
     
-    # communicator默认采用的是allreduce的方法
     comm = params.get('communicator', 'allreduce')
     
     compressor = get_compressor(params)
     memory = get_memory(params)
 
-    # 梯度交换的通信方法
     if comm == 'allreduce':
         from adtopk_lib.communicator.allreduce import Allreduce
         return Allreduce(compressor, memory)
