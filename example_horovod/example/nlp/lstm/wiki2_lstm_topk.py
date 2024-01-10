@@ -404,42 +404,6 @@ except KeyboardInterrupt:
     print('Exiting from training early') 
 
 
-def draw_curve(epoch, time_arr, ppl_arr, ppl_test):
-
-    # dataset_model = '/wiki2_lstm'
-    # date = '0104'
-    
-    # comp_type = '/wiki2_lstm_001_ef_epoch_80_dgc'
-    # comp = '/wiki2_lstm_001_ef_epoch_80_dgc'
-    
-    dataset_model = '/wiki2_lstm'
-    date = '0107'
-
-    
-    # comp_type = '/wiki2_lstm_'+str(args.density)+'_ef_epoch_'+str(epoch)+'_'+str(args.compressor)
-    # comp = '/wiki2_lstm_'+str(args.density)+'_ef_epoch_'+str(epoch)+'_'+str(args.compressor)
-    
-    comp_type = '/wiki2_lstm_'+str(args.compressor)+'_ef_epoch_'+str(args.epochs)+'_'+str(args.density).replace('.','')
-    comp = '/wiki2_lstm_'+str(args.compressor)+'_ef_epoch_'+str(args.epochs)+'_'+str(args.density).replace('.','')
-
-    save_dir = '/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/result_train_horovod'
-    
-    
-    figpath = save_dir + dataset_model
-    datapath = save_dir + dataset_model + comp_type
-    
-    
-    
-    if not os.path.exists(figpath):
-        os.makedirs(figpath)
-    if not os.path.exists(datapath):
-        os.makedirs(datapath)
-
-    np.savetxt(datapath + comp + "_e" + str(epoch) + "_ytest_acc_" + date + ".txt", ppl_test)
-    np.savetxt(datapath + comp + "_e" + str(epoch) + "_xtrain_time_" + date + ".txt", time_arr)
-    np.savetxt(datapath + comp + "_e" + str(epoch) + "_ytrain_acc_" + date + ".txt", ppl_arr)
-
-
 if hvd.rank() == 0:     
     test_loss = evaluate(test_data)     
     print('=' * 89)     
@@ -452,14 +416,3 @@ if hvd.rank() == 0:
     time_arr = np.array(time_list)
     ppl_arr = np.array(ppl_list)
     ppl_test = np.array(ppl_test)
-
-    # np.savetxt("./data93/time_8gpu.txt", time_arr)     
-    # np.savetxt("./data93/val_8gpu.txt", ppl_arr)     
-    # np.savetxt("./data93/test_8gpu.txt", ppl_test)     
-         
-    # np.savetxt("./data1005/time_gtopk_all.txt", time_arr)          
-    # np.savetxt("./data1005/val_gtopk_all.txt", ppl_arr)          
-    # np.savetxt("./data1005/test_gtopk_all.txt", ppl_test) 
-    
-    draw_curve(args.epochs, time_arr, ppl_arr, ppl_test)
-

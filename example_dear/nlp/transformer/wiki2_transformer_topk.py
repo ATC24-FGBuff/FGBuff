@@ -16,10 +16,6 @@ import numpy as np
 # is it faster?
 torch.backends.cudnn.benchmark = True
 
-
-# 环境变量HOROVOD_FUSION_THRESHOLD实际上以字节为单位.
-# 然而, 当使用horovodrun时, 有一个--fusion-threshold-mb以MB为单位的参数.
-
 os.environ['HOROVOD_FUSION_THRESHOLD'] = '0'
 os.environ['HOROVOD_CACHE_CAPACITY'] = '0'
 os.environ['HOROVOD_CYCLE_TIME'] = '0'
@@ -682,36 +678,6 @@ except KeyboardInterrupt:
 
 
 
-
-def draw_curve(epoch, time_arr, ppl_arr, ppl_test):
-
-    dataset_model = '/wiki2_transformer'
-    date = '0107'
-    
-    # comp_type = '/wiki2_transformer_'+str(args.density)+'_ef_epoch_'+str(epoch)+'_'+str(args.compressor)
-    # comp = '/wiki2_transformer_'+str(args.density)+'_ef_epoch_'+str(epoch)+'_'+str(args.compressor)
-    
-    save_dir = '/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/result_train_dear'
-
-    comp_type = '/wiki2_transformer_'+str(args.compressor)+'_ef_epoch_'+str(epoch)+'_'+str(args.density).replace(".", "")
-    comp = '/wiki2_transformer_'+str(args.compressor)+'_ef_epoch_'+str(epoch)+'_'+str(args.density).replace(".", "")
-
-
-    figpath = save_dir + dataset_model
-    datapath = save_dir + dataset_model + comp_type
-    
-    if not os.path.exists(figpath):
-        os.makedirs(figpath)
-    if not os.path.exists(datapath):
-        os.makedirs(datapath)
-
-    np.savetxt(datapath + comp + "_e" + str(epoch) + "_ytest_acc_" + date + ".txt", ppl_test)
-    np.savetxt(datapath + comp + "_e" + str(epoch) + "_xtrain_time_" + date + ".txt", time_arr)
-    np.savetxt(datapath + comp + "_e" + str(epoch) + "_ytrain_acc_" + date + ".txt", ppl_arr)
-
-
-
-
 if hvd.rank() == 0:     
     test_loss = evaluate(test_data)     
     print('=' * 89)     
@@ -729,4 +695,4 @@ if hvd.rank() == 0:
     # train loss
     ppl_test = np.array(ppl_test)
     
-    draw_curve(args.epochs, time_arr, ppl_arr, ppl_test)
+    

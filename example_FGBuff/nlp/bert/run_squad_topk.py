@@ -44,21 +44,16 @@ from optimization import BertAdam, warmup_linear
 from tokenization import (BasicTokenizer, BertTokenizer, whitespace_tokenize)
 from utils import is_main_process, format_step
 import dllogger, time
-# import horovod.torch as hvd
-
 torch._C._jit_set_profiling_mode(False)
 torch._C._jit_set_profiling_executor(False)
-
 if sys.version_info[0] == 2:
     import cPickle as pickle
 else:
     import pickle
-
 logging.basicConfig(format='%(asctime)s - %(levelname)s - %(name)s -   %(message)s',
                     datefmt='%m/%d/%Y %H:%M:%S',
                     level=logging.INFO)
 logger = logging.getLogger(__name__)
-
 import argparse
 import time
 import math
@@ -76,21 +71,16 @@ import torch.optim as optim
 import torch.utils.data.distributed
 import os
 import math
-
 import sys
 sys.path.append(os.path.join(os.path.dirname(__file__),'../'))
-
 import time
 import os
-
 os.environ['HOROVOD_FUSION_THRESHOLD'] = '0'
 os.environ['HOROVOD_CACHE_CAPACITY'] = '0'
 os.environ['HOROVOD_CYCLE_TIME'] = '0'
-
-# 访问上层路径
 import sys
 sys.path.append("../../../..") 
-import Bayesian.hv_bayes_distributed_optimizer as hvd
+import hv_distributed_optimizer as  hvd
 from compression import compressors
 import numpy as np
 
@@ -1099,7 +1089,7 @@ def main():
         # Horovod: broadcast parameters & optimizer state.
         hvd.broadcast_parameters(model.state_dict(), root_rank=0)
         
-        optimizer = hvd.DistributedOptimizer(args.model_net, optimizer, named_parameters=model.named_parameters(), model= model,
+        optimizer = hvd.DistributedOptimizer(args.model_net, optimizer, named_parameters=model.named_parameters(), 
                                         compression=compressors[args.compressor](), is_sparse=args.density<1, density=args.density, 
                                         seq_layernames=None, layerwise_times=None, norm_clip=None, 
                                         threshold=args.threshold, writer=None)

@@ -549,28 +549,6 @@ except KeyboardInterrupt:
 
 
 
-def draw_curve(epoch, time_arr, ppl_arr, ppl_test):
-
-    dataset_model = '/wiki103_transformer'
-    date = '0104'
-    
-    comp_type = '/wiki103_lstm_'+str(args.density)+'_ef_epoch_'+str(epoch)+'_'+str(args.compressor)
-    comp = '/wiki103_lstm_'+str(args.density)+'_ef_epoch_'+str(epoch)+'_'+str(args.compressor)
-
-    figpath = '/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/result_0101' + dataset_model
-    datapath = '/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/result_0101' + dataset_model + comp_type
-    
-    if not os.path.exists(figpath):
-        os.makedirs(figpath)
-    if not os.path.exists(datapath):
-        os.makedirs(datapath)
-
-    np.savetxt(datapath + comp + "_e" + str(epoch) + "_ytest_acc_" + date + ".txt", ppl_test)
-    np.savetxt(datapath + comp + "_e" + str(epoch) + "_xtrain_time_" + date + ".txt", time_arr)
-    np.savetxt(datapath + comp + "_e" + str(epoch) + "_ytrain_acc_" + date + ".txt", ppl_arr)
-
-
-
 
 if hvd.rank() == 0:     
     test_loss = evaluate(test_data)     
@@ -586,4 +564,4 @@ if hvd.rank() == 0:
     ppl_arr = np.array(ppl_list)
     ppl_test = np.array(ppl_test)
     
-    draw_curve(args.epochs, time_arr, ppl_arr, ppl_test)
+    

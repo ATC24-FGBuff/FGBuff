@@ -5,33 +5,48 @@ import torch.multiprocessing as mp
 import torch.nn.functional as F
 import torch.optim as optim
 import torch.utils.data.distributed
-from torch.utils.tensorboard import SummaryWriter
+# from torch.utils.tensorboard import SummaryWriter
 from torchvision import datasets, transforms, models
-import horovod.torch as hvd
+# import horovod.torch as hvd
 import os
 import math
 from tqdm import tqdm
-from adtopk_lib.helper import get_communicator
-
 
 import sys
 sys.path.append(os.path.join(os.path.dirname(__file__),'../'))
 
-from utils_model_ho import get_network
-
 import numpy as np
 import matplotlib.pyplot as plt
 import time
+import os
+
+# 环境变量HOROVOD_FUSION_THRESHOLD实际上以字节为单位.
+# 然而, 当使用horovodrun时, 有一个--fusion-threshold-mb以MB为单位的参数.
+os.environ['HOROVOD_FUSION_THRESHOLD'] = '0'
+os.environ['HOROVOD_CACHE_CAPACITY'] = '0'
+os.environ['HOROVOD_CYCLE_TIME'] = '0'
+
+
+import sys
+sys.path.append("../..") 
+import hv_distributed_optimizer_synea as hvd
+from compression import compressors
+from utils_model import get_network
+
+import timeit
+import numpy as np
+from profiling import benchmark
+
 
 
 # Training settings
-parser = argparse.ArgumentParser(description='PyTorch Cifar100 Example',
+parser = argparse.ArgumentParser(description='PyTorch Cifar100 + ResNet-50 Example',
                                  formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+
+# Horovod
 # parser.add_argument('--net', default='resnet50',type=str, required=True, help='net type')
 # parser.add_argument('--model-net', default='resnet50',type=str, help='net type')
-
 parser.add_argument('--model-net', default='resnet50',type=str, help='net type')
-
 
 parser.add_argument('--train-dir', default=os.path.expanduser('~/cifar100/train'),
                     help='path to training data')
@@ -51,6 +66,7 @@ parser.add_argument('--use-adasum', action='store_true', default=False,
                     help='use adasum algorithm to do reduction')
 parser.add_argument('--gradient-predivide-factor', type=float, default=1.0,
                     help='apply gradient predivide factor in optimizer (default: 1.0)')
+
 
 # Default settings from https://arxiv.org/abs/1706.02677.
 parser.add_argument('--batch-size', type=int, default=32,
@@ -74,8 +90,6 @@ parser.add_argument('--no-cuda', action='store_true', default=False,
                     help='disables CUDA training')
 parser.add_argument('--seed', type=int, default=42,
                     help='random seed')
-
-
 
 
 # Gradient Merging
@@ -121,11 +135,8 @@ parser.add_argument('--rdma', action='store_true', default=False, help='Use RDMA
 # parser.add_argument('--density', type=float, default=1, help='Density for sparsification')
 
 # Top-k + EF
-parser.add_argument('--compressor', type=str, default = 'eftopk', help='Specify the compressors if density < 1.0')
-parser.add_argument('--memory', type=str, default = 'residual', help='Error-feedback')
-
+parser.add_argument('--compressor', type=str, default='eftopk', choices=compressors.keys(), help='Specify the compressors if density < 1.0')
 parser.add_argument('--density', type=float, default=0.1, help='Density for sparsification')
-
 # parser.add_argument('--density', type=float, default=0.0101, help='Density for sparsification')
 # parser.add_argument('--density', type=float, default=0.0099, help='Density for sparsification')
 
@@ -146,45 +157,61 @@ x_test_epoch_time = []
 x_train_epoch_time = []
 x_epoch = []
 
+
 def train(epoch):
     bias_gaussiank_array=[]
     bias_dgc_array=[]
     bias_redsync_array=[]
+    
     model.train()
     train_sampler.set_epoch(epoch)
     train_loss = Metric('train_loss')
     train_accuracy = Metric('train_accuracy')
     
-    optimizer._communicator.compressor.topk_time=[]
-    optimizer._communicator.compressor.threshold_time=[]
+    optimizer._compression.topk_time=[]
+    optimizer._compression.threshold_time=[]
+    
+    optimizer.synchronize_time= []
+    optimizer.para_update_time= []
+    optimizer.hook_time= []
     
     # optimizer._communicator.compressor.bias_gaussiank=[]
     # optimizer._communicator.compressor.bias_dgc=[]
     # optimizer._communicator.compressor.bias_redsync=[]
     
-    optimizer._communicator.compression_time_array=[]
-    optimizer._communicator.decompression_time_array=[]
-    optimizer._communicator.send_time_array=[]
-    optimizer._communicator.receive_time_array=[]
-    optimizer._communicator.synchronize_time_array=[]
+    # optimizer._communicator.compression_time_array=[]
+    # optimizer._communicator.decompression_time_array=[]
+    # optimizer._communicator.send_time_array=[]
+    # optimizer._communicator.receive_time_array=[]
+    # optimizer._communicator.synchronize_time_array=[]
 
-    io_time_array =[]
-    forward_backforward_time_array =[]
-    forward_time_array =[]
-    step_time_array = []
+    io_time_array= []
+    forward_backforward_time_array= []
+    forward_time_array= []
+    backward_time_array= []
+    step_time_array= []
+    update_time_array= []
     
-    optimizer._communicator.compressor.epoch=epoch
+    optimizer.handle_synchronize_time= []
+    optimizer_synchronize_time_array= []
+    
+    optimizer._compression.epoch=epoch
+    
     with tqdm(total=len(train_loader),
               desc='Train Epoch     #{}'.format(epoch + 1),
               disable=not verbose) as t:
         for batch_idx, (data, target) in enumerate(train_loader):
             adjust_learning_rate(epoch, batch_idx)
+            
             # optimizer._communicator.compressor.iteration=batch_idx
             s_time=time.time()
             if args.cuda:
                 data, target = data.cuda(), target.cuda()
+            
+            io_time_array.append(time.time()-s_time)
+            
             e_time=time.time()
-            io_time_array.append(e_time-s_time)
+            
             optimizer.zero_grad()
             
             # Split data into sub-batches of size batch_size
@@ -203,8 +230,12 @@ def train(epoch):
             train_accuracy.update(accuracy(output, target))
             loss = F.cross_entropy(output, target)
             train_loss.update(loss)
+            
             forward_time_array.append(time.time()-e_time)
+            
+            b_time=time.time()
             loss.backward()
+            backward_time_array.append(time.time()-b_time)
             
             # if hvd.rank() == 0 and batch_idx == 5 and epoch < 5:
             #     # tensor_np_array=[]
@@ -216,18 +247,23 @@ def train(epoch):
             #         # tensor_np_array.append(tensor_np)
             #         np.savetxt("./examples/torch/resnet_layer_gradient/epoch" + str(epoch+1) + "/resnet18_grad_tensor_5_"+str(index)+".txt", tensor_np)
             #         index = index + 1
-                           
-            # Gradient is applied across all ranks            
-            forward_backforward_time_array.append(time.time()-e_time)
-            s_time = time.time()
-            optimizer.step()
             
+            s_time=time.time()               
+            # Gradient is applied across all ranks
+            optimizer.step()       
+            
+                 
             step_time_array.append(time.time()-s_time)
-            
             
             t.set_postfix({'loss': train_loss.avg.item(),
                            'accuracy': 100. * train_accuracy.avg.item()})
+            
+            u_time=time.time() 
             t.update(1)
+            update_time_array.append(time.time()-u_time)
+            
+            optimizer_synchronize_time_array.append(optimizer.handle_synchronize_time)
+            optimizer.handle_synchronize_time= []
             
             # bias_gaussiank=optimizer._communicator.compressor.bias_gaussiank  
             # bias_dgc=optimizer._communicator.compressor.bias_dgc
@@ -255,6 +291,7 @@ def train(epoch):
             # optimizer._communicator.compressor.topk_time=[]
             # optimizer._communicator.compressor.threshold_time=[]
     
+    
     # datapath='/home/user/eurosys23/workspace/ACTopk/examples/plot_eurosys/bias_threshold/'
     # np.savetxt(datapath + "average_inter_worker_bias_gaussiank_array_epoch_"+str(epoch)+"_rank_"+str(hvd.rank())+".txt", bias_gaussiank_array)
     # np.savetxt(datapath + "average_inter_worker_bias_dgc_array_epoch_"+str(epoch)+"_rank_"+str(hvd.rank())+".txt", bias_dgc_array)
@@ -279,54 +316,67 @@ def train(epoch):
     end_time_epoch = time.time()
     x_train_epoch_time.append(end_time_epoch - modified_time)
     
-    compression_time=sum(optimizer._communicator.compression_time_array)
-    decompression_time=sum(optimizer._communicator.decompression_time_array)
-    send_time=sum(optimizer._communicator.send_time_array)
-    receive_time=sum(optimizer._communicator.receive_time_array)
-    synchronize_time=sum(optimizer._communicator.synchronize_time_array)    
+    
+    # compression_time=sum(optimizer._communicator.compression_time_array)
+    # decompression_time=sum(optimizer._communicator.decompression_time_array)
+    # send_time=sum(optimizer._communicator.send_time_array)
+    # receive_time=sum(optimizer._communicator.receive_time_array)
+    # synchronize_time=sum(optimizer._communicator.synchronize_time_array)
     
     io_time=sum(io_time_array)
-    forward_backforward_time=sum(forward_backforward_time_array)
-    forward_time =sum(forward_time_array)
-    step_time =sum(step_time_array)
+    # forward_backforward_time=sum(forward_backforward_time_array)
+    forward_time=sum(forward_time_array)
+    backward_time=sum(backward_time_array)
+    step_time=sum(step_time_array)
+    update_time=sum(update_time_array)
     
-    
-    topk_time_array =optimizer._communicator.compressor.topk_time
-    threshold_time_array =optimizer._communicator.compressor.threshold_time
-    
-    
+    topk_time_array =optimizer._compression.topk_time
+    threshold_time_array =optimizer._compression.threshold_time
     topk_time=sum(topk_time_array)
     threshold_time=sum(threshold_time_array)
+    
+    synchronize_time=sum(optimizer.synchronize_time)
+    para_update_time=sum(optimizer.para_update_time)
+    hook_time=sum(optimizer.hook_time)
     
     if hvd.rank() == 0:
         # datapath='/home/user/eurosys23/workspace/ACTopk/examples/plot_eurosys/compression_time/'
         # np.savetxt(datapath + "topk_time/topk_time_"+str(epoch)+"_rank_"+str(hvd.rank())+".txt", topk_time_array)
         # np.savetxt(datapath + "threshold_time/threshold_time_"+str(epoch)+"_rank_"+str(hvd.rank())+".txt", topk_time_array)
         
-        
-        print('compression_time = ', compression_time)
-        
+        # print('compression_time = ', compression_time)
+               
         print('topk_time = ', topk_time)
-        print('threshold_time = ', threshold_time)        
-        print('send_time = ', send_time)
+        print('threshold_time = ', threshold_time)
+                     
+        # print('send_time = ', send_time)        
+        # print('decompression_time = ', decompression_time)
+        # print('receive_time = ', receive_time)
+        # print('synchronize_time = ', synchronize_time)
         
-        print('decompression_time = ', decompression_time)
-        print('receive_time = ', receive_time)
-        print('synchronize_time = ', synchronize_time)
-
         print('io_time = ', io_time)
-        print('forward_backforward_time = ', forward_backforward_time)
         print('forward_time = ', forward_time)
-        print('backforward_time = ', forward_backforward_time-forward_time)
+        print('backward_time = ', backward_time-topk_time)
         print('step_time = ', step_time)
+        # print('update_time = ', update_time)
+        print('communication_time = ', synchronize_time)
+        print('para_update_time = ', para_update_time)
+        print('hook_time = ', hook_time)
+        # print('buffer_time = ', buffer_time)
         
+        
+        # print('backforward_time = ', forward_backforward_time-(send_time+receive_time+decompression_time+compression_time))
+        print('---------------------------------')
+        # print('optimizer_synchronize_time_array= ', optimizer_synchronize_time_array[:20])
+
+
 
     # topk_time=sum(optimizer._communicator.compressor.topk_time)
     # threshold_time=sum(optimizer._communicator.compressor.threshold_time)
     # if hvd.rank() == 0:
     #     print('topk_time = ', topk_time)
     #     print('threshold_time = ', threshold_time)
-    
+
     # if hvd.rank() == 0:
     #     print('\nTrain set: Average loss: {:.4f}, Train Accuracy: {:.2f}%\n'.format(
     #             train_loss.avg.item(), 100. * train_accuracy.avg.item()))
@@ -375,15 +425,6 @@ def validate(epoch):
 # the first five epochs. See https://arxiv.org/abs/1706.02677 for details.
 # After the warmup reduce learning rate by 10 on the 30th, 60th and 80th epochs.
 def adjust_learning_rate(epoch, batch_idx):
-    # if epoch < 40:
-    #     lr_adj = 1e-1
-    # elif epoch < 60:
-    #     lr_adj = 1e-2
-    # elif epoch < 80:
-    #     lr_adj = 1e-3
-    # else:
-    #     lr_adj = 1e-4
-
     if epoch < args.warmup_epochs:
         epoch += float(batch_idx + 1) / len(train_loader)
         lr_adj = 1. / hvd.size() * (epoch * (hvd.size() - 1) / args.warmup_epochs + 1)
@@ -395,9 +436,28 @@ def adjust_learning_rate(epoch, batch_idx):
         lr_adj = 1e-2
     else:
         lr_adj = 1e-3
+    
+    
+    # if epoch < 40:
+    #     lr_adj = 1e-1
+    # elif epoch < 60:
+    #     lr_adj = 1e-2
+    # elif epoch < 80:
+    #     lr_adj = 1e-3
+    # else:
+    #     lr_adj = 1e-4
 
-
-
+    # if epoch < args.warmup_epochs:
+    #     epoch += float(batch_idx + 1) / len(train_loader)
+    #     lr_adj = 1. / hvd.size() * (epoch * (hvd.size() - 1) / args.warmup_epochs + 1)
+    # elif epoch < 30:
+    #     lr_adj = 1.
+    # elif epoch < 60:
+    #     lr_adj = 1e-1
+    # elif epoch < 80:
+    #     lr_adj = 1e-2
+    # else:
+    #     lr_adj = 1e-3
     for param_group in optimizer.param_groups:
         param_group['lr'] = args.base_lr * hvd.size() * args.batches_per_allreduce * lr_adj
 
@@ -438,13 +498,12 @@ if __name__ == '__main__':
     args = parser.parse_args()
     args.cuda = not args.no_cuda and torch.cuda.is_available()
     # torch.set_default_dtype(torch.float16)
-    
+    os.environ['HOROVOD_NUM_NCCL_STREAMS'] = str(args.nstreams)
     
     allreduce_batch_size = args.batch_size * args.batches_per_allreduce
 
     hvd.init()
-    torch.manual_seed(args.seed)
-
+    
     if args.cuda:
         # Horovod: pin GPU to local rank.
         torch.cuda.set_device(hvd.local_rank())
@@ -530,8 +589,8 @@ if __name__ == '__main__':
                              train=False,
                              download=True,
                              transform=transforms.Compose([
-                                #  transforms.Resize(256),
-                                #  transforms.CenterCrop(224),
+                                 # transforms.Resize(256),
+                                 # transforms.CenterCrop(224),
                                  transforms.ToTensor(),
                                  transforms.Normalize(mean=CIFAR100_TRAIN_MEAN,
                                                       std=CIFAR100_TRAIN_STD)
@@ -542,6 +601,7 @@ if __name__ == '__main__':
     val_loader = torch.utils.data.DataLoader(val_dataset, batch_size=args.val_batch_size,
                                              sampler=val_sampler, **kwargs)
 
+
     # Set up standard ResNet-50 model.
     # model = models.resnet50()
     model=get_network(args)
@@ -549,6 +609,8 @@ if __name__ == '__main__':
     # By default, Adasum doesn't need scaling up learning rate.
     # For sum/average with gradient Accumulation: scale learning rate by batches_per_allreduce
     lr_scaler = args.batches_per_allreduce * hvd.size() if not args.use_adasum else 1
+    # By default, Adasum doesn't need scaling up learning rate.
+    # lr_scaler = hvd.size() if not args.use_adasum else 1
 
     if args.cuda:
         # Move model to GPU.
@@ -562,11 +624,25 @@ if __name__ == '__main__':
                           lr=(args.base_lr *
                               lr_scaler),
                           momentum=args.momentum, weight_decay=args.wd)
-
+    
+    # Set up fixed fake data
+    image_size = 224
+    if args.model == 'inception_v3':
+        image_size = 227
+    data = torch.randn(args.batch_size, 3, image_size, image_size)
+    target = torch.LongTensor(args.batch_size).random_() % 1000
+    if args.cuda:
+        data, target = data.cuda(), target.cuda()
+    if args.mgwfbp:
+        seq_layernames, layerwise_times, _ = benchmark(model, (data, target), F.cross_entropy, task='imagenet')
+        layerwise_times =hvd.broadcast(layerwise_times,root_rank=0)
+        # layerwise_times = comm.bcast(layerwise_times, root=0)
+    else:
+        seq_layernames, layerwise_times = None, None
+    
+    
     # Horovod: (optional) compression algorithm.
     # compression = hvd.Compression.fp16 if args.fp16_allreduce else hvd.Compression.none
-
-
     # params = {'compressor': 'topk', 'memory': 'residual', 'communicator': 'allgather'}
     # Horovod: wrap optimizer with DistributedOptimizer.
     # 得到一个分布式的SGD优化器
@@ -574,24 +650,28 @@ if __name__ == '__main__':
     #     optimizer, grc, named_parameters=model.named_parameters())
 
 
-    # Allgather
-    # params = {'compressor': 'imbalancetopktime', 'memory': 'residual', 'communicator': 'allgather','model_named_parameters':model.named_parameters()}
-    # params = {'compressor': 'imbalancetopktime', 'memory': 'residual', 'communicator': 'allgather','model_named_parameters':model.named_parameters()}
+    # Horovod
+    # # Allgather
+    # # params = {'compressor': 'imbalancetopktime', 'memory': 'residual', 'communicator': 'allgather','model_named_parameters':model.named_parameters()}
+    # params = {'compressor': 'imbalancetopktime', 'memory': 'none', 'communicator': 'allgather','model_named_parameters':model.named_parameters()}
+    # # params = {'compressor': 'none', 'memory': 'none', 'communicator': 'allgather','model_named_parameters':model.named_parameters()}
+    # # params = {'compressor': 'none', 'memory': 'none', 'communicator': 'allreduce','model_named_parameters':model.named_parameters()}
     
+    # # params = {'compressor': 'none', 'memory': 'none', 'communicator': 'allgather','model_named_parameters':model.named_parameters()}
+    # # params = {'compressor': 'none', 'memory': 'none', 'communicator': 'allreduce','model_named_parameters':model.named_parameters()}
     
+    # communicator = get_communicator(params)
+    # optimizer = hvd.DistributedOptimizer(
+    #     optimizer, communicator, named_parameters=model.named_parameters())
     
-    if args.density<1:
-        communicator_str = 'allgather'
-    else:
-        communicator_str = 'allreduce'
-    
-    params = {'compressor': args.compressor, 'memory': args.memory, 'density': args.density,'communicator': 'allgather','model_named_parameters':model.named_parameters()}
-    
- 
+    # MG-WFBP
+    optimizer = hvd.DistributedOptimizer(args.model_net, optimizer, 
+                                         named_parameters=model.named_parameters(), compression=compressors[args.compressor](), is_sparse=args.density<1, density=args.density, seq_layernames=seq_layernames, layerwise_times=layerwise_times, norm_clip=None, threshold=args.threshold, writer=None, gradient_path='./', momentum_correction=False, fp16=args.fp16, mgwfbp=args.mgwfbp, rdma=args.rdma, asc=args.asc)
 
-    communicator = get_communicator(params)
-    optimizer = hvd.DistributedOptimizer(
-        optimizer, communicator, named_parameters=model.named_parameters())
+    hvd.broadcast_parameters(model.state_dict(), root_rank=0)
+    hvd.broadcast_optimizer_state(optimizer, root_rank=0)
+
+    
 
     # Horovod: wrap optimizer with DistributedOptimizer.
     # All-reduce
@@ -611,8 +691,8 @@ if __name__ == '__main__':
     #     optimizer.load_state_dict(checkpoint['optimizer'])
 
     # Horovod: broadcast parameters & optimizer state.
-    hvd.broadcast_parameters(model.state_dict(), root_rank=0)
-    hvd.broadcast_optimizer_state(optimizer, root_rank=0)
+    # hvd.broadcast_parameters(model.state_dict(), root_rank=0)
+    # hvd.broadcast_optimizer_state(optimizer, root_rank=0)
 
     start_time = time.time()
     modified_time = start_time
@@ -623,7 +703,7 @@ if __name__ == '__main__':
     for epoch in range(resume_from_epoch, args.epochs):
         train(epoch)
         validate(epoch)
-        
+
         # 保存最后一个训练模型
         # if epoch==args.epochs-1:
         #     save_checkpoint(epoch)
@@ -637,4 +717,4 @@ if __name__ == '__main__':
         training_time = end_time - modified_time
         print('end_time - modified_time = ', training_time)
         print(f"Samples per second: GPU * epochs * iter * batch-size / time = {8 * args.epochs * 196 * 32 / training_time}")
-        
+

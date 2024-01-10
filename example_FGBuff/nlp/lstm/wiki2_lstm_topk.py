@@ -7,7 +7,7 @@ import torch
 import torch.nn as nn
 import torch.onnx
 import torch.optim as optim
-# import horovod.torch as hvd
+import horovod.torch as hvd
 
 import datahelper
 import model
@@ -24,7 +24,7 @@ os.environ['HOROVOD_CYCLE_TIME'] = '0'
 
 import sys
 sys.path.append("../../..") 
-import hv_distributed_optimizer_omgs as hvd
+import hv_distributed_optimizer as hvd
 from compression import compressors
 # from utils_model import get_network
 
@@ -442,24 +442,9 @@ else:
 # optimizer = hvd.DistributedOptimizer(optimizer, communicator, named_parameters=model.named_parameters(), op=hvd.Average) 
 
 seq_layernames, layerwise_times = None, None
-# optimizer = hvd.DistributedOptimizer(args.model_net, optimizer, 
-#                                          named_parameters=model.named_parameters(), compression=compressors[args.compressor](), is_sparse=args.density<1, density=args.density, seq_layernames=seq_layernames, layerwise_times=layerwise_times, norm_clip=None, threshold=args.threshold, writer=None, gradient_path='./', momentum_correction=False, fp16=args.fp16, mgwfbp=args.mgwfbp, rdma=args.rdma, asc=args.asc)
-dnn=None
-norm_clip = None
-if dnn == 'lstm':
-    norm_clip = 0.25
-elif dnn == 'lstman4':
-    norm_clip = 400
-writer = None
-    
-optimizer = hvd.DistributedOptimizer(args.model_net, optimizer, named_parameters=model.named_parameters(), 
-                                    compression=compressors[args.compressor](), is_sparse=args.density<1, density=args.density, 
-                                    seq_layernames=seq_layernames, layerwise_times=layerwise_times, norm_clip=norm_clip, 
-                                    threshold=args.threshold, writer=writer)
+optimizer = hvd.DistributedOptimizer(args.model_net, optimizer, 
+                                         named_parameters=model.named_parameters(), compression=compressors[args.compressor](), is_sparse=args.density<1, density=args.density, seq_layernames=seq_layernames, layerwise_times=layerwise_times, norm_clip=None, threshold=args.threshold, writer=None, gradient_path='./', momentum_correction=False, fp16=args.fp16, mgwfbp=args.mgwfbp, rdma=args.rdma, asc=args.asc)
 
-
-hvd.broadcast_parameters(model.state_dict(), root_rank=0) 
-# hvd.broadcast_optimizer_state(optimizer, root_rank=0) 
 
 
 # comm_params = {
@@ -484,6 +469,8 @@ if hvd.rank() == 0:
         print(name,':',parameters.size()) 
 
 
+# hvd.broadcast_parameters(model.state_dict(), root_rank=0) 
+# hvd.broadcast_optimizer_state(optimizer, root_rank=0) 
 
 
 try:    
@@ -541,5 +528,11 @@ if hvd.rank() == 0:
     print('| End of training | test loss {:5.2f} | test ppl {:8.2f}'.format(test_loss, math.exp(test_loss)))     
     print('=' * 89) 
     ppl_test = [math.exp(test_loss)]
+
+if hvd.rank() == 0:
+    import numpy as np           
+    time_arr = np.array(time_list)
+    ppl_arr = np.array(ppl_list)
+    ppl_test = np.array(ppl_test)
 
 

@@ -1,8 +1,6 @@
 echo "Container nvidia build = " $NVIDIA_BUILD_ID
-
 export DIR_Model="/data/dataset/nlp/bert/pre-model/bert-base-uncased/uncased_L-12_H-768_A-12"
 export DIR_DataSet="/data/dataset/nlp/bert"
-
 init_checkpoint=${1:-"$DIR_Model/bert_base_wiki.pt"}
 epochs=${2:-"3.0"}
 batch_size=${3:-"4"}
@@ -14,7 +12,7 @@ seed=${8:-"1"}
 squad_dir=${9:-"$DIR_DataSet/squad"}
 vocab_file=${10:-"$DIR_Model/vocab.txt"}
 
-OUT_DIR=${11:-"../result_train_omgs/"}
+OUT_DIR=${11:-"../result_train/"}
 
 # train+eval
 mode=${12:-"train eval"}
@@ -37,11 +35,9 @@ max_steps=${14:-"-1"}
 #         # 'efsignum': EFSignCompressor,
 #     }
 # setup
-density="${density:-0.01}"
+density="${density:-0.05}"
 threshold="${threshold:-8192}"
 compressor="${compressor:-gaussian}"
-# compressor="${compressor:-topkef}"
-# max_epochs="${max_epochs:-200}"
 memory="${memory:-residual}"
 
 
