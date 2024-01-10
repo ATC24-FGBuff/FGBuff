@@ -72,4 +72,4 @@ FGBuff: Fine-Grained Buffering for Efficient Merged Gradient Sparsification in D
 
 ## License
 
-See [LICENSE](https://github.com/ATC24-FGBuff/main/LICENSE).
+See [LICENSE](https://github.com/ATC24-FGBuff/FGBuff/blob/main/LICENSE.txt).
