@@ -312,10 +312,10 @@ if hvd.rank() == 0:
 # print(model)
 
 def warmup_lr_scheduler(optimizer, warmup_iters, warmup_factor):
-    def f(x): # x是step次数
+    def f(x): 
         if x >= warmup_iters:
             return 0.95**(x-warmup_iters)
-        alpha = float(x) / warmup_iters # 当前进度 0-1
+        alpha = float(x) / warmup_iters 
         return warmup_factor * (1 - alpha) + alpha
     return torch.optim.lr_scheduler.LambdaLR(optimizer, f)
 
