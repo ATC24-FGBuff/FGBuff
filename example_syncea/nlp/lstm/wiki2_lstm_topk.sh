@@ -1,30 +1,3 @@
-# scp -r /home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/example/nlp/lstm/*   user@n16:/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/example/nlp/lstm/
-# scp -r /home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/example/nlp/lstm/*   user@n17:/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/example/nlp/lstm/
-# scp -r /home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/example/nlp/lstm/*   user@n18:/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/example/nlp/lstm/
-# scp -r /home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/example/nlp/lstm/*   user@n19:/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/example/nlp/lstm/
-# scp -r /home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/example/nlp/lstm/*   user@n20:/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/example/nlp/lstm/
-# scp -r /home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/example/nlp/lstm/*   user@n21:/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/example/nlp/lstm/
-# scp -r /home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/example/nlp/lstm/*   user@n22:/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/example/nlp/lstm/
-
-
-
-# scp -r /home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/example/nlp/*   user@n16:/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/example/nlp/
-# scp -r /home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/example/nlp/*   user@n17:/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/example/nlp/
-# scp -r /home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/example/nlp/*   user@n18:/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/example/nlp/
-# scp -r /home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/example/nlp/*   user@n19:/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/example/nlp/
-# scp -r /home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/example/nlp/*   user@n20:/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/example/nlp/
-# scp -r /home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/example/nlp/*   user@n21:/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/example/nlp/
-# scp -r /home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/example/nlp/*   user@n22:/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/example/nlp/
-
-scp -r /home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/*  user@node16:/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/
-scp -r /home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/*  user@node17:/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/
-scp -r /home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/*  user@node18:/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/
-scp -r /home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/*  user@node19:/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/
-scp -r /home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/*  user@node20:/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/
-scp -r /home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/*  user@node21:/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/
-scp -r /home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/*  user@node22:/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/
-
-    
 # compressors = {
 #         None: NoneCompressor,
 #         'none': NoneCompressor,
@@ -42,7 +15,6 @@ scp -r /home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/* 
 density="${density:-0.01}"
 threshold="${threshold:-8192}"
 compressor="${compressor:-topk}"
-# compressor="${compressor:-gaussian}"
 max_epochs="${max_epochs:-200}"
 memory="${memory:-residual}"
 

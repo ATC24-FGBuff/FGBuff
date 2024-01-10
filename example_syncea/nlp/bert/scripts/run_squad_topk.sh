@@ -1,57 +1,9 @@
-# scp -r /home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/example/* user@n16:/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/example/
-# scp -r /home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/example/* user@n17:/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/example/
-# scp -r /home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/example/* user@n18:/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/example/
-# scp -r /home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/example/* user@n19:/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/example/
-# scp -r /home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/example/* user@n20:/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/example/
-# scp -r /home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/example/* user@n21:/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/example/
-# scp -r /home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/example/* user@n22:/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/example/
-
-
-scp -r /home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/hv_distributed_optimizer_synea.py user@n16:/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/
-scp -r /home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/hv_distributed_optimizer_synea.py user@n17:/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/
-scp -r /home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/hv_distributed_optimizer_synea.py user@n18:/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/
-scp -r /home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/hv_distributed_optimizer_synea.py user@n19:/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/
-scp -r /home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/hv_distributed_optimizer_synea.py user@n20:/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/
-scp -r /home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/hv_distributed_optimizer_synea.py user@n21:/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/
-scp -r /home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/hv_distributed_optimizer_synea.py user@n22:/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/
-
-
-scp -r /home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/utils_optimizer.py user@n16:/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/
-scp -r /home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/utils_optimizer.py user@n17:/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/
-scp -r /home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/utils_optimizer.py user@n18:/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/
-scp -r /home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/utils_optimizer.py user@n19:/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/
-scp -r /home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/utils_optimizer.py user@n20:/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/
-scp -r /home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/utils_optimizer.py user@n21:/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/
-scp -r /home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/utils_optimizer.py user@n22:/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/
-
-scp -r /home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/compression.py user@n16:/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/
-scp -r /home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/compression.py user@n17:/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/
-scp -r /home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/compression.py user@n18:/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/
-scp -r /home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/compression.py user@n19:/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/
-scp -r /home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/compression.py user@n20:/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/
-scp -r /home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/compression.py user@n21:/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/
-scp -r /home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/compression.py user@n22:/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/
-
-
-
-# scp -r /home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/*  user@node16:/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/
-# scp -r /home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/*  user@node17:/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/
-# scp -r /home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/*  user@node18:/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/
-# scp -r /home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/*  user@node19:/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/
-# scp -r /home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/*  user@node20:/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/
-# scp -r /home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/*  user@node21:/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/
-# scp -r /home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/*  user@node22:/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/
-
-
 echo "Container nvidia build = " $NVIDIA_BUILD_ID
 
-# export DIR_Model="/home/mzq/mingzq/workspaces/project/grace/examples/torch/nlp/bert/pre-model/bert-large-uncased/uncased_L-24_H-1024_A-16"
+
 export DIR_Model="/data/dataset/nlp/bert/pre-model/bert-base-uncased/uncased_L-12_H-768_A-12"
 export DIR_DataSet="/data/dataset/nlp/bert"
-# export DIR_Save= "/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/result_train"
 
-# init_checkpoint=${1:-"/home/mzq/mingzq/workspaces/project/grace/examples/torch/nlp/bert/pre-model/bert-base-uncased/uncased_L-12_H-768_A-12/bert_model.ckpt"}
-# init_checkpoint=${1:-"$DIR_Model/bert_model.ckpt"}
 init_checkpoint=${1:-"$DIR_Model/bert_base_wiki.pt"}
 epochs=${2:-"3.0"}
 batch_size=${3:-"4"}
@@ -62,12 +14,8 @@ num_gpu=${7:-"8"}
 seed=${8:-"1"}
 squad_dir=${9:-"$DIR_DataSet/squad"}
 vocab_file=${10:-"$DIR_Model/vocab.txt"}
-# 输出模型和预测结果
-# OUT_DIR=${11:-"./squad_base/actopk/8"}
-# OUT_DIR=${11:-"./squad_base/compression_rate/01"}
 
-# OUT_DIR=${11:-"/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/result_train_ours/bert_base/gaussian_3_005"}
-OUT_DIR=${11:-"/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/result_train_syncea/bert_base/gaussian_ef_epochs_3_001_0109"}
+OUT_DIR=${11:-"../result_train/"}
 
 # train+eval
 mode=${12:-"train eval"}
@@ -93,8 +41,6 @@ max_steps=${14:-"-1"}
 density="${density:-0.01}"
 threshold="${threshold:-8192}"
 compressor="${compressor:-gaussian}"
-# compressor="${compressor:-topkef}"
-# max_epochs="${max_epochs:-200}"
 memory="${memory:-residual}"
 
 

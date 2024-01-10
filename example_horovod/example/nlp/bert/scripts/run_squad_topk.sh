@@ -1,23 +1,3 @@
-# scp -r /home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/omgs/example/nlp/bert/* user@n16:/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/omgs/example/nlp/bert/
-# scp -r /home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/omgs/example/nlp/bert/* user@n17:/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/omgs/example/nlp/bert/
-# scp -r /home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/omgs/example/nlp/bert/* user@n18:/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/omgs/example/nlp/bert/
-# scp -r /home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/omgs/example/nlp/bert/* user@n19:/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/omgs/example/nlp/bert/
-# scp -r /home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/omgs/example/nlp/bert/* user@n20:/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/omgs/example/nlp/bert/
-# scp -r /home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/omgs/example/nlp/bert/* user@n21:/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/omgs/example/nlp/bert/
-# scp -r /home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/omgs/example/nlp/bert/* user@n22:/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/omgs/example/nlp/bert/
-
-
-
-# scp -r /home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/horovod/*  user@node16:/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/horovod/
-# scp -r /home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/horovod/*  user@node17:/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/horovod/
-# scp -r /home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/horovod/*  user@node18:/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/horovod/
-# scp -r /home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/horovod/*  user@node19:/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/horovod/
-# scp -r /home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/horovod/*  user@node20:/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/horovod/
-# scp -r /home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/horovod/*  user@node21:/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/horovod/
-# scp -r /home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/horovod/*  user@node22:/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/horovod/
-
-
-
 echo "Container nvidia build = " $NVIDIA_BUILD_ID
 
 # export DIR_Model="/home/mzq/mingzq/workspaces/project/grace/examples/torch/nlp/bert/pre-model/bert-large-uncased/uncased_L-24_H-1024_A-16"
@@ -25,8 +5,6 @@ export DIR_Model="/data/dataset/nlp/bert/pre-model/bert-base-uncased/uncased_L-1
 export DIR_DataSet="/data/dataset/nlp/bert"
 
 
-# init_checkpoint=${1:-"/home/mzq/mingzq/workspaces/project/grace/examples/torch/nlp/bert/pre-model/bert-base-uncased/uncased_L-12_H-768_A-12/bert_model.ckpt"}
-# init_checkpoint=${1:-"$DIR_Model/bert_model.ckpt"}
 init_checkpoint=${1:-"$DIR_Model/bert_base_wiki.pt"}
 epochs=${2:-"3.0"}
 batch_size=${3:-"4"}
@@ -37,10 +15,8 @@ num_gpu=${7:-"8"}
 seed=${8:-"1"}
 squad_dir=${9:-"$DIR_DataSet/squad"}
 vocab_file=${10:-"$DIR_Model/vocab.txt"}
-# 输出模型和预测结果
-# OUT_DIR=${11:-"./squad_base/actopk/8"}
-# OUT_DIR=${11:-"./squad_base/compression_rate/01"}
-OUT_DIR=${11:-"/home/user/mzq/workspaces/project/dear_pytorch/ATC24-FG-MGS/fgmgs_ours/result_train_horovod/bert_base/gaussian_ef_epochs_3_001_0109"}
+
+OUT_DIR=${11:-"../result_train_horovod"}
 
 
  
