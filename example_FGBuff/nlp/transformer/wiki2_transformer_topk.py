@@ -449,8 +449,6 @@ seq_layernames, layerwise_times = None, None
 optimizer = hvd.DistributedOptimizer(args.model_net, optimizer, 
                                          named_parameters=model.named_parameters(), compression=compressors[args.compressor](), is_sparse=args.density<1, density=args.density, seq_layernames=seq_layernames, layerwise_times=layerwise_times, norm_clip=None, threshold=args.threshold, writer=None, gradient_path='./', momentum_correction=False, fp16=args.fp16, mgwfbp=args.mgwfbp, rdma=args.rdma, asc=args.asc)
 
-
-
 np.random.seed(0)
 np.random.shuffle(column_indices) 
 train_data = train_datas[:, column_indices]
@@ -492,8 +490,6 @@ def train_step(optimizer, train_data, batch):
         start_time = time.time()
 
 
-
-
 try:
     start_time= time.time()  
     start_time_epochs= time.time() 
@@ -505,16 +501,7 @@ try:
         optimizer.synchronize_time= []
         optimizer.para_update_time= []
         optimizer.hook_time= []
-        
-        # optimizer._communicator.compressor.bias_gaussiank=[]
-        # optimizer._communicator.compressor.bias_dgc=[]
-        # optimizer._communicator.compressor.bias_redsync=[]
-    
-        # optimizer._communicator.compression_time_array=[]
-        # optimizer._communicator.decompression_time_array=[]
-        # optimizer._communicator.send_time_array=[]
-        # optimizer._communicator.receive_time_array=[]
-        # optimizer._communicator.synchronize_time_array=[]
+
 
         io_time_array= []
         forward_backforward_time_array= []
@@ -595,71 +582,7 @@ try:
             print('| end of epoch {:3d} | time: {:5.2f}s | valid loss {:5.4f} | ' 'valid ppl {:8.2f}'.format(epoch, (time.time() - epoch_start_time), val_loss, math.exp(val_loss)))
             time_list.append(tmp)            
             print('-' * 89) 
-        
-    
-    
-        # end_time_epoch = time.time()
-        # x_train_epoch_time.append(end_time_epoch - modified_time)
-    
-        io_time=sum(io_time_array)
-        # forward_backforward_time=sum(forward_backforward_time_array)
-        forward_time=sum(forward_time_array)
-        backward_time=sum(backward_time_array)
-        step_time=sum(step_time_array)
-        update_time=sum(update_time_array)
-    
-        topk_time_array =optimizer._compression.topk_time
-        threshold_time_array =optimizer._compression.threshold_time
-        topk_time=sum(topk_time_array)
-        threshold_time=sum(threshold_time_array)
-    
-        synchronize_time=sum(optimizer.synchronize_time)
-        para_update_time=sum(optimizer.para_update_time)
-        hook_time=sum(optimizer.hook_time)
-    
-        if hvd.rank() == 0:
-            # datapath='/home/user/eurosys23/workspace/ACTopk/examples/plot_eurosys/compression_time/'
-            # np.savetxt(datapath + "topk_time/topk_time_"+str(epoch)+"_rank_"+str(hvd.rank())+".txt", topk_time_array)
-            # np.savetxt(datapath + "threshold_time/threshold_time_"+str(epoch)+"_rank_"+str(hvd.rank())+".txt", topk_time_array)
-        
-            # print('compression_time = ', compression_time)
-               
-            print('topk_time = ', topk_time)
-            print('threshold_time = ', threshold_time)
-                     
-            # print('send_time = ', send_time)        
-            # print('decompression_time = ', decompression_time)
-            # print('receive_time = ', receive_time)
-            # print('synchronize_time = ', synchronize_time)
-        
-            print('io_time = ', io_time)
-            print('forward_time = ', forward_time)
-            print('backward_time = ', backward_time-topk_time)
-            print('step_time = ', step_time)
-            # print('update_time = ', update_time)
-            print('communication_time = ', synchronize_time)
-            print('para_update_time = ', para_update_time)
-            print('hook_time = ', hook_time)
-            # print('buffer_time = ', buffer_time)
-        
-        
-            # print('backforward_time = ', forward_backforward_time-(send_time+receive_time+decompression_time+compression_time))
-            print('---------------------------------')
-            # print('optimizer_synchronize_time_array= ', optimizer_synchronize_time_array[:15])
-        
 
-            # scheduler_warmup.step(epoch)
-            # train(optimizer, train_data)
-            # val_loss = evaluate(val_data)
-            # ppl_list.append(math.exp(val_loss))
-
-        # if hvd.rank() == 0:             
-        #     print('-' * 89)
-        #     tmp = time.time() - epoch_start_time           
-        #     print('| end of epoch {:3d} | time: {:5.2f}s | valid loss {:5.4f} | ' 'valid ppl {:8.2f}'.format(epoch, (time.time() - epoch_start_time), val_loss, math.exp(val_loss)))
-        #     time_list.append(tmp)            
-        #     print('-' * 89)  
-    
     if hvd.rank() == 0:
          # torch.cuda.synchronize()
         end_time = time.time()
@@ -684,18 +607,3 @@ if hvd.rank() == 0:
 
 
 
-
-
-
-
-
-
-
-if hvd.rank() == 0:
-    import numpy as np           
-    time_arr = np.array(time_list)
-    
-    # val loss
-    ppl_arr = np.array(ppl_list)
-    # train loss
-    ppl_test = np.array(ppl_test)

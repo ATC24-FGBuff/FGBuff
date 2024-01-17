@@ -4,9 +4,9 @@ import torch
 import numpy as np
 import time
 import math
-import utils_optimizer
+import example_fgbuff.utils_optimizer as utils_optimizer
 from scipy import stats
-import hv_distributed_optimizer as hvd
+import example_fgbuff.hv_distributed_optimizer as hvd
 
 class NoneCompressor():
     def __init__(self):
@@ -43,7 +43,6 @@ class TopKCompressor():
         self.zc = None
         self.current_ratio = 1
         
-        # 实时更新
         self.epoch=0
         self.iteration=0
         
@@ -89,7 +88,6 @@ class TopKCompressor():
             self.current_ratio = ratio
             
             if ratio==1:
-            # if ratio ==1 or 'fc' in name:
                 numel = tensor.numel()
                 values =tensor
                 indexes=torch.arange(0,numel).cuda(tensor.device)
@@ -111,278 +109,9 @@ class TopKCompressor():
             self.topk_time.append(e_topk_time)
 
             return tensor, indexes, values
-    
-    def compress_layer_wise(self, tensor, name=None, group_size=None, sigma_scale=2.5, ratio=0.01):
-        time_start_=time.time()
-        with torch.no_grad():
-            
-            if name not in self.residuals:
-                self.residuals[name] = torch.zeros_like(tensor.data)
-            # top-k solution
-            # numel = tensor.numel()
-            
-            self.current_ratio = ratio
-            if ratio==1:
-                numel = tensor.numel()
-                values=tensor
-                indexes=torch.arange(0,numel).cuda(tensor.device)
-                return tensor, indexes, values
-            
-            
-            # self._process_data_before_selecting(name, tensor.data)
-            # tensor.add_(self.residuals[name].data)
-            
-            tensor_abs=torch.abs(tensor.data)
-
-            pre_size=0
-            values = None
-            indexes = None  
-            indexes_arr=[]
-            
-            for i, s in enumerate(group_size):
-                k = max(int(s * ratio), 1)
-                values_, indexes_ = torch.topk(tensor_abs[pre_size:pre_size+s], k=k)
-                # if group_dim[i]!=2:
-                #     k = max(int(s * ratio), 1)
-                #     values_, indexes_ = torch.topk(tensor_abs[pre_size:pre_size+s], k=k)
-                # else:
-                #     indexes_=torch.arange(0,s).cuda(tensor.device)
-                
-                indexes_+=pre_size
-                pre_size+=s
-                indexes_arr.append(indexes_)
-            
-            indexes = torch.cat(indexes_arr, dim=0)
-            values = tensor.data[indexes]
-                      
-            
-            # for i, s in enumerate(group_size):
-            #     # layer_name=names[i]
-            #     numel=s
-            #     # if numel<10000:
-            #     #     indexes_=torch.tensor(range(s)).cuda()
-            #     # else:
-            #     #     k = max(int(numel * ratio), 1)
-            #     #     values_, indexes_ = torch.topk(torch.abs(tensor.data[pre_size:pre_size+s]), k=k)
-            #     # indexes_+=pre_size
-            #     # pre_size+=s  
-            #     k = max(int(numel * ratio), 1)
-            #     values_, indexes_ = torch.topk(tensor_abs[pre_size:pre_size+numel], k=k)
-            #     indexes_+=pre_size
-            #     pre_size+=numel
-                
-            #     if indexes==None:
-            #         indexes=indexes_
-            #     else:
-            #         indexes=torch.concatenate((indexes,indexes_), dim=0)
-            # values = tensor.data[indexes]
-
-            # self.residuals[name].data = tensor.data + 0.0 
-            # self.residuals[name].data[indexes] = 0.            
-            
-            e_topk_time=time.time()-time_start_
-            self.topk_time.append(e_topk_time)
-            
-            return tensor, indexes, values
-
-    
-    def compress_layer_wise_selective(self, tensor, name=None, group_size=None, group_dim=None,sigma_scale=2.5, ratio=0.01):
-        time_start_=time.time()
-        with torch.no_grad():
-            
-            if ratio==1:
-                numel = tensor.numel()
-                values=tensor
-                indexes=torch.arange(0,numel).cuda(tensor.device)
-                return tensor, indexes, values
-            
-            
-            if name not in self.residuals:
-                self.residuals[name] = torch.zeros_like(tensor.data)
-                      
-            self.current_ratio = ratio
-            # self._process_data_before_selecting(name, tensor.data)
-            # tensor.add_(self.residuals[name].data)
-            
-            tensor_abs=torch.abs(tensor.data)
-
-            pre_size=0
-            values = None
-            indexes = None
-            indexes_arr=[]
-            
-            for i, s in enumerate(group_size):
-                
-                if group_dim[i]!=2:
-                    k = max(int(s * ratio), 1)
-                    values_, indexes_ = torch.topk(tensor_abs[pre_size:pre_size+s], k=k)
-                else:
-                    indexes_=torch.arange(0,s).cuda(tensor.device)
-                
-                indexes_+=pre_size
-                pre_size+=s
-                indexes_arr.append(indexes_)
-            
-            indexes = torch.cat(indexes_arr, dim=0)
-            values = tensor.data[indexes]
-
-            # self.residuals[name].data = tensor.data + 0.0 
-            # self.residuals[name].data[indexes] = 0.
 
 
-            e_topk_time=time.time()-time_start_
-            self.topk_time.append(e_topk_time)
 
-            return tensor, indexes, values
-    
-    
-    # Block-based compression
-    def compress_block(self, tensor, name=None, group_size=None, group_dim=None, sigma_scale=2.5, ratio=0.01):
-        time_start_ = time.time()
-        with torch.no_grad():
-            if name not in self.residuals:
-                self.residuals[name] = torch.zeros_like(tensor.data)
-
-            # self._process_data_before_selecting(name, tensor.data)
-            # tensor.add_(self.residuals[name].data)
-            
-            tensor_abs=torch.abs(tensor.data)
-            values = None
-            indexes = None
-            
-            numel = tensor.numel()            
-            
-            self.current_ratio = ratio
-            # self._process_data_before_selecting(name, tensor.data)
-            # tensor.add_(self.residuals[name].data)
-            pre_size=0
-            indexes_arr=[]
-            k = max(int(numel * ratio), 1)
-            values_, indexes_ = torch.topk(tensor_abs, k=k)
-            
-            indexes_arr.append(indexes_)
-            for i, s in enumerate(group_size):                
-                if group_dim[i]==2:
-                    indexes_dim=torch.arange(0,s).cuda(tensor.device)
-                    indexes_dim+=pre_size
-                    indexes_arr.append(indexes_dim)
-                pre_size+=s  
-            indexes = torch.cat(indexes_arr, dim=0)
-      
-            values = tensor.data[indexes]
-            # self.residuals[name].data = tensor.data + 0.0 
-            # self.residuals[name].data[indexes] = 0.
-            # self.values[name] = values
-            # self.indexes[name] = indexes
-            # self._process_data_after_residual(name, tensor.data)
-            
-            e_topk_time=time.time()-time_start_
-            self.topk_time.append(e_topk_time)
-            
-            return tensor, indexes, values
-    
-    # 优化压缩
-    def compress_block_opt(self, tensor, name=None, group_size=None, group_dim=None, sigma_scale=2.5, ratio=0.01):
-        time_start_ = time.time()
-        with torch.no_grad():
-            if name not in self.residuals:
-                self.residuals[name] = torch.zeros_like(tensor.data)
-
-            # self._process_data_before_selecting(name, tensor.data)
-            # tensor.add_(self.residuals[name].data)
-            
-            tensor_abs=torch.abs(tensor.data)
-            numel = tensor.numel()        
-            
-            self.current_ratio = ratio
-            
-            if 'fc' in name:
-                # case-1, fc层全传输
-                # indexes= torch.arange(0, numel).cuda(tensor.device)
-                
-                # case-2, fc层部分传输
-                # ratio=0.1
-                # k = max(int(numel * ratio), 1)
-                # values_, indexes = torch.topk(tensor_abs, k=k)
-                # values = tensor.data[indexes]
-                
-                
-                ratio=0.3
-                k = max(int(numel * ratio), 1)
-                indexes_bias= torch.arange(0, 100).cuda(tensor.device)                
-                values_weight, indexes_weight= torch.topk(tensor_abs[100:], k=k)
-                indexes= torch.concatenate((indexes_bias, indexes_weight+100), dim=0)
-                values = tensor.data[indexes]
-                
-                
-                # ratio=0.1
-                # k = max(int(2048 * ratio), 1)
-                # indexes_bias= torch.arange(0, 100).cuda(tensor.device)             
-                # values_weight, indexes_weight= torch.topk(tensor_abs[100:].reshape([100, 2048]), k=k,dim=1)
-                # tensor_decompressed = torch.zeros(
-                #     [100, 2048], dtype=values_weight.dtype, layout=values_weight.layout, device=values_weight.device).cuda()
-                # tensor_decompressed.scatter_(1, indexes_weight, values_weight)
-                # tensor_=tensor_decompressed.flatten()
-                # one_indexes = tensor_ > 0
-                # indexes_weight_ = one_indexes.nonzero().data.squeeze().view(-1)                
-                # indexes= torch.concatenate((indexes_bias, indexes_weight_+100), dim=0)
-
-                return tensor, indexes, values
-            
-            k = max(int(numel * ratio), 1)
-            values, indexes = torch.topk(tensor_abs, k=k)
-            values = tensor.data[indexes]
-            
-            e_topk_time=time.time()-time_start_
-            self.topk_time.append(e_topk_time)
-            return tensor, indexes, values
-        
-        
-            
-            # self._process_data_before_selecting(name, tensor.data)
-            # tensor.add_(self.residuals[name].data)
-            pre_size=0
-            indexes_arr=[]
-            k = max(int(numel * ratio), 1)
-            values_, indexes_ = torch.topk(tensor_abs, k=k)
-            
-            indexes_arr.append(indexes_)
-            for i, s in enumerate(group_size):                
-                if group_dim[i]==2:
-                    indexes_dim=torch.arange(0,s).cuda(tensor.device)
-                    indexes_dim+=pre_size
-                    indexes_arr.append(indexes_dim)
-                pre_size+=s  
-            indexes = torch.cat(indexes_arr, dim=0)
-      
-            values = tensor.data[indexes]
-            # self.residuals[name].data = tensor.data + 0.0 
-            # self.residuals[name].data[indexes] = 0.
-            # self.values[name] = values
-            # self.indexes[name] = indexes
-            # self._process_data_after_residual(name, tensor.data)
-            
-            e_topk_time=time.time()-time_start_
-            self.topk_time.append(e_topk_time)
-            
-            return tensor, indexes, values
-
-
-    # def get_residuals(self, name, like_tensor):
-    #     if name not in self.residuals:
-    #         self.residuals[name] = torch.zeros_like(like_tensor.data)
-    #     return self.residuals[name]
-
-    # def add_residuals(self, included_indexes, name):
-    #     with torch.no_grad():
-    #         residuals = self.residuals[name]
-    #         if type(included_indexes) is np.ndarray:
-    #             indexes_t = torch.from_numpy(included_indexes).to(device=residuals.device).long()
-    #         else:
-    #             indexes_t = included_indexes
-    #         values = self.values[name]
-    #         values.data[indexes_t] = 0.0
-    #         residuals.data[self.indexes[name]] += values.data
 
     def decompress(self, tensor, original_tensor_size):
         return tensor
@@ -468,31 +197,9 @@ class GaussianCompressor(TopKCompressor):
             mean = torch.mean(tensor)
             left_thres, thr = utils_optimizer.gen_threshold_from_normal_distribution(1-ratio, float(mean), float(std))
             # abs_tensor = torch.abs(tensor)
-            # loops = 0
-            # while loops < 5:
-            # # while loops < 2:
-            #     one_indexes = abs_tensor > right_thres
-            #     indexes = one_indexes.nonzero().data.squeeze().view(-1)
-            #     if indexes.numel() < 2*k/3:
-            #         right_thres *= 0.7
-            #     elif indexes.numel() > 4*k/3:
-            #         right_thres *= 1.3
-            #     else:
-            #         break
-            #     loops += 1
             mask = tensor.abs() >= thr
             selected = mask.sum()
 
-            # for _ in range(5):
-            #     if selected > 1.3 * k:
-            #         thr = 1.3 * thr
-            #     elif selected < 0.7 * numel * k:
-            #         thr = 0.7 * thr
-            #     else:
-            #         break
-            #     mask = tensor.abs() >= thr
-            #     selected = mask.sum()
-            
             for _ in range(5):
                 if selected > 1.2 * k:
                     thr = 1.2 * thr
