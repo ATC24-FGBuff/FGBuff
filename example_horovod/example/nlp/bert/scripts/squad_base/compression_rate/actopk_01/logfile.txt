@@ -1,178 +1,0 @@
-2024-01-05 07:27:13.747323: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcudart.so.10.1
-No protocol specified
-No protocol specified
-No protocol specified
-No protocol specified
-No protocol specified
-No protocol specified
-No protocol specified
-[1,0]<stderr>:2024-01-05 07:27:19.392193: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcudart.so.10.1
-[1,7]<stderr>:2024-01-05 20:27:19.436301: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcudart.so.10.1
-[1,4]<stderr>:2024-01-05 20:27:19.441879: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcudart.so.10.1
-[1,6]<stderr>:2024-01-05 07:27:19.441260: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcudart.so.10.1
-[1,2]<stderr>:2024-01-05 07:27:19.211812: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcudart.so.10.1
-[1,5]<stderr>:2024-01-05 07:27:19.449185: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcudart.so.10.1
-[1,3]<stderr>:2024-01-05 20:27:19.475069: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcudart.so.10.1
-[1,1]<stderr>:2024-01-05 20:27:19.518498: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcudart.so.10.1
-[1,2]<stdout>:
-[1,2]<stdout>: ^^^^^^^000000000000^^^^^^^^^^^ args.seed   1
-[1,1]<stdout>:
-[1,1]<stdout>: ^^^^^^^000000000000^^^^^^^^^^^ args.seed   1
-[1,7]<stdout>:
-[1,7]<stdout>: ^^^^^^^000000000000^^^^^^^^^^^ args.seed   1
-[1,4]<stdout>:
-[1,4]<stdout>: ^^^^^^^000000000000^^^^^^^^^^^ args.seed   1
-[1,5]<stdout>:
-[1,5]<stdout>: ^^^^^^^000000000000^^^^^^^^^^^ args.seed   1
-[1,6]<stdout>:
-[1,6]<stdout>: ^^^^^^^000000000000^^^^^^^^^^^ args.seed   1
-[1,3]<stdout>:
-[1,3]<stdout>: ^^^^^^^000000000000^^^^^^^^^^^ args.seed   1
-[1,0]<stdout>:
-[1,0]<stdout>: ^^^^^^^000000000000^^^^^^^^^^^ args.seed   1
-[1,1]<stdout>:
-[1,1]<stdout>: ^^^^^^^^^^^^^^^^^^ hvd.size()  8
-[1,1]<stdout>:
-[1,1]<stdout>: ^^^^^^^^^^^^^^^^^^ hvd.local_rank()  0
-[1,1]<stdout>:
-[1,1]<stdout>: ^^^^^^^^^^^^^^^^^^ hvd.rank()  1
-[1,7]<stdout>:
-[1,7]<stdout>: ^^^^^^^^^^^^^^^^^^ hvd.size()  8
-[1,7]<stdout>:
-[1,7]<stdout>: ^^^^^^^^^^^^^^^^^^ hvd.local_rank()  0
-[1,7]<stdout>:
-[1,7]<stdout>: ^^^^^^^^^^^^^^^^^^ hvd.rank()  7
-[1,1]<stdout>:device: cuda n_gpu: 1, distributed training: False, 16-bits training: False
-[1,1]<stdout>:DLL 2024-01-05 20:27:20.811777 - PARAMETER Config : ["Namespace(bert_model='bert-base-uncased', output_dir='./squad_base/compression_rate/actopk_01', init_checkpoint='/data/dataset/nlp/bert/pre-model/bert-base-uncased/uncased_L-12_H-768_A-12/bert_base_wiki.pt', train_file='/data/dataset/nlp/bert/squad/train-v1.1.json', predict_file='/data/dataset/nlp/bert/squad/dev-v1.1.json', max_seq_length=384, doc_stride=128, max_query_length=64, do_train=True, do_predict=True, train_batch_size=4, predict_batch_size=4, learning_rate=3e-05, num_train_epochs=3.0, max_steps=-1.0, warmup_proportion=0.1, n_best_size=20, max_answer_length=30, verbose_logging=False, no_cuda=False, seed=1, gradient_accumulation_steps=1, do_lower_case=True, local_rank=-1, fp16=False, amp=False, loss_scale=0, version_2_with_negative=False, null_score_diff_threshold=0.0, vocab_file='/data/dataset/nlp/bert/pre-model/bert-base-uncased/uncased_L-12_H-768_A-12/vocab.txt', config_file='/data/dataset/nlp/bert/pre-model/bert-base-uncased/uncased_L-12_H-768_A-12/bert_config.json', log_freq=100, json_summary='results/dllogger.json', eval_script='/data/dataset/nlp/bert/squad/evaluate-v1.1.py', do_eval=True, use_env=False, skip_checkpoint=False, disable_progress_bar=False, skip_cache=False, cache_dir=None, profile=False, use_adasum=False, model_net='bert_base', num_warmup_batches=20, num_batches_per_iter=10, num_iters=50, mgwfbp=False, asc=False, nstreams=1, threshold=8192, rdma=False, compressor='topkef', memory='residual', density=0.1, cuda=True)"] 
-[1,7]<stdout>:device: cuda n_gpu: 1, distributed training: False, 16-bits training: False
-[1,2]<stdout>:
-[1,2]<stdout>: ^^^^^^^^^^^^^^^^^^ hvd.size()  8
-[1,2]<stdout>:
-[1,2]<stdout>: ^^^^^^^^^^^^^^^^^^ hvd.local_rank()  0
-[1,2]<stdout>:
-[1,2]<stdout>: ^^^^^^^^^^^^^^^^^^ hvd.rank()  2
-[1,1]<stdout>:DLL 2024-01-05 20:27:20.812132 - PARAMETER SEED : 1 
-[1,7]<stdout>:DLL 2024-01-05 20:27:20.784072 - PARAMETER Config : ["Namespace(bert_model='bert-base-uncased', output_dir='./squad_base/compression_rate/actopk_01', init_checkpoint='/data/dataset/nlp/bert/pre-model/bert-base-uncased/uncased_L-12_H-768_A-12/bert_base_wiki.pt', train_file='/data/dataset/nlp/bert/squad/train-v1.1.json', predict_file='/data/dataset/nlp/bert/squad/dev-v1.1.json', max_seq_length=384, doc_stride=128, max_query_length=64, do_train=True, do_predict=True, train_batch_size=4, predict_batch_size=4, learning_rate=3e-05, num_train_epochs=3.0, max_steps=-1.0, warmup_proportion=0.1, n_best_size=20, max_answer_length=30, verbose_logging=False, no_cuda=False, seed=1, gradient_accumulation_steps=1, do_lower_case=True, local_rank=-1, fp16=False, amp=False, loss_scale=0, version_2_with_negative=False, null_score_diff_threshold=0.0, vocab_file='/data/dataset/nlp/bert/pre-model/bert-base-uncased/uncased_L-12_H-768_A-12/vocab.txt', config_file='/data/dataset/nlp/bert/pre-model/bert-base-uncased/uncased_L-12_H-768_A-12/bert_config.json', log_freq=100, json_summary='results/dllogger.json', eval_script='/data/dataset/nlp/bert/squad/evaluate-v1.1.py', do_eval=True, use_env=False, skip_checkpoint=False, disable_progress_bar=False, skip_cache=False, cache_dir=None, profile=False, use_adasum=False, model_net='bert_base', num_warmup_batches=20, num_batches_per_iter=10, num_iters=50, mgwfbp=False, asc=False, nstreams=1, threshold=8192, rdma=False, compressor='topkef', memory='residual', density=0.1, cuda=True)"] 
-[1,5]<stdout>:
-[1,5]<stdout>: ^^^^^^^^^^^^^^^^^^ hvd.size()  8
-[1,5]<stdout>:
-[1,5]<stdout>: ^^^^^^^^^^^^^^^^^^ hvd.local_rank()  0
-[1,3]<stdout>:
-[1,3]<stdout>: ^^^^^^^^^^^^^^^^^^ hvd.size()  8
-[1,3]<stdout>:
-[1,3]<stdout>: ^^^^^^^^^^^^^^^^^^ hvd.local_rank()  0
-[1,5]<stdout>:
-[1,5]<stdout>: ^^^^^^^^^^^^^^^^^^ hvd.rank()  5
-[1,3]<stdout>:
-[1,3]<stdout>: ^^^^^^^^^^^^^^^^^^ hvd.rank()  3
-[1,7]<stdout>:DLL 2024-01-05 20:27:20.784290 - PARAMETER SEED : 1 
-[1,6]<stdout>:
-[1,6]<stdout>: ^^^^^^^^^^^^^^^^^^ hvd.size()  8
-[1,6]<stdout>:
-[1,6]<stdout>: ^^^^^^^^^^^^^^^^^^ hvd.local_rank()  0
-[1,6]<stdout>:
-[1,6]<stdout>: ^^^^^^^^^^^^^^^^^^ hvd.rank()  6
-[1,4]<stdout>:
-[1,4]<stdout>: ^^^^^^^^^^^^^^^^^^ hvd.size()  8
-[1,4]<stdout>:
-[1,4]<stdout>: ^^^^^^^^^^^^^^^^^^ hvd.local_rank()  0
-[1,0]<stdout>:
-[1,0]<stdout>: ^^^^^^^^^^^^^^^^^^ hvd.size()  8
-[1,0]<stdout>:
-[1,0]<stdout>: ^^^^^^^^^^^^^^^^^^ hvd.local_rank()  0
-[1,2]<stdout>:device: cuda n_gpu: 1, distributed training: False, 16-bits training: False
-[1,0]<stdout>:
-[1,0]<stdout>: ^^^^^^^^^^^^^^^^^^ hvd.rank()  0
-[1,4]<stdout>:
-[1,4]<stdout>: ^^^^^^^^^^^^^^^^^^ hvd.rank()  4
-[1,3]<stdout>:device: cuda n_gpu: 1, distributed training: False, 16-bits training: False
-[1,5]<stdout>:device: cuda n_gpu: 1, distributed training: False, 16-bits training: False
-[1,2]<stdout>:DLL 2024-01-05 07:27:20.542695 - PARAMETER Config : ["Namespace(bert_model='bert-base-uncased', output_dir='./squad_base/compression_rate/actopk_01', init_checkpoint='/data/dataset/nlp/bert/pre-model/bert-base-uncased/uncased_L-12_H-768_A-12/bert_base_wiki.pt', train_file='/data/dataset/nlp/bert/squad/train-v1.1.json', predict_file='/data/dataset/nlp/bert/squad/dev-v1.1.json', max_seq_length=384, doc_stride=128, max_query_length=64, do_train=True, do_predict=True, train_batch_size=4, predict_batch_size=4, learning_rate=3e-05, num_train_epochs=3.0, max_steps=-1.0, warmup_proportion=0.1, n_best_size=20, max_answer_length=30, verbose_logging=False, no_cuda=False, seed=1, gradient_accumulation_steps=1, do_lower_case=True, local_rank=-1, fp16=False, amp=False, loss_scale=0, version_2_with_negative=False, null_score_diff_threshold=0.0, vocab_file='/data/dataset/nlp/bert/pre-model/bert-base-uncased/uncased_L-12_H-768_A-12/vocab.txt', config_file='/data/dataset/nlp/bert/pre-model/bert-base-uncased/uncased_L-12_H-768_A-12/bert_config.json', log_freq=100, json_summary='results/dllogger.json', eval_script='/data/dataset/nlp/bert/squad/evaluate-v1.1.py', do_eval=True, use_env=False, skip_checkpoint=False, disable_progress_bar=False, skip_cache=False, cache_dir=None, profile=False, use_adasum=False, model_net='bert_base', num_warmup_batches=20, num_batches_per_iter=10, num_iters=50, mgwfbp=False, asc=False, nstreams=1, threshold=8192, rdma=False, compressor='topkef', memory='residual', density=0.1, cuda=True)"] 
-[1,5]<stdout>:DLL 2024-01-05 07:27:20.774531 - PARAMETER Config : ["Namespace(bert_model='bert-base-uncased', output_dir='./squad_base/compression_rate/actopk_01', init_checkpoint='/data/dataset/nlp/bert/pre-model/bert-base-uncased/uncased_L-12_H-768_A-12/bert_base_wiki.pt', train_file='/data/dataset/nlp/bert/squad/train-v1.1.json', predict_file='/data/dataset/nlp/bert/squad/dev-v1.1.json', max_seq_length=384, doc_stride=128, max_query_length=64, do_train=True, do_predict=True, train_batch_size=4, predict_batch_size=4, learning_rate=3e-05, num_train_epochs=3.0, max_steps=-1.0, warmup_proportion=0.1, n_best_size=20, max_answer_length=30, verbose_logging=False, no_cuda=False, seed=1, gradient_accumulation_steps=1, do_lower_case=True, local_rank=-1, fp16=False, amp=False, loss_scale=0, version_2_with_negative=False, null_score_diff_threshold=0.0, vocab_file='/data/dataset/nlp/bert/pre-model/bert-base-uncased/uncased_L-12_H-768_A-12/vocab.txt', config_file='/data/dataset/nlp/bert/pre-model/bert-base-uncased/uncased_L-12_H-768_A-12/bert_config.json', log_freq=100, json_summary='results/dllogger.json', eval_script='/data/dataset/nlp/bert/squad/evaluate-v1.1.py', do_eval=True, use_env=False, skip_checkpoint=False, disable_progress_bar=False, skip_cache=False, cache_dir=None, profile=False, use_adasum=False, model_net='bert_base', num_warmup_batches=20, num_batches_per_iter=10, num_iters=50, mgwfbp=False, asc=False, nstreams=1, threshold=8192, rdma=False, compressor='topkef', memory='residual', density=0.1, cuda=True)"] 
-[1,2]<stdout>:DLL 2024-01-05 07:27:20.543057 - PARAMETER SEED : 1 
-[1,3]<stdout>:DLL 2024-01-05 20:27:20.792999 - PARAMETER Config : ["Namespace(bert_model='bert-base-uncased', output_dir='./squad_base/compression_rate/actopk_01', init_checkpoint='/data/dataset/nlp/bert/pre-model/bert-base-uncased/uncased_L-12_H-768_A-12/bert_base_wiki.pt', train_file='/data/dataset/nlp/bert/squad/train-v1.1.json', predict_file='/data/dataset/nlp/bert/squad/dev-v1.1.json', max_seq_length=384, doc_stride=128, max_query_length=64, do_train=True, do_predict=True, train_batch_size=4, predict_batch_size=4, learning_rate=3e-05, num_train_epochs=3.0, max_steps=-1.0, warmup_proportion=0.1, n_best_size=20, max_answer_length=30, verbose_logging=False, no_cuda=False, seed=1, gradient_accumulation_steps=1, do_lower_case=True, local_rank=-1, fp16=False, amp=False, loss_scale=0, version_2_with_negative=False, null_score_diff_threshold=0.0, vocab_file='/data/dataset/nlp/bert/pre-model/bert-base-uncased/uncased_L-12_H-768_A-12/vocab.txt', config_file='/data/dataset/nlp/bert/pre-model/bert-base-uncased/uncased_L-12_H-768_A-12/bert_config.json', log_freq=100, json_summary='results/dllogger.json', eval_script='/data/dataset/nlp/bert/squad/evaluate-v1.1.py', do_eval=True, use_env=False, skip_checkpoint=False, disable_progress_bar=False, skip_cache=False, cache_dir=None, profile=False, use_adasum=False, model_net='bert_base', num_warmup_batches=20, num_batches_per_iter=10, num_iters=50, mgwfbp=False, asc=False, nstreams=1, threshold=8192, rdma=False, compressor='topkef', memory='residual', density=0.1, cuda=True)"] 
-[1,0]<stdout>:device: cuda n_gpu: 1, distributed training: False, 16-bits training: False
-[1,4]<stdout>:device: cuda n_gpu: 1, distributed training: False, 16-bits training: False
-[1,3]<stdout>:DLL 2024-01-05 20:27:20.793374 - PARAMETER SEED : 1 
-[1,6]<stdout>:device: cuda n_gpu: 1, distributed training: False, 16-bits training: False
-[1,5]<stdout>:DLL 2024-01-05 07:27:20.774903 - PARAMETER SEED : 1 
-[1,0]<stdout>:DLL 2024-01-05 07:27:20.763752 - PARAMETER Config : ["Namespace(bert_model='bert-base-uncased', output_dir='./squad_base/compression_rate/actopk_01', init_checkpoint='/data/dataset/nlp/bert/pre-model/bert-base-uncased/uncased_L-12_H-768_A-12/bert_base_wiki.pt', train_file='/data/dataset/nlp/bert/squad/train-v1.1.json', predict_file='/data/dataset/nlp/bert/squad/dev-v1.1.json', max_seq_length=384, doc_stride=128, max_query_length=64, do_train=True, do_predict=True, train_batch_size=4, predict_batch_size=4, learning_rate=3e-05, num_train_epochs=3.0, max_steps=-1.0, warmup_proportion=0.1, n_best_size=20, max_answer_length=30, verbose_logging=False, no_cuda=False, seed=1, gradient_accumulation_steps=1, do_lower_case=True, local_rank=-1, fp16=False, amp=False, loss_scale=0, version_2_with_negative=False, null_score_diff_threshold=0.0, vocab_file='/data/dataset/nlp/bert/pre-model/bert-base-uncased/uncased_L-12_H-768_A-12/vocab.txt', config_file='/data/dataset/nlp/bert/pre-model/bert-base-uncased/uncased_L-12_H-768_A-12/bert_config.json', log_freq=100, json_summary='results/dllogger.json', eval_script='/data/dataset/nlp/bert/squad/evaluate-v1.1.py', do_eval=True, use_env=False, skip_checkpoint=False, disable_progress_bar=False, skip_cache=False, cache_dir=None, profile=False, use_adasum=False, model_net='bert_base', num_warmup_batches=20, num_batches_per_iter=10, num_iters=50, mgwfbp=False, asc=False, nstreams=1, threshold=8192, rdma=False, compressor='topkef', memory='residual', density=0.1, cuda=True)"] 
-[1,4]<stdout>:DLL 2024-01-05 20:27:20.789393 - PARAMETER Config : ["Namespace(bert_model='bert-base-uncased', output_dir='./squad_base/compression_rate/actopk_01', init_checkpoint='/data/dataset/nlp/bert/pre-model/bert-base-uncased/uncased_L-12_H-768_A-12/bert_base_wiki.pt', train_file='/data/dataset/nlp/bert/squad/train-v1.1.json', predict_file='/data/dataset/nlp/bert/squad/dev-v1.1.json', max_seq_length=384, doc_stride=128, max_query_length=64, do_train=True, do_predict=True, train_batch_size=4, predict_batch_size=4, learning_rate=3e-05, num_train_epochs=3.0, max_steps=-1.0, warmup_proportion=0.1, n_best_size=20, max_answer_length=30, verbose_logging=False, no_cuda=False, seed=1, gradient_accumulation_steps=1, do_lower_case=True, local_rank=-1, fp16=False, amp=False, loss_scale=0, version_2_with_negative=False, null_score_diff_threshold=0.0, vocab_file='/data/dataset/nlp/bert/pre-model/bert-base-uncased/uncased_L-12_H-768_A-12/vocab.txt', config_file='/data/dataset/nlp/bert/pre-model/bert-base-uncased/uncased_L-12_H-768_A-12/bert_config.json', log_freq=100, json_summary='results/dllogger.json', eval_script='/data/dataset/nlp/bert/squad/evaluate-v1.1.py', do_eval=True, use_env=False, skip_checkpoint=False, disable_progress_bar=False, skip_cache=False, cache_dir=None, profile=False, use_adasum=False, model_net='bert_base', num_warmup_batches=20, num_batches_per_iter=10, num_iters=50, mgwfbp=False, asc=False, nstreams=1, threshold=8192, rdma=False, compressor='topkef', memory='residual', density=0.1, cuda=True)"] 
-[1,6]<stdout>:DLL 2024-01-05 07:27:20.779642 - PARAMETER Config : ["Namespace(bert_model='bert-base-uncased', output_dir='./squad_base/compression_rate/actopk_01', init_checkpoint='/data/dataset/nlp/bert/pre-model/bert-base-uncased/uncased_L-12_H-768_A-12/bert_base_wiki.pt', train_file='/data/dataset/nlp/bert/squad/train-v1.1.json', predict_file='/data/dataset/nlp/bert/squad/dev-v1.1.json', max_seq_length=384, doc_stride=128, max_query_length=64, do_train=True, do_predict=True, train_batch_size=4, predict_batch_size=4, learning_rate=3e-05, num_train_epochs=3.0, max_steps=-1.0, warmup_proportion=0.1, n_best_size=20, max_answer_length=30, verbose_logging=False, no_cuda=False, seed=1, gradient_accumulation_steps=1, do_lower_case=True, local_rank=-1, fp16=False, amp=False, loss_scale=0, version_2_with_negative=False, null_score_diff_threshold=0.0, vocab_file='/data/dataset/nlp/bert/pre-model/bert-base-uncased/uncased_L-12_H-768_A-12/vocab.txt', config_file='/data/dataset/nlp/bert/pre-model/bert-base-uncased/uncased_L-12_H-768_A-12/bert_config.json', log_freq=100, json_summary='results/dllogger.json', eval_script='/data/dataset/nlp/bert/squad/evaluate-v1.1.py', do_eval=True, use_env=False, skip_checkpoint=False, disable_progress_bar=False, skip_cache=False, cache_dir=None, profile=False, use_adasum=False, model_net='bert_base', num_warmup_batches=20, num_batches_per_iter=10, num_iters=50, mgwfbp=False, asc=False, nstreams=1, threshold=8192, rdma=False, compressor='topkef', memory='residual', density=0.1, cuda=True)"] 
-[1,4]<stdout>:DLL 2024-01-05 20:27:20.789599 - PARAMETER SEED : 1 
-[1,0]<stdout>:DLL 2024-01-05 07:27:20.763977 - PARAMETER SEED : 1 
-[1,6]<stdout>:DLL 2024-01-05 07:27:20.779853 - PARAMETER SEED : 1 
-[1,7]<stdout>:DLL 2024-01-05 20:27:29.868097 - PARAMETER loading_checkpoint : True 
-[1,3]<stdout>:DLL 2024-01-05 20:27:29.879416 - PARAMETER loading_checkpoint : True 
-[1,4]<stdout>:DLL 2024-01-05 20:27:29.915289 - PARAMETER loading_checkpoint : True 
-[1,5]<stdout>:DLL 2024-01-05 07:27:29.910187 - PARAMETER loading_checkpoint : True 
-[1,1]<stdout>:DLL 2024-01-05 20:27:29.970153 - PARAMETER loading_checkpoint : True 
-[1,6]<stdout>:DLL 2024-01-05 07:27:30.002799 - PARAMETER loading_checkpoint : True 
-[1,0]<stdout>:DLL 2024-01-05 07:27:30.052225 - PARAMETER loading_checkpoint : True 
-[1,2]<stdout>:DLL 2024-01-05 07:27:29.870692 - PARAMETER loading_checkpoint : True 
-[1,7]<stdout>:DLL 2024-01-05 20:27:31.045673 - PARAMETER loaded_checkpoint : True 
-[1,4]<stdout>:DLL 2024-01-05 20:27:31.079953 - PARAMETER loaded_checkpoint : True 
-[1,3]<stdout>:DLL 2024-01-05 20:27:31.103452 - PARAMETER loaded_checkpoint : True 
-[1,5]<stdout>:DLL 2024-01-05 07:27:31.132517 - PARAMETER loaded_checkpoint : True 
-[1,1]<stdout>:DLL 2024-01-05 20:27:31.189837 - PARAMETER loaded_checkpoint : True 
-[1,6]<stdout>:DLL 2024-01-05 07:27:31.170145 - PARAMETER loaded_checkpoint : True 
-[1,0]<stdout>:DLL 2024-01-05 07:27:31.253891 - PARAMETER loaded_checkpoint : True 
-[1,2]<stdout>:DLL 2024-01-05 07:27:31.095949 - PARAMETER loaded_checkpoint : True 
-[1,7]<stdout>:DLL 2024-01-05 20:27:32.645214 - PARAMETER model_weights_num : 109488386 
-[1,4]<stdout>:DLL 2024-01-05 20:27:32.669122 - PARAMETER model_weights_num : 109488386 
-[1,3]<stdout>:DLL 2024-01-05 20:27:32.698909 - PARAMETER model_weights_num : 109488386 
-[1,5]<stdout>:DLL 2024-01-05 07:27:32.728499 - PARAMETER model_weights_num : 109488386 
-[1,1]<stdout>:DLL 2024-01-05 20:27:32.791182 - PARAMETER model_weights_num : 109488386 
-[1,6]<stdout>:DLL 2024-01-05 07:27:32.767919 - PARAMETER model_weights_num : 109488386 
-[1,0]<stdout>:DLL 2024-01-05 07:27:32.875582 - PARAMETER model_weights_num : 109488386 
-[1,2]<stdout>:DLL 2024-01-05 07:27:32.698488 - PARAMETER model_weights_num : 109488386 
-[1,0]<stderr>:01/05/2024 07:27:33 - INFO - __main__ -   +++++++++++++++++++ train train train +++++++ hvd.rank() = 0
-[1,1]<stderr>:01/05/2024 20:27:33 - INFO - __main__ -   +++++++++++++++++++ train train train +++++++ hvd.rank() = 1
-[1,2]<stderr>:01/05/2024 07:27:33 - INFO - __main__ -   +++++++++++++++++++ train train train +++++++ hvd.rank() = 2
-[1,3]<stderr>:01/05/2024 20:27:33 - INFO - __main__ -   +++++++++++++++++++ train train train +++++++ hvd.rank() = 3
-[1,4]<stderr>:01/05/2024 20:27:33 - INFO - __main__ -   +++++++++++++++++++ train train train +++++++ hvd.rank() = 4
-[1,5]<stderr>:01/05/2024 07:27:33 - INFO - __main__ -   +++++++++++++++++++ train train train +++++++ hvd.rank() = 5
-[1,6]<stderr>:01/05/2024 07:27:33 - INFO - __main__ -   +++++++++++++++++++ train train train +++++++ hvd.rank() = 6
-[1,7]<stderr>:01/05/2024 20:27:33 - INFO - __main__ -   +++++++++++++++++++ train train train +++++++ hvd.rank() = 7
-[1,3]<stdout>:DLL 2024-01-05 20:27:42.267940 - PARAMETER train_start : True 
-[1,3]<stdout>:DLL 2024-01-05 20:27:42.268063 - PARAMETER training_samples : 87599 
-[1,3]<stdout>:DLL 2024-01-05 20:27:42.268100 - PARAMETER training_features : 88641 
-[1,3]<stdout>:DLL 2024-01-05 20:27:42.268130 - PARAMETER train_batch_size : 4 
-[1,3]<stdout>:DLL 2024-01-05 20:27:42.268157 - PARAMETER steps : 65697.0 
-[1,4]<stdout>:DLL 2024-01-05 20:27:42.276618 - PARAMETER train_start : True 
-[1,4]<stdout>:DLL 2024-01-05 20:27:42.276751 - PARAMETER training_samples : 87599 
-[1,4]<stdout>:DLL 2024-01-05 20:27:42.276788 - PARAMETER training_features : 88641 
-[1,4]<stdout>:DLL 2024-01-05 20:27:42.276817 - PARAMETER train_batch_size : 4 
-[1,4]<stdout>:DLL 2024-01-05 20:27:42.276844 - PARAMETER steps : 65697.0 
-[1,2]<stdout>:DLL 2024-01-05 07:27:42.054415 - PARAMETER train_start : True 
-[1,2]<stdout>:DLL 2024-01-05 07:27:42.054537 - PARAMETER training_samples : 87599 
-[1,2]<stdout>:DLL 2024-01-05 07:27:42.054572 - PARAMETER training_features : 88641 
-[1,2]<stdout>:DLL 2024-01-05 07:27:42.054601 - PARAMETER train_batch_size : 4 
-[1,2]<stdout>:DLL 2024-01-05 07:27:42.054626 - PARAMETER steps : 65697.0 
-[1,6]<stdout>:DLL 2024-01-05 07:27:42.315390 - PARAMETER train_start : True 
-[1,6]<stdout>:DLL 2024-01-05 07:27:42.315536 - PARAMETER training_samples : 87599 
-[1,6]<stdout>:DLL 2024-01-05 07:27:42.315574 - PARAMETER training_features : 88641 
-[1,6]<stdout>:DLL 2024-01-05 07:27:42.315605 - PARAMETER train_batch_size : 4 
-[1,6]<stdout>:DLL 2024-01-05 07:27:42.315632 - PARAMETER steps : 65697.0 
-[1,7]<stdout>:DLL 2024-01-05 20:27:42.322247 - PARAMETER train_start : True 
-[1,7]<stdout>:DLL 2024-01-05 20:27:42.322386 - PARAMETER training_samples : 87599 
-[1,7]<stdout>:DLL 2024-01-05 20:27:42.322424 - PARAMETER training_features : 88641 
-[1,7]<stdout>:DLL 2024-01-05 20:27:42.322455 - PARAMETER train_batch_size : 4 
-[1,7]<stdout>:DLL 2024-01-05 20:27:42.322483 - PARAMETER steps : 65697.0 
-[1,1]<stdout>:DLL 2024-01-05 20:27:42.366139 - PARAMETER train_start : True 
-[1,1]<stdout>:DLL 2024-01-05 20:27:42.366261 - PARAMETER training_samples : 87599 
-[1,1]<stdout>:DLL 2024-01-05 20:27:42.366296 - PARAMETER training_features : 88641 
-[1,1]<stdout>:DLL 2024-01-05 20:27:42.366326 - PARAMETER train_batch_size : 4 
-[1,1]<stdout>:DLL 2024-01-05 20:27:42.366351 - PARAMETER steps : 65697.0 
-[1,5]<stdout>:DLL 2024-01-05 07:27:42.340541 - PARAMETER train_start : True 
-[1,5]<stdout>:DLL 2024-01-05 07:27:42.340670 - PARAMETER training_samples : 87599 
-[1,5]<stdout>:DLL 2024-01-05 07:27:42.340705 - PARAMETER training_features : 88641 
-[1,5]<stdout>:DLL 2024-01-05 07:27:42.340733 - PARAMETER train_batch_size : 4 
-[1,5]<stdout>:DLL 2024-01-05 07:27:42.340758 - PARAMETER steps : 65697.0 
-[1,0]<stdout>:DLL 2024-01-05 07:27:42.407248 - PARAMETER train_start : True 
-[1,0]<stdout>:DLL 2024-01-05 07:27:42.407368 - PARAMETER training_samples : 87599 
-[1,0]<stdout>:DLL 2024-01-05 07:27:42.407411 - PARAMETER training_features : 88641 
-[1,0]<stdout>:DLL 2024-01-05 07:27:42.407448 - PARAMETER train_batch_size : 4 
-[1,0]<stdout>:DLL 2024-01-05 07:27:42.407484 - PARAMETER steps : 65697.0 
-[1,4]<stderr>:Iteration:   0%|          | 0/2771 [00:00<?, ?it/s][1,3]<stderr>:Iteration:   0%|          | 0/2771 [00:00<?, ?it/s][1,2]<stderr>:Iteration:   0%|          | 0/2771 [00:00<?, ?it/s][1,6]<stderr>:Iteration:   0%|          | 0/2771 [00:00<?, ?it/s][1,7]<stderr>:Iteration:   0%|          | 0/2771 [00:00<?, ?it/s][1,1]<stderr>:Iteration:   0%|          | 0/2771 [00:00<?, ?it/s][1,5]<stderr>:Iteration:   0%|          | 0/2771 [00:00<?, ?it/s][1,0]<stderr>:Iteration:   0%|          | 0/2771 [00:00<?, ?it/s][1,2]<stderr>:Iteration:   0%|          | 1/2771 [00:01<1:20:20,  1.74s/it][1,4]<stderr>:Iteration:   0%|          | 1/2771 [00:01<1:21:56,  1.77s/it][1,1]<stderr>:Iteration:   0%|          | 1/2771 [00:01<1:13:50,  1.60s/it][1,5]<stderr>:Iteration:   0%|          | 1/2771 [00:01<1:13:46,  1.60s/it][1,3]<stderr>:Iteration:   0%|          | 1/2771 [00:01<1:21:53,  1.77s/it][1,0]<stdout>:DLL 2024-01-05 07:27:46.507974 - Training Epoch: 0 Training Iteration: 1  step_loss : 5.8494553565979  learning_rate : 3e-05 
-[1,0]<stderr>:Iteration:   0%|          | 1/2771 [00:01<1:11:07,  1.54s/it][1,6]<stderr>:Iteration:   0%|          | 1/2771 [00:01<1:20:36,  1.75s/it][1,7]<stderr>:Iteration:   0%|          | 1/2771 [00:01<1:15:10,  1.63s/it][1,0]<stderr>:Iteration:   0%|          | 2/2771 [00:02<55:11,  1.20s/it]  [1,4]<stderr>:Iteration:   0%|          | 2/2771 [00:02<59:41,  1.29s/it]  [1,1]<stderr>:Iteration:   0%|          | 2/2771 [00:02<56:22,  1.22s/it]  [1,3]<stderr>:Iteration:   0%|          | 2/2771 [00:02<59:40,  1.29s/it]  [1,2]<stderr>:Iteration:   0%|          | 2/2771 [00:02<59:02,  1.28s/it]  [1,5]<stderr>:Iteration:   0%|          | 2/2771 [00:02<56:20,  1.22s/it]  [1,6]<stderr>:Iteration:   0%|          | 2/2771 [00:02<59:04,  1.28s/it]  [1,7]<stderr>:Iteration:   0%|          | 2/2771 [00:02<56:46,  1.23s/it]  [1,0]<stderr>:Iteration:   0%|          | 3/2771 [00:03<49:27,  1.07s/it][1,5]<stderr>:Iteration:   0%|          | 3/2771 [00:03<50:04,  1.09s/it][1,4]<stderr>:Iteration:   0%|          | 3/2771 [00:03<51:54,  1.13s/it][1,2]<stderr>:Iteration:   0%|          | 3/2771 [00:03<51:33,  1.12s/it][1,3]<stderr>:Iteration:   0%|          | 3/2771 [00:03<51:54,  1.13s/it][1,1]<stderr>:Iteration:   0%|          | 3/2771 [00:03<50:06,  1.09s/it][1,6]<stderr>:Iteration:   0%|          | 3/2771 [00:03<51:33,  1.12s/it][1,7]<stderr>:Iteration:   0%|          | 3/2771 [00:03<50:19,  1.09s/it][1,0]<stderr>:Iteration:   0%|          | 4/2771 [00:04<46:45,  1.01s/it][1,1]<stderr>:Iteration:   0%|          | 4/2771 [00:04<47:08,  1.02s/it][1,2]<stderr>:Iteration:   0%|          | 4/2771 [00:04<48:03,  1.04s/it][1,3]<stderr>:Iteration:   0%|          | 4/2771 [00:04<48:17,  1.05s/it][1,4]<stderr>:Iteration:   0%|          | 4/2771 [00:04<48:17,  1.05s/it][1,5]<stderr>:Iteration:   0%|          | 4/2771 [00:04<47:11,  1.02s/it][1,6]<stderr>:Iteration:   0%|          | 4/2771 [00:04<48:04,  1.04s/it][1,7]<stderr>:Iteration:   0%|          | 4/2771 [00:04<47:19,  1.03s/it][1,3]<stderr>:Iteration:   0%|          | 5/2771 [00:05<46:11,  1.00s/it][1,1]<stderr>:Iteration:   0%|          | 5/2771 [00:05<45:31,  1.01it/s][1,2]<stderr>:Iteration:   0%|          | 5/2771 [00:05<46:04,  1.00it/s][1,4]<stderr>:Iteration:   0%|          | 5/2771 [00:05<46:13,  1.00s/it][1,0]<stderr>:Iteration:   0%|          | 5/2771 [00:05<45:18,  1.02it/s][1,5]<stderr>:Iteration:   0%|          | 5/2771 [00:05<45:31,  1.01it/s][1,7]<stderr>:Iteration:   0%|          | 5/2771 [00:05<45:37,  1.01it/s][1,6]<stderr>:Iteration:   0%|          | 5/2771 [00:05<46:07,  1.00s/it][1,1]<stderr>:Iteration:   0%|          | 6/2771 [00:06<44:28,  1.04it/s][1,0]<stderr>:Iteration:   0%|          | 6/2771 [00:06<44:19,  1.04it/s][1,2]<stderr>:Iteration:   0%|          | 6/2771 [00:06<44:51,  1.03it/s][1,3]<stderr>:Iteration:   0%|          | 6/2771 [00:06<44:57,  1.03it/s][1,4]<stderr>:Iteration:   0%|          | 6/2771 [00:06<44:57,  1.03it/s][1,5]<stderr>:Iteration:   0%|          | 6/2771 [00:06<44:29,  1.04it/s][1,6]<stderr>:Iteration:   0%|          | 6/2771 [00:06<44:51,  1.03it/s][1,7]<stderr>:Iteration:   0%|          | 6/2771 [00:06<44:32,  1.03it/s][1,4]<stderr>:Iteration:   0%|          | 7/2771 [00:07<44:08,  1.04it/s][1,5]<stderr>:Iteration:   0%|          | 7/2771 [00:07<43:49,  1.05it/s][1,3]<stderr>:Iteration:   0%|          | 7/2771 [00:07<44:09,  1.04it/s][1,2]<stderr>:Iteration:   0%|          | 7/2771 [00:07<44:06,  1.04it/s][1,0]<stderr>:Iteration:   0%|          | 7/2771 [00:07<43:45,  1.05it/s][1,1]<stderr>:Iteration:   0%|          | 7/2771 [00:07<43:52,  1.05it/s][1,6]<stderr>:Iteration:   0%|          | 7/2771 [00:07<44:05,  1.04it/s][1,7]<stderr>:Iteration:   0%|          | 7/2771 [00:07<43:53,  1.05it/s][1,4]<stderr>:Iteration:   0%|          | 8/2771 [00:08<43:46,  1.05it/s][1,1]<stderr>:Iteration:   0%|          | 8/2771 [00:08<43:34,  1.06it/s][1,0]<stderr>:Iteration:   0%|          | 8/2771 [00:08<43:30,  1.06it/s][1,3]<stderr>:Iteration:   0%|          | 8/2771 [00:08<43:47,  1.05it/s][1,2]<stderr>:Iteration:   0%|          | 8/2771 [00:08<43:45,  1.05it/s][1,5]<stderr>:Iteration:   0%|          | 8/2771 [00:08<43:35,  1.06it/s][1,6]<stderr>:Iteration:   0%|          | 8/2771 [00:08<43:44,  1.05it/s][1,7]<stderr>:Iteration:   0%|          | 8/2771 [00:08<43:36,  1.06it/s][1,0]<stderr>:Iteration:   0%|          | 9/2771 [00:08<43:10,  1.07it/s][1,5]<stderr>:Iteration:   0%|          | 9/2771 [00:09<43:13,  1.06it/s][1,1]<stderr>:Iteration:   0%|          | 9/2771 [00:09<43:14,  1.06it/s][1,4]<stderr>:Iteration:   0%|          | 9/2771 [00:09<43:23,  1.06it/s][1,3]<stderr>:Iteration:   0%|          | 9/2771 [00:09<43:23,  1.06it/s][1,2]<stderr>:Iteration:   0%|          | 9/2771 [00:09<43:22,  1.06it/s][1,6]<stderr>:Iteration:   0%|          | 9/2771 [00:09<43:20,  1.06it/s][1,7]<stderr>:Iteration:   0%|          | 9/2771 [00:09<43:14,  1.06it/s][1,2]<stderr>:Iteration:   0%|          | 10/2771 [00:10<42:57,  1.07it/s][1,4]<stderr>:Iteration:   0%|          | 10/2771 [00:10<42:59,  1.07it/s][1,0]<stderr>:Iteration:   0%|          | 10/2771 [00:09<42:51,  1.07it/s][1,1]<stderr>:Iteration:   0%|          | 10/2771 [00:09<42:54,  1.07it/s][1,3]<stderr>:Iteration:   0%|          | 10/2771 [00:10<42:59,  1.07it/s][1,5]<stderr>:Iteration:   0%|          | 10/2771 [00:09<42:55,  1.07it/s][1,6]<stderr>:Iteration:   0%|          | 10/2771 [00:10<42:59,  1.07it/s][1,7]<stderr>:Iteration:   0%|          | 10/2771 [00:09<42:55,  1.07it/s][1,2]<stderr>:Iteration:   0%|          | 11/2771 [00:11<42:54,  1.07it/s][1,1]<stderr>:Iteration:   0%|          | 11/2771 [00:10<42:51,  1.07it/s][1,0]<stderr>:Iteration:   0%|          | 11/2771 [00:10<42:50,  1.07it/s][1,4]<stderr>:Iteration:   0%|          | 11/2771 [00:11<42:56,  1.07it/s][1,3]<stderr>:Iteration:   0%|          | 11/2771 [00:11<42:56,  1.07it/s][1,5]<stderr>:Iteration:   0%|          | 11/2771 [00:10<42:52,  1.07it/s][1,6]<stderr>:Iteration:   0%|          | 11/2771 [00:11<42:55,  1.07it/s][1,7]<stderr>:Iteration:   0%|          | 11/2771 [00:10<42:52,  1.07it/s][1,2]<stderr>:Iteration:   0%|          | 12/2771 [00:11<42:48,  1.07it/s][1,3]<stderr>:Iteration:   0%|          | 12/2771 [00:11<42:48,  1.07it/s][1,0]<stderr>:Iteration:   0%|          | 12/2771 [00:11<42:45,  1.08it/s][1,5]<stderr>:Iteration:   0%|          | 12/2771 [00:11<42:45,  1.08it/s][1,4]<stderr>:Iteration:   0%|          | 12/2771 [00:11<42:49,  1.07it/s][1,1]<stderr>:Iteration:   0%|          | 12/2771 [00:11<42:47,  1.07it/s][1,7]<stderr>:Iteration:   0%|          | 12/2771 [00:11<42:46,  1.07it/s][1,6]<stderr>:Iteration:   0%|          | 12/2771 [00:11<42:50,  1.07it/s][1,4]<stderr>:Iteration:   0%|          | 13/2771 [00:12<43:01,  1.07it/s][1,5]<stderr>:Iteration:   0%|          | 13/2771 [00:12<42:59,  1.07it/s][1,1]<stderr>:Iteration:   0%|          | 13/2771 [00:12<43:00,  1.07it/s][1,0]<stderr>:Iteration:   0%|          | 13/2771 [00:12<43:00,  1.07it/s][1,2]<stderr>:Iteration:   0%|          | 13/2771 [00:12<43:02,  1.07it/s][1,3]<stderr>:Iteration:   0%|          | 13/2771 [00:12<43:03,  1.07it/s][1,6]<stderr>:Iteration:   0%|          | 13/2771 [00:12<43:01,  1.07it/s][1,7]<stderr>:Iteration:   0%|          | 13/2771 [00:12<43:00,  1.07it/s][1,0]<stderr>:Iteration:   1%|          | 14/2771 [00:13<42:53,  1.07it/s][1,4]<stderr>:Iteration:   1%|          | 14/2771 [00:13<42:55,  1.07it/s][1,1]<stderr>:Iteration:   1%|          | 14/2771 [00:13<42:53,  1.07it/s][1,2]<stderr>:Iteration:   1%|          | 14/2771 [00:13<42:54,  1.07it/s][1,3]<stderr>:Iteration:   1%|          | 14/2771 [00:13<42:55,  1.07it/s][1,5]<stderr>:Iteration:   1%|          | 14/2771 [00:13<42:53,  1.07it/s][1,6]<stderr>:Iteration:   1%|          | 14/2771 [00:13<42:55,  1.07it/s][1,7]<stderr>:Iteration:   1%|          | 14/2771 [00:13<42:54,  1.07it/s][1,0]<stderr>:Iteration:   1%|          | 15/2771 [00:14<42:46,  1.07it/s][1,1]<stderr>:Iteration:   1%|          | 15/2771 [00:14<42:47,  1.07it/s][1,5]<stderr>:Iteration:   1%|          | 15/2771 [00:14<42:47,  1.07it/s][1,2]<stderr>:Iteration:   1%|          | 15/2771 [00:14<42:48,  1.07it/s][1,3]<stderr>:Iteration:   1%|          | 15/2771 [00:14<42:48,  1.07it/s][1,4]<stderr>:Iteration:   1%|          | 15/2771 [00:14<42:48,  1.07it/s][1,7]<stderr>:Iteration:   1%|          | 15/2771 [00:14<42:46,  1.07it/s][1,6]<stderr>:Iteration:   1%|          | 15/2771 [00:14<42:48,  1.07it/s]
