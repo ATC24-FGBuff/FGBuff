@@ -1,6 +1,6 @@
 import torch
 
-from adtopk_lib import Compressor
+from gradce_lib import Compressor
 import random
 import numpy as np
 import horovod.torch as hvd
@@ -130,9 +130,6 @@ class TopKCompressor(Compressor):
             return values
         tensor_decompressed = torch.zeros(
             numel, dtype=values.dtype, layout=values.layout, device=values.device).cuda()
-        # if hvd.rank() == 0:
-        #     print('values: ', values, 'indices: ', indices)
-        # [a,b,    c,d]  [0,1,    0,2]
-        # [c, b ,d ][a+c, b,d ]
+
         tensor_decompressed = tensor_decompressed.scatter_add(0, indices, values)
         return tensor_decompressed.view(shape)

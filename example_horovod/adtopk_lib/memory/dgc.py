@@ -1,6 +1,6 @@
 import torch
 
-from adtopk_lib import Memory
+from gradce_lib import Memory
 from horovod.torch import allreduce_
 
 

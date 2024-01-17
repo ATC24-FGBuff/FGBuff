@@ -1,4 +1,4 @@
-from adtopk_lib import Memory
+from gradce_lib import Memory
 
 
 class ResidualMemory(Memory):
@@ -15,12 +15,6 @@ class ResidualMemory(Memory):
 
     def update(self, tensor, name, compressor, tensor_compressed, ctx):
         """Update the residuals."""
-        # numel, shape = ctx
-        # values, indices = tensor_compressed
-        # if values.numel()!=numel:
-        #     tensor_decompressed = compressor.decompress(tensor_compressed, ctx)
-        # else:
-        #     tensor_decompressed=values
         tensor_decompressed = compressor.decompress(tensor_compressed, ctx, name)
 
         residual = tensor - tensor_decompressed

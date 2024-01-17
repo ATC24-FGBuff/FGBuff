@@ -852,27 +852,6 @@ class _DistributedOptimizer(torch.optim.Optimizer):
         self._group_sizes = group_sizes
         self._group_dims = group_dims
         
-        
-        
-        
-        # # _sizes和groups都是倒序
-        if rank()==0 and self._num_steps< 3:
-            print('Number of parameters: %d' % np.sum(self._sizes))
-            print('Total number of tensors: %s' % len(self._sizes))
-            print('Merged number of groups: %s' % len(groups))
-            
-            # print('self._group_sizes: ',len(self._group_sizes))
-            # print('self._group_sizes: ',self._group_sizes)
-            # arr_=[]
-            # for gz in self._group_sizes:
-            #     print(len(gz))
-            #     arr_.append(len(gz))
-                
-            # print('sum(len(gz))=', sum(arr_))
-            # print('groups_len: ', len(groups))
-            # print('groups: ', groups)
-            # print('group_dims: ', group_dims)
-
 
         new_keys = []
         self._merged_parameter_offsets = {}
@@ -922,22 +901,6 @@ class _DistributedOptimizer(torch.optim.Optimizer):
                 flags.append(0)
             self._groups_flags.append(flags)
 
-        # logger.info('offsets: ', self._merged_parameter_offsets)
-        # logger.info('_layerwise_compressors: %s', self._layerwise_compressors)        
-        # if rank()==0 and self._num_steps< 3:
-        #     # print('self._merged_parameter_offsets: ',self._merged_parameter_offsets)
-        #     # print('self._layerwise_compressors: ', self._layerwise_compressors)            
-        #     # print('self._merged_parameters: ', self._merged_parameters)
-        #     # print('self._merged_parameter_names: ', self._merged_parameter_names)
-        #     # print('self._merged_parameter_offsets: ', self._merged_parameter_offsets)            
-        #     print('self._groups: ', self._groups)
-        #     # print('self._key_groupidx_maps: ', self._key_groupidx_maps)                   
-        #     print('self._merged_parameters_group_sizes: ', self._merged_parameters_group_sizes)
-            
-        #     for k in self._merged_parameters_group_sizes.keys():
-        #         print(sum(self._merged_parameters_group_sizes[k]))
-            
-        #     print('self._merged_parameters_group_ids: ', self._merged_parameters_group_ids)
 
 
     def _push_to_buffer(self, name, tensor):
@@ -958,11 +921,8 @@ class _DistributedOptimizer(torch.optim.Optimizer):
             self._merged_parameters[new_key].data[offset:offset+numel].copy_(tensor.view(numel))
 
             self._groups_flags[group_idx][layer_idx] = 1
-            # 遍历_groups_flags看是否都进group
             for i, idx in enumerate(self._groups_flags[group_idx]):
-                # Debug bert_base
-                # if self._model_net_name=='bert_base' and (i==2 or i==3):
-                #     continue
+
                 
                 if idx == 0:
                     return name, None
@@ -1007,59 +967,12 @@ class _DistributedOptimizer(torch.optim.Optimizer):
         merged_parameters_group_size= self._merged_parameters_group_sizes[name]
         merged_parameters_group_dim= self._merged_parameters_group_dims[name]
         
-        # if rank()==0:
-        #     print('merged_parameters_group_size=',sum(merged_parameters_group_size))
-        #     print('tensor=', len(tensor))
-        
-        # if 'classifier.3.weight' in name:
-        #     density=0.002
-        # density =0.1
+
         
         group_idx = self._merged_parameters_group_ids[name] 
         
-        # if group_idx==5 or group_idx==6:
-        #     density=0.1
-        # elif group_idx==0 or group_idx==1:
-        #     density=0.01
-
-        # if group_idx==0 or group_idx==1 or group_idx==2:
-        #     density=0.01
-        # elif group_idx==6 :
-        #     density=0.5
-        # elif group_idx==4 or group_idx==5:
-        #     density=0.1
-        # else:
-        #     density=0.05
         
-        # FC 
-        # if group_idx==1:
-        #     density=0.01
-        # elif group_idx==0 or group_idx==7:
-        #     density=1
-        # elif group_idx==5 or group_idx==6:
-        #     density=0.2
-        # else:
-        #     density=0.05    
-        
-
-        # if 'fc' in name :
-        #     density=0.001
-        # elif 'conv4' in name:
-        #     density=0.1
-        # else:
-        #     density=1
-        
-        # print(name,':',group_idx)
         tensor_compressed, ctx, selected_values = self._compression.compress(tensor, name, group_size=merged_parameters_group_size, ratio=density)
-        
-        # tensor_compressed, ctx, selected_values = self._compression.compress_layer_wise(tensor, name, group_size=merged_parameters_group_size, ratio=density)
-
-
-        # tensor_compressed, ctx, selected_values = self._compression.compress_layer_wise_selective(tensor, name, group_size=merged_parameters_group_size, group_dim=merged_parameters_group_dim,ratio=density)
-        
-        # tensor_compressed, ctx, selected_values = self._compression.compress_block(tensor, name, group_size=merged_parameters_group_size, group_dim=merged_parameters_group_dim,ratio=density)
-        
-        # tensor_compressed, ctx, selected_values = self._compression.compress_block_opt(tensor, name, group_size=merged_parameters_group_size, group_dim=merged_parameters_group_dim,ratio=density)
 
 
         if False and rank() == 0 and self.train_iter % 200 == 0 and self.train_iter < 3000:
@@ -1137,8 +1050,7 @@ class _DistributedOptimizer(torch.optim.Optimizer):
         num_of_workers = size()
         # key(p)=new_tensor, value=(handle, ctx, 1)
         for p, value in self._handles.items():
-            # torch.cuda.synchronize()
-            # handle初始时间
+
             handle_time = time.time() 
             
             name = self._merged_parameter_names.get(p)
@@ -1171,8 +1083,7 @@ class _DistributedOptimizer(torch.optim.Optimizer):
                         per_values = values
                         
                         per_values = self._compression.decompress(per_values, p.size())
-                        # 解压梯度
-                        
+  
                         new_grad += per_values.view(-1)
                     else:
                         values = values_and_indexes
@@ -1181,7 +1092,6 @@ class _DistributedOptimizer(torch.optim.Optimizer):
 
                         per_values = self._compression.decompress(per_values, p.size())
                         
-                        # 解压梯度
                         new_grad[indexes[0:indexes.numel()]] += per_values
                 new_grad /= num_of_workers
 
@@ -1306,15 +1216,13 @@ class _DistributedOptimizer(torch.optim.Optimizer):
                         offset += d_p.numel()
         return loss
     
-    # 执行同步操作
     def step(self, closure=None):
         if not self.local:
             self.synchronize()
         
         if self._threshold_tuning_mb:
             self._next_threshold_mb = self._tuner.step()
-            # print('self._next_threshold_mb = ', self._next_threshold_mb)
-        
+
         # Note: the last step is skipped
         self._num_steps += 1
         

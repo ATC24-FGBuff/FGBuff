@@ -29,8 +29,6 @@ max_steps=${14:-"-1"}
 density="${density:-0.01}"
 threshold="${threshold:-8192}"
 compressor="${compressor:-gaussiank}"
-# compressor="${compressor:-topkef}"
-# max_epochs="${max_epochs:-200}"
 memory="${memory:-residual}"
 
 

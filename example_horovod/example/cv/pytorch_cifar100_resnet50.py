@@ -11,7 +11,7 @@ import horovod.torch as hvd
 import os
 import math
 from tqdm import tqdm
-from adtopk_lib.helper import get_communicator
+from gradce_lib.helper import get_communicator
 
 
 import sys
@@ -177,58 +177,6 @@ def train(epoch):
     y_acc['train'].append(train_accuracy.avg.item())
     end_time_epoch = time.time()
     x_train_epoch_time.append(end_time_epoch - modified_time)
-    
-    compression_time=sum(optimizer._communicator.compression_time_array)
-    decompression_time=sum(optimizer._communicator.decompression_time_array)
-    send_time=sum(optimizer._communicator.send_time_array)
-    receive_time=sum(optimizer._communicator.receive_time_array)
-    synchronize_time=sum(optimizer._communicator.synchronize_time_array)    
-    
-    io_time=sum(io_time_array)
-    forward_backforward_time=sum(forward_backforward_time_array)
-    forward_time =sum(forward_time_array)
-    step_time =sum(step_time_array)
-    
-    
-    topk_time_array =optimizer._communicator.compressor.topk_time
-    threshold_time_array =optimizer._communicator.compressor.threshold_time
-    
-    
-    topk_time=sum(topk_time_array)
-    threshold_time=sum(threshold_time_array)
-    
-    if hvd.rank() == 0:
-        # datapath='/home/user/eurosys23/workspace/ACTopk/examples/plot_eurosys/compression_time/'
-        # np.savetxt(datapath + "topk_time/topk_time_"+str(epoch)+"_rank_"+str(hvd.rank())+".txt", topk_time_array)
-        # np.savetxt(datapath + "threshold_time/threshold_time_"+str(epoch)+"_rank_"+str(hvd.rank())+".txt", topk_time_array)
-        
-        
-        print('compression_time = ', compression_time)
-        
-        print('topk_time = ', topk_time)
-        print('threshold_time = ', threshold_time)        
-        print('send_time = ', send_time)
-        
-        print('decompression_time = ', decompression_time)
-        print('receive_time = ', receive_time)
-        print('synchronize_time = ', synchronize_time)
-
-        print('io_time = ', io_time)
-        print('forward_backforward_time = ', forward_backforward_time)
-        print('forward_time = ', forward_time)
-        print('backforward_time = ', forward_backforward_time-forward_time)
-        print('step_time = ', step_time)
-        
-
-    # topk_time=sum(optimizer._communicator.compressor.topk_time)
-    # threshold_time=sum(optimizer._communicator.compressor.threshold_time)
-    # if hvd.rank() == 0:
-    #     print('topk_time = ', topk_time)
-    #     print('threshold_time = ', threshold_time)
-    
-    # if hvd.rank() == 0:
-    #     print('\nTrain set: Average loss: {:.4f}, Train Accuracy: {:.2f}%\n'.format(
-    #             train_loss.avg.item(), 100. * train_accuracy.avg.item()))
 
 
 def validate(epoch):
@@ -252,9 +200,6 @@ def validate(epoch):
                                'accuracy': 100. * val_accuracy.avg.item()})
                 t.update(1)
 
-    # if log_writer:
-    #     log_writer.add_scalar('val/loss', val_loss.avg, epoch)
-    #     log_writer.add_scalar('val/accuracy', val_accuracy.avg, epoch)
 
     y_loss['test'].append(val_loss.avg.item())
     y_acc['test'].append(val_accuracy.avg.item())
@@ -264,24 +209,12 @@ def validate(epoch):
     modified_time += val_time
     x_test_epoch_time.append(end_time_epoch - modified_time)
 
-    # if hvd.rank() == 0:
-    #     print('\nTest set: Average loss: {:.4f}, Test Accuracy: {:.2f}%\n'.format(
-    #             val_loss.avg.item(), 100. * val_accuracy.avg.item()))
-
 
 # Horovod: using `lr = base_lr * hvd.size()` from the very beginning leads to worse final
 # accuracy. Scale the learning rate `lr = base_lr` ---> `lr = base_lr * hvd.size()` during
 # the first five epochs. See https://arxiv.org/abs/1706.02677 for details.
 # After the warmup reduce learning rate by 10 on the 30th, 60th and 80th epochs.
 def adjust_learning_rate(epoch, batch_idx):
-    # if epoch < 40:
-    #     lr_adj = 1e-1
-    # elif epoch < 60:
-    #     lr_adj = 1e-2
-    # elif epoch < 80:
-    #     lr_adj = 1e-3
-    # else:
-    #     lr_adj = 1e-4
 
     if epoch < args.warmup_epochs:
         epoch += float(batch_idx + 1) / len(train_loader)
@@ -294,8 +227,6 @@ def adjust_learning_rate(epoch, batch_idx):
         lr_adj = 1e-2
     else:
         lr_adj = 1e-3
-
-
 
     for param_group in optimizer.param_groups:
         param_group['lr'] = args.base_lr * hvd.size() * args.batches_per_allreduce * lr_adj

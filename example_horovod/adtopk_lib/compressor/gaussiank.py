@@ -1,6 +1,6 @@
 import torch
 
-from adtopk_lib import Compressor
+from gradce_lib import Compressor
 import random
 import horovod.torch as hvd
 import numpy as np
@@ -51,40 +51,9 @@ class GaussiankCompressor(Compressor):
         tensor_flatten = tensor.flatten().cuda()
         # abs_tensor_tensor_flatten = torch.abs(tensor_flatten)
         
-        # one_indexes = abs_tensor_tensor_flatten > right_thres
-        # loops = 0
-        # while loops <  2:
-        # while loops <  5:
-        #     one_indexes = abs_tensor_tensor_flatten > right_thres
-        #     selected = one_indexes.sum()
-            
-        #     # print(f"loops: {loops}, selected: {selected}")
-        #     # print(f"loops: {loops}, one_indexes: {one_indexes}")
-        #     # indexes = one_indexes.nonzero().data.squeeze().view(-1)
-        #     # print(f"indexes: {indexes}")
-
-        #     if selected < 2*k/3:
-        #         right_thres *= 0.5
-        #     elif selected > 4*k/3:
-        #         right_thres *= 1.5
-        #     else:
-        #         break
-        #     loops += 1
-        # # indexes = indexes 
-        # indices, = torch.where(one_indexes)
-        # indices = indices.cuda(tensor.device)
         mask = tensor_flatten.abs() >= thr
         selected = mask.sum()
 
-        # for _ in range(2):
-        #     if selected > 1.3 * k:
-        #         thr = 1.3 * thr
-        #     elif selected < 0.7 * numel * k:
-        #         thr = 0.7 * thr
-        #     else:
-        #         break
-        #     mask = tensor_flatten.abs() >= thr
-        #     selected = mask.sum()
         for _ in range(5):
             if selected > 1.2 * k:
                 thr = 1.2 * thr
@@ -99,21 +68,6 @@ class GaussiankCompressor(Compressor):
         indices, = torch.where(mask)
         
         values = tensor_flatten[indices]
-
-        # abs_tensor = torch.abs(tensor)
-        # loops = 0
-        # while loops < 5:
-        #     one_indexes = abs_tensor > right_thres
-        #     indexes = one_indexes.nonzero().data.squeeze().view(-1)
-        #     if indexes.numel() < 2*k/3:
-        #         right_thres *= 0.5
-        #     elif indexes.numel() > 4*k/3:
-        #         right_thres *= 1.5
-        #     else:
-        #         break
-        #     loops += 1
-        # indices = indexes 
-        # values = tensor.data[indexes] 
 
         tensors = values, indices
         ctx = numel, shape

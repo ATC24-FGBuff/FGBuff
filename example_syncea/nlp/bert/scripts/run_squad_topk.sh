@@ -23,27 +23,11 @@ mode=${12:-"train eval"}
 CONFIG_FILE=${13:-"$DIR_Model/bert_config.json"}
 max_steps=${14:-"-1"}
 
-# compressors = {
-#         None: NoneCompressor,
-#         'none': NoneCompressor,
-#         'topk': TopKCompressor,
-#         'topkef': EFTopKCompressor,
-#         'eftopk': EFTopKCompressor, #TopK with error-feedback
-#         'gaussian': GaussianCompressor, #GaussianK with error-feedback
-#         'dgc': DgcCompressor,
-#         'redsync' :RedSyncCompressor,
-#         'randomk': RandomKCompressor,
-#         'sidco': ExpCompressor,
-#         # 'signum': SignCompressor,
-#         # 'efsignum': EFSignCompressor,
-#     }
 # setup
 density="${density:-0.01}"
 threshold="${threshold:-8192}"
 compressor="${compressor:-gaussian}"
 memory="${memory:-residual}"
-
-
 
 
 echo "out dir is $OUT_DIR"

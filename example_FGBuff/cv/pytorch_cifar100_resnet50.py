@@ -135,13 +135,13 @@ def train(epoch):
             s_time=time.time()
             if args.cuda:
                 data, target = data.cuda(), target.cuda()
-            
+
             io_time_array.append(time.time()-s_time)
-            
+
             e_time=time.time()
-            
+
             optimizer.zero_grad()
-            
+
             output = model(data)
             train_accuracy.update(accuracy(output, target))
             loss = F.cross_entropy(output, target)
@@ -156,53 +156,22 @@ def train(epoch):
             s_time=time.time()               
             # Gradient is applied across all ranks
             optimizer.step()       
-            
-                 
             step_time_array.append(time.time()-s_time)
-            
+
             t.set_postfix({'loss': train_loss.avg.item(),
                            'accuracy': 100. * train_accuracy.avg.item()})
-            
             u_time=time.time() 
             t.update(1)
             update_time_array.append(time.time()-u_time)
-            
+
             optimizer_synchronize_time_array.append(optimizer.handle_synchronize_time)
             optimizer.handle_synchronize_time= []
-            
+
     y_loss['train'].append(train_loss.avg.item())
     y_acc['train'].append(train_accuracy.avg.item())
     end_time_epoch = time.time()
     x_train_epoch_time.append(end_time_epoch - modified_time)
-    
-    io_time=sum(io_time_array)
-    # forward_backforward_time=sum(forward_backforward_time_array)
-    forward_time=sum(forward_time_array)
-    backward_time=sum(backward_time_array)
-    step_time=sum(step_time_array)
-    update_time=sum(update_time_array)
-    
-    topk_time_array =optimizer._compression.topk_time
-    threshold_time_array =optimizer._compression.threshold_time
-    topk_time=sum(topk_time_array)
-    threshold_time=sum(threshold_time_array)
-    
-    synchronize_time=sum(optimizer.synchronize_time)
-    para_update_time=sum(optimizer.para_update_time)
-    hook_time=sum(optimizer.hook_time)
-    
-    if hvd.rank() == 0:
-               
-        print('topk_time = ', topk_time)
-        print('threshold_time = ', threshold_time)
-        print('io_time = ', io_time)
-        print('forward_time = ', forward_time)
-        print('backward_time = ', backward_time-topk_time)
-        print('step_time = ', step_time)
-        print('communication_time = ', synchronize_time)
-        print('para_update_time = ', para_update_time)
-        print('hook_time = ', hook_time)
-        print('---------------------------------')
+
 
 
 def validate(epoch):
@@ -325,6 +294,7 @@ if __name__ == '__main__':
     
     CIFAR100_TRAIN_MEAN = [0.5070751592371323, 0.48654887331495095, 0.4409178433670343]
     CIFAR100_TRAIN_STD = [0.2673342858792401, 0.2564384629170883, 0.27615047132568404]
+    
     # CIFAR100
     train_dataset = \
         datasets.CIFAR100(args.train_dir,

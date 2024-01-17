@@ -1,4 +1,4 @@
-from adtopk_lib import Memory
+from gradce_lib import Memory
 
 class ResidualGlobalTopkMemory(Memory):
     def __init__(self, beta=1.0, gamma=1.0, afa=0):
@@ -38,14 +38,6 @@ class ResidualGlobalTopkMemory(Memory):
     def update_gtopk(self,ctx,tensor_decompressed, tensors_aggregated_avg, original_tensor, name):
         """Update the residuals."""
 
-        # tensor_decompressed = compressor.decompress(tensor_compressed, ctx)
-        # print(tensor_decompressed.shape)
-        # print(tensors_aggregated_avg.shape)
-        # if tensor_decompressed.shape==tensors_aggregated_avg.shape:
-        #     print(True)
-
-        # if name in self.residuals_global:
         residual = self.tensor_decompressed_[name] - tensors_aggregated_avg
 
-        # self.tensor_decompressed_[name]=tensor_decompressed
         self.residuals_global[name] = residual

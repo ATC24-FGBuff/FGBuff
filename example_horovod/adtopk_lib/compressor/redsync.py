@@ -1,6 +1,6 @@
 import torch
 
-from adtopk_lib import Compressor
+from gradce_lib import Compressor
 import horovod.torch as hvd
 import numpy as np
 

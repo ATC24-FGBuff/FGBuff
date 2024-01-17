@@ -199,38 +199,6 @@ def train(epoch):
     y_acc['train'].append(train_accuracy.avg.item())
     end_time_epoch = time.time()
     x_train_epoch_time.append(end_time_epoch - modified_time)
-    
-    io_time=sum(io_time_array)
-    # forward_backforward_time=sum(forward_backforward_time_array)
-    forward_time=sum(forward_time_array)
-    backward_time=sum(backward_time_array)
-    step_time=sum(step_time_array)
-    update_time=sum(update_time_array)
-    
-    topk_time_array =optimizer._compression.topk_time
-    threshold_time_array =optimizer._compression.threshold_time
-    topk_time=sum(topk_time_array)
-    threshold_time=sum(threshold_time_array)
-    
-    synchronize_time=sum(optimizer.synchronize_time)
-    para_update_time=sum(optimizer.para_update_time)
-    hook_time=sum(optimizer.hook_time)
-    
-    if hvd.rank() == 0:
-
-               
-        print('topk_time = ', topk_time)
-        print('threshold_time = ', threshold_time)
-
-        print('io_time = ', io_time)
-        print('forward_time = ', forward_time)
-        print('backward_time = ', backward_time-topk_time)
-        print('step_time = ', step_time)
-        print('communication_time = ', synchronize_time)
-        print('para_update_time = ', para_update_time)
-        print('hook_time = ', hook_time)
-
-        print('---------------------------------')
 
 
 def validate(epoch):

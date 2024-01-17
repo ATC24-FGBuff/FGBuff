@@ -262,258 +262,7 @@ class _DistributedOptimizer(torch.optim.Optimizer):
                     self._grad_accs.append(grad_acc)
     
     
-    def _generate_groups_with_threshold(self, threshold):
-        sizes = [self._named_parameters[k].data.numel() for k in self._sequential_keys][::-1] # reverse order
-        self._sizes = sizes
-        group_sizes=[]
-        group_size=[]
-
-        group_dims=[]
-        group_dim=[]
-
-        sub_size = 0
-        groups = []
-        group = []
-        key_groupidx_maps = {}
-        idx = 0
-
-        # Training time = 1437.5672519207
-        # Threshold = 3386464
-        for k in self._sequential_keys[::-1]:
-            numel = self._named_parameters[k].data.numel()
-            sub_size += numel
-            key_groupidx_maps[k] = idx
-            
-            if sub_size < threshold:
-                group.append(k)
-                group_size.append(numel)
-                group_dim.append(self._named_parameters[k].dim())
-            else:
-                idx += 1
-                group.append(k)
-                groups.append(group)
-                group = []
-                
-                group_size.append(numel)
-                group_sizes.append(group_size)
-                group_size=[]
-                
-                group_dim.append(self._named_parameters[k].dim())
-                group_dims.append(group_dim)
-                group_dim=[]
-                
-                sub_size = 0
-        
-        if len(group) > 0:
-            groups.append(group)
-            group_sizes.append(group_size)
-            group_dims.append(group_dim)
-            
-        return groups, key_groupidx_maps, group_sizes, group_dims
-
-    # 控制进入buffer的梯度Block
-    def _generate_groups_with_block(self, number_layers, threshold):
-        sizes = [self._named_parameters[k].data.numel() for k in self._sequential_keys][::-1] # reverse order
-        self._sizes = sizes
-        group_sizes=[]
-        group_size=[]
-        
-        group_dims=[]
-        group_dim=[]
-        
-        sub_size = 0
-        numel_size = 0
-        
-        groups = []
-        group = []
-        key_groupidx_maps = {}
-        idx = 0
-        
-        pre_name=None
-        for k in self._sequential_keys[::-1]:
-            numel = self._named_parameters[k].data.numel()
-            sub_size += 1
-            numel_size += numel
-            
-            name=k.split('.')[0]
-            
-            if name=='conv5_x':
-                number_layers=10
-            # elif name=='conv4_x':
-            #     number_layers=30
-            # elif name=='conv3_x':
-            #     number_layers=20
-            # elif name=='conv2_x':
-            #     number_layers=30
-            
-            else:
-                number_layers=60
-            
-            
-            # if (name == pre_name or pre_name==None):
-            if (name == pre_name or pre_name==None) and sub_size < number_layers:
-            # if (name == pre_name or pre_name==None) and numel_size < threshold:
-                group.append(k)
-                group_size.append(numel)
-                group_dim.append(self._named_parameters[k].dim())
-                
-                key_groupidx_maps[k] = idx
-            else:
-                idx += 1
-
-                groups.append(group)
-                group = []
-                  
-                group_sizes.append(group_size)
-                group_size=[]
-                
-                group_dims.append(group_dim)
-                group_dim=[]
-                
-                sub_size = 0
-                numel_size=0 
-                
-                group.append(k)
-                group_size.append(numel)
-                group_dim.append(self._named_parameters[k].dim())
-                key_groupidx_maps[k] = idx
-            
-            pre_name=name
-        
-        if len(group) > 0:
-            groups.append(group)
-            group_sizes.append(group_size)
-            
-            group_dims.append(group_dim)
-        
-        return groups, key_groupidx_maps, group_sizes, group_dims
     
-    
-    # 控制进入buffer的梯度的数量
-    def _generate_groups_with_number(self, number_layers):
-        sizes = [self._named_parameters[k].data.numel() for k in self._sequential_keys][::-1] # reverse order
-        self._sizes = sizes
-        group_sizes=[]
-        group_size=[]
-        
-        group_dims=[]
-        group_dim=[]
-        
-        sub_size = 0
-        groups = []
-        group = []
-        key_groupidx_maps = {}
-        idx = 0
-        for k in self._sequential_keys[::-1]:
-            numel = self._named_parameters[k].data.numel()
-            sub_size += 1
-            key_groupidx_maps[k] = idx
-            
-            if sub_size < number_layers:
-                group.append(k)
-                group_size.append(numel)
-                group_dim.append(self._named_parameters[k].dim())
-            else:
-                idx += 1
-                group.append(k)
-                groups.append(group)
-                group = []
-                
-                group_size.append(numel)
-                group_sizes.append(group_size)
-                group_size=[]
-                
-                group_dim.append(self._named_parameters[k].dim())
-                group_dims.append(group_dim)
-                group_dim=[]
-                
-                sub_size = 0
-        
-        if len(group) > 0:
-            groups.append(group)
-            group_sizes.append(group_size)
-            
-            group_dims.append(group_dim)
-            
-        return groups, key_groupidx_maps, group_sizes, group_dims
-    
-    
-    # 控制进入buffer的梯度的数量
-    def _generate_groups_with_number_fc(self, number_layers):
-        number_layers_ =number_layers
-        sizes = [self._named_parameters[k].data.numel() for k in self._sequential_keys][::-1] # reverse order
-        self._sizes = sizes
-        group_sizes= []
-        group_size= []
-        
-        group_dims= []
-        group_dim= []
-        
-        sub_size = 0
-        numel_size = 0
-        
-        groups = []
-        group = []
-        key_groupidx_maps = {}
-        idx = 0
-        
-        # print('self._sequential_keys[::-1]= ', self._sequential_keys[::-1])
-        
-        pre_name=None
-        for k in self._sequential_keys[::-1]:
-            numel = self._named_parameters[k].data.numel()
-            
-            numel_size += numel            
-            # name =k.split('.')[0]
-            
-            if 'fc' in k:
-                number_layers_ =2
-
-
-            # if (name == pre_name or pre_name==None):
-            if sub_size < number_layers_:
-            # if (name == pre_name or pre_name==None) and numel_size < threshold:
-                group.append(k)
-                group_size.append(numel)
-                group_dim.append(self._named_parameters[k].dim())
-                
-                key_groupidx_maps[k] = idx
-                sub_size += 1
-                
-            else:
-                number_layers_ =number_layers
-                
-                idx += 1
-
-                groups.append(group)
-                group = []
-                  
-                group_sizes.append(group_size)
-                group_size=[]
-                
-                group_dims.append(group_dim)
-                group_dim=[]
-                
-                sub_size = 0
-                numel_size=0 
-                
-                group.append(k)
-                group_size.append(numel)
-                group_dim.append(self._named_parameters[k].dim())
-                key_groupidx_maps[k] = idx
-            
-            # pre_name=name
-        
-        if len(group) > 0:
-            groups.append(group)
-            group_sizes.append(group_size)
-            
-            group_dims.append(group_dim)
-        
-        return groups, key_groupidx_maps, group_sizes, group_dims
-    
-    
-    # 生成最小化等待时间的number梯度合并buffer
     # SyncEA-SGD, Gradient merging into one buffer(single buffer)
     def _generate_groups_with_single_buffer(self, ):
         sizes = [self._named_parameters[k].data.numel() for k in self._sequential_keys][::-1] # reverse order
@@ -584,65 +333,6 @@ class _DistributedOptimizer(torch.optim.Optimizer):
             group_dims.append(group_dim)
         
         return groups, key_groupidx_maps, group_sizes, group_dims
-
-    def _generate_groups_with_number_threshold(self, number_layers, threshold):
-        sizes = [self._named_parameters[k].data.numel() for k in self._sequential_keys][::-1] # reverse order
-        self._sizes = sizes
-        group_sizes =[]
-        group_size =[]
-        
-        group_dims =[]
-        group_dim =[]
-        
-        sub_size = 0
-        numel_size = 0
-        
-        groups = []
-        group = []
-        key_groupidx_maps = {}
-        idx = 0
-        for k in self._sequential_keys[::-1]:
-            numel = self._named_parameters[k].data.numel()
-            sub_size += 1
-            numel_size += numel
-            # key_groupidx_maps[k] = idx
-            
-            if sub_size < number_layers and  numel_size< threshold:
-                group.append(k)
-                group_size.append(numel)
-                group_dim.append(self._named_parameters[k].dim())
-                
-                key_groupidx_maps[k] = idx
-                
-                # numel_size += numel
-            else:
-                idx += 1
-                
-                groups.append(group)
-                group = []
-               
-                group_sizes.append(group_size)
-                group_size=[]
-                
-                group_dims.append(group_dim)
-                group_dim=[]
-                
-                sub_size = 1
-                numel_size =numel
-                
-                group.append(k)
-                group_size.append(numel)
-                group_dim.append(self._named_parameters[k].dim())
-                key_groupidx_maps[k] = idx
-        
-        if len(group) > 0:
-            groups.append(group)
-            group_sizes.append(group_size)
-            
-            group_dims.append(group_dim)
-            
-        return groups, key_groupidx_maps, group_sizes, group_dims
-    
 
 
     def get_current_density(self, name=None):
@@ -716,8 +406,8 @@ class _DistributedOptimizer(torch.optim.Optimizer):
         l = L-1
         key = seq_layernames[l] 
         key_groupidx_maps[key] = idx
-        
-        # 逆序插入layer序列
+
+
         for l in range(1, L)[::-1]:
             key = seq_layernames[l]
             # 
@@ -755,13 +445,6 @@ class _DistributedOptimizer(torch.optim.Optimizer):
                 group_sizes.append(group_size)
                 group_size=[]
             
-            #elif current_taob > taoc[l+1]+tc[l+1] and current_taob < taoc[l]+tc[l] and taoc[l]+alpha > current_taob:
-            #    __merge(taob, tc, p, l)
-            #    taoc = __calculate_comm_start(tc, tb, taob, L)
-            #else:
-            #    idx += 1
-            #    groups.append(group)
-            #    group = []
         
         l = 0
         key = seq_layernames[l]
@@ -950,10 +633,6 @@ class _DistributedOptimizer(torch.optim.Optimizer):
                     groups, key_groupidx_maps, group_sizes  = self._generate_groups_mgwfbp()
         else:
          
-            
-            threshold_ = 3386464
-            threshold_ = 4670000
-         
             groups, key_groupidx_maps, group_sizes, group_dims = self._generate_groups_with_single_buffer()
 
 
@@ -962,26 +641,6 @@ class _DistributedOptimizer(torch.optim.Optimizer):
         self._group_sizes = group_sizes
         self._group_dims = group_dims
         
-        
-        print('Number of parameters: %d' % np.sum(self._sizes))
-        print('Total number of tensors: %s' % len(self._sizes))
-        print('Merged number of groups: %s' % len(groups))
-        
-        # # _sizes和groups都是倒序
-        if rank()==0:
-            print('self._group_sizes: ',len(self._group_sizes))
-            print('self._group_sizes: ',self._group_sizes)
-            arr_=[]
-            for gz in self._group_sizes:
-                print(len(gz))
-                arr_.append(len(gz))
-                
-            print('sum(len(gz))=', sum(arr_))
-            print('groups_len: ', len(groups))
-            print('groups: ', groups)
-            print('group_dims: ', group_dims)
-
-
         new_keys = []
         self._merged_parameter_offsets = {}
         self._layerwise_compressors = None

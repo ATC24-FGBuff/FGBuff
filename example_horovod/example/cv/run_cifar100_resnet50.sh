@@ -1,18 +1,5 @@
-# compressors = {
-#         None: 'none',
-#         'none': '',
-#         'topk': topk,
-#         'topkef': topkef, #TopK with error-feedback
-#         'gaussian': gaussiank, #GaussianK with error-feedback
-#         'dgc': dgc,
-#         'redsync' :redsync,
-#         'sidco': sidcoexp,
-#         'randomk': randomk,
-#     }
-
 density="${density:-0.1}"
 threshold="${threshold:-8192}"
-# compressor="${compressor:-topkef}"
 compressor="${compressor:-gaussiank}"
 max_epochs="${max_epochs:-80}"
 memory="${memory:-residual}"

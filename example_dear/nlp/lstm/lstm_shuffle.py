@@ -237,7 +237,7 @@ optimizer = torch.optim.Adam(model.parameters(), lr=args.lr*hvd.size(),weight_de
 
 scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'min', factor=0.5, patience=3)
 
-from adtopk_lib.helper import get_communicator
+from gradce_lib.helper import get_communicator
 
 # Allgather 
 params = {'compressor': 'allchanneltopk', 'memory': 'residual', 'communicator': 'allgather','model_named_parameters': model.named_parameters()}
@@ -261,7 +261,6 @@ try:
         train_data = train_data[hvd.rank()]
         train(optimizer, train_data)     
         val_loss = evaluate(val_data)
-        
         ppl_list.append(math.exp(val_loss))
 
         scheduler.step(val_loss)         
@@ -285,25 +284,3 @@ if hvd.rank() == 0:
     print('=' * 89) 
     ppl_test = [math.exp(test_loss)]
 
-if hvd.rank() == 0:
-    import numpy as np           
-    time_arr = np.array(time_list)
-    ppl_arr = np.array(ppl_list)
-    ppl_test = np.array(ppl_test)
-    # np.savetxt("./data/time_baseline_single.txt", time_arr)
-    # np.savetxt("./data/val_ppl_baseline_single.txt", ppl_arr)
-    # np.savetxt("./data/test_ppl_baseline_single.txt", ppl_test)      
-    # np.savetxt("./data/time_baseline_8gpu.txt", time_arr)     
-    # np.savetxt("./data/val_ppl_baseline_8gpu.txt", ppl_arr)     
-    # np.savetxt("./data/test_ppl_baseline_8gpu.txt", ppl_test)      
-    # np.savetxt("./data/time_baseline_gtopk.txt", time_arr)          
-    # np.savetxt("./data/val_ppl_baseline_gtopk.txt", ppl_arr)          
-    # np.savetxt("./data/test_ppl_baseline_gtopk.txt", ppl_test)   
-
-    # np.savetxt("./data/time_baseline_actopk.txt", time_arr)               
-    # np.savetxt("./data/val_ppl_baseline_actopk.txt", ppl_arr)               
-    # np.savetxt("./data/test_ppl_baseline_actopk.txt", ppl_test)       
-
-    np.savetxt("./data/time_baseline_allchanneltopk.txt", time_arr)               
-    np.savetxt("./data/val_ppl_baseline_allchanneltopk.txt", ppl_arr)               
-    np.savetxt("./data/test_ppl_baseline_allchanneltopk.txt", ppl_test)   

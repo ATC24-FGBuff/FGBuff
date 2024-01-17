@@ -118,11 +118,6 @@ parser.add_argument('--density', type=float, default=0.1, help='Density for spar
 
 
 
-
-
-
-
-
 args = parser.parse_args()
 
 ppl_list = []
@@ -250,16 +245,7 @@ def train(optimizer, train_data):
     optimizer.synchronize_time= []
     optimizer.para_update_time= []
     optimizer.hook_time= []
-    
-    # optimizer._communicator.compressor.bias_gaussiank=[]
-    # optimizer._communicator.compressor.bias_dgc=[]
-    # optimizer._communicator.compressor.bias_redsync=[]
-    
-    # optimizer._communicator.compression_time_array=[]
-    # optimizer._communicator.decompression_time_array=[]
-    # optimizer._communicator.send_time_array=[]
-    # optimizer._communicator.receive_time_array=[]
-    # optimizer._communicator.synchronize_time_array=[]
+
 
     io_time_array= []
     forward_backforward_time_array= []
@@ -282,8 +268,7 @@ def train(optimizer, train_data):
         s_time=time.time()
         data, targets = get_batch(train_data, i)
         io_time_array.append(time.time()-s_time)
-        
-        
+
         # Starting each batch, we detach the hidden state from how it was previously produced.
         # If we didn't, the model would try backpropagating all the way to start of the dataset.
         e_time=time.time()
@@ -324,43 +309,6 @@ def train(optimizer, train_data):
         
         optimizer_synchronize_time_array.append(optimizer.handle_synchronize_time)
         optimizer.handle_synchronize_time= []
-    
-    # end_time_epoch = time.time()
-    # x_train_epoch_time.append(end_time_epoch - modified_time)
-    
-    io_time=sum(io_time_array)
-    # forward_backforward_time=sum(forward_backforward_time_array)
-    forward_time=sum(forward_time_array)
-    backward_time=sum(backward_time_array)
-    step_time=sum(step_time_array)
-    update_time=sum(update_time_array)
-    
-    topk_time_array =optimizer._compression.topk_time
-    threshold_time_array =optimizer._compression.threshold_time
-    topk_time=sum(topk_time_array)
-    threshold_time=sum(threshold_time_array)
-    
-    synchronize_time=sum(optimizer.synchronize_time)
-    para_update_time=sum(optimizer.para_update_time)
-    hook_time=sum(optimizer.hook_time)
-    
-    if hvd.rank() == 0:
-               
-        print('topk_time = ', topk_time)
-        print('threshold_time = ', threshold_time)
-
-        print('io_time = ', io_time)
-        print('forward_time = ', forward_time)
-        print('backward_time = ', backward_time-topk_time)
-        print('step_time = ', step_time)
-        # print('update_time = ', update_time)
-        print('communication_time = ', synchronize_time)
-        print('para_update_time = ', para_update_time)
-        print('hook_time = ', hook_time)
-
-        print('---------------------------------')
-
-
     
 
 # Loop over epochs.
@@ -412,7 +360,7 @@ class WarmupLR(_LRScheduler):
         self.last_epoch = step
 
 scheduler_warmup = WarmupLR(optimizer, warmup_steps=100, last_epoch = -1)
-from adtopk_lib.helper import get_communicator
+from gradce_lib.helper import get_communicator
 
 if args.density<1:
     communicator_str = 'allgather'
@@ -485,16 +433,6 @@ try:
         optimizer.synchronize_time= []
         optimizer.para_update_time= []
         optimizer.hook_time= []
-        
-        # optimizer._communicator.compressor.bias_gaussiank=[]
-        # optimizer._communicator.compressor.bias_dgc=[]
-        # optimizer._communicator.compressor.bias_redsync=[]
-    
-        # optimizer._communicator.compression_time_array=[]
-        # optimizer._communicator.decompression_time_array=[]
-        # optimizer._communicator.send_time_array=[]
-        # optimizer._communicator.receive_time_array=[]
-        # optimizer._communicator.synchronize_time_array=[]
 
         io_time_array= []
         forward_backforward_time_array= []
@@ -557,12 +495,8 @@ try:
             update_time_array.append(time.time()-u_time)
             optimizer_synchronize_time_array.append(optimizer.handle_synchronize_time)
             optimizer.handle_synchronize_time= []
-            
-            # if  hvd.rank() == 0:
-            #     scheduler_warmup.step(batch/15) 
-            
-            
-            
+
+ 
         if  hvd.rank() == 0:
             # scheduler_warmup.step(batch/15) 
             val_loss = evaluate(val_data) 
@@ -575,51 +509,7 @@ try:
             print('| end of epoch {:3d} | time: {:5.2f}s | valid loss {:5.4f} | ' 'valid ppl {:8.2f}'.format(epoch, (time.time() - epoch_start_time), val_loss, math.exp(val_loss)))
             time_list.append(tmp)            
             print('-' * 89) 
-        
-    
-    
-        # end_time_epoch = time.time()
-        # x_train_epoch_time.append(end_time_epoch - modified_time)
-    
-        io_time=sum(io_time_array)
-        # forward_backforward_time=sum(forward_backforward_time_array)
-        forward_time=sum(forward_time_array)
-        backward_time=sum(backward_time_array)
-        step_time=sum(step_time_array)
-        update_time=sum(update_time_array)
-    
-        topk_time_array =optimizer._compression.topk_time
-        threshold_time_array =optimizer._compression.threshold_time
-        topk_time=sum(topk_time_array)
-        threshold_time=sum(threshold_time_array)
-    
-        synchronize_time=sum(optimizer.synchronize_time)
-        para_update_time=sum(optimizer.para_update_time)
-        hook_time=sum(optimizer.hook_time)
-    
-        if hvd.rank() == 0:
-            print('topk_time = ', topk_time)
-            print('threshold_time = ', threshold_time)
-                     
-            # print('send_time = ', send_time)        
-            # print('decompression_time = ', decompression_time)
-            # print('receive_time = ', receive_time)
-            # print('synchronize_time = ', synchronize_time)
-        
-            print('io_time = ', io_time)
-            print('forward_time = ', forward_time)
-            print('backward_time = ', backward_time-topk_time)
-            print('step_time = ', step_time)
-            # print('update_time = ', update_time)
-            print('communication_time = ', synchronize_time)
-            print('para_update_time = ', para_update_time)
-            print('hook_time = ', hook_time)
-            # print('buffer_time = ', buffer_time)
-        
-        
-            # print('backforward_time = ', forward_backforward_time-(send_time+receive_time+decompression_time+compression_time))
-            print('---------------------------------')
-            # print('optimizer_synchronize_time_array= ', optimizer_synchronize_time_array[:15])
+
 
     if hvd.rank() == 0:
          # torch.cuda.synchronize()

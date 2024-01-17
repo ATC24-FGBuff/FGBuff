@@ -271,7 +271,7 @@ optimizer = torch.optim.Adam(model.parameters(), lr=lr*hvd.size(), weight_decay=
 
 scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'min', factor=0.5, patience=3)
 
-from adtopk_lib.helper import get_communicator
+from gradce_lib.helper import get_communicator
 
 if args.density<1:
     communicator_str = 'allgather'

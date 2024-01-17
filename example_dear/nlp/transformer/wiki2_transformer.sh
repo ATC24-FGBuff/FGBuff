@@ -1,20 +1,7 @@
-# compressors = {
-#         None: NoneCompressor,
-#         'none': NoneCompressor,
-#         'topk': TopKCompressor,
-#         'topkef': EFTopKCompressor,
-#         'eftopk': EFTopKCompressor, #TopK with error-feedback
-#         'gaussian': GaussianCompressor, #GaussianK with error-feedback
-#         'dgc': DgcCompressor,
-#         'redsync' :RedSyncCompressor,
-#         'randomk': RandomKCompressor,
-#         'sidco': ExpCompressor,
-#         # 'signum': SignCompressor,
-#         # 'efsignum': EFSignCompressor,
-#     }
+
 density="${density:-0.1}"
 threshold="${threshold:-8192}"
-# compressor="${compressor:-topkef}"
+
 compressor="${compressor:-gaussian}"
 max_epochs="${max_epochs:-120}"
 memory="${memory:-residual}"

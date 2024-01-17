@@ -1,4 +1,4 @@
-from adtopk_lib import Compressor
+from gradce_lib import Compressor
 
 
 class NoneCompressor(Compressor):

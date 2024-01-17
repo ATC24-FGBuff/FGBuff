@@ -1,18 +1,5 @@
-# compressors = {
-#         None: NoneCompressor,
-#         'none': NoneCompressor,
-#         'topk': TopKCompressor,
-#         'topkef': EFTopKCompressor, #TopK with error-feedback
-#         'eftopk': EFTopKCompressor, #TopK with error-feedback
-#         'gaussian': GaussianCompressor, #GaussianK with error-feedback
-#         'dgc': DgcCompressor,
-#         'redsync' :RedSyncCompressor,
-#         'randomk': RandomKCompressor,
-#         'sidco': ExpCompressor,
-#     }
 density="${density:-0.01}"
 threshold="${threshold:-8192}"
-# compressor="${compressor:-topkef}"
 compressor="${compressor:-gaussian}"
 max_epochs="${max_epochs:-80}"
 nwpernode=4

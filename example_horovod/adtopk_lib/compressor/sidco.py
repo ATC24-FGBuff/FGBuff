@@ -1,8 +1,8 @@
 import torch
 
-from adtopk_lib import Compressor
+from gradce_lib import Compressor
 import numpy as np
-import adtopk_lib.sidcosettings as settings
+import gradce_lib.sidcosettings as settings
 import math
 import sys
 

@@ -337,7 +337,6 @@ class _DistributedOptimizer(torch.optim.Optimizer):
             groups.append(group)
         return groups, key_groupidx_maps
     
-    # OMGS-SGD  the number of merged layers, Debug by mingzq
     def _generate_groups_with_number_merged_layers(self, number_layers):
         sizes = [self._named_parameters[k].data.numel() for k in self._sequential_keys][::-1] # reverse order
         self._sizes = sizes

@@ -310,47 +310,6 @@ def train(optimizer, train_data):
         
         optimizer_synchronize_time_array.append(optimizer.handle_synchronize_time)
         optimizer.handle_synchronize_time= []
-    
-    # end_time_epoch = time.time()
-    # x_train_epoch_time.append(end_time_epoch - modified_time)
-    
-    io_time=sum(io_time_array)
-    # forward_backforward_time=sum(forward_backforward_time_array)
-    forward_time=sum(forward_time_array)
-    backward_time=sum(backward_time_array)
-    step_time=sum(step_time_array)
-    update_time=sum(update_time_array)
-    
-    topk_time_array =optimizer._compression.topk_time
-    threshold_time_array =optimizer._compression.threshold_time
-    topk_time=sum(topk_time_array)
-    threshold_time=sum(threshold_time_array)
-    
-    synchronize_time=sum(optimizer.synchronize_time)
-    para_update_time=sum(optimizer.para_update_time)
-    hook_time=sum(optimizer.hook_time)
-    
-    if hvd.rank() == 0:
- 
-               
-        print('topk_time = ', topk_time)
-        print('threshold_time = ', threshold_time)
-                     
-        
-        print('io_time = ', io_time)
-        print('forward_time = ', forward_time)
-        print('backward_time = ', backward_time-topk_time)
-        print('step_time = ', step_time)
-        # print('update_time = ', update_time)
-        print('communication_time = ', synchronize_time)
-        print('para_update_time = ', para_update_time)
-        print('hook_time = ', hook_time)
-        # print('buffer_time = ', buffer_time)
-        
-        
-        # print('backforward_time = ', forward_backforward_time-(send_time+receive_time+decompression_time+compression_time))
-        print('---------------------------------')
-        # print('optimizer_synchronize_time_array= ', optimizer_synchronize_time_array[:15])
 
 
 # Loop over epochs.
@@ -361,7 +320,7 @@ optimizer = torch.optim.Adam(model.parameters(), lr=lr*hvd.size(), weight_decay=
 
 scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'min', factor=0.5, patience=3)
 
-from adtopk_lib.helper import get_communicator
+from gradce_lib.helper import get_communicator
 
 if args.density<1:
     communicator_str = 'allgather'
@@ -378,9 +337,6 @@ else:
 seq_layernames, layerwise_times = None, None
 optimizer = hvd.DistributedOptimizer(args.model_net, optimizer, model= model,
                                          named_parameters=model.named_parameters(), compression=compressors[args.compressor](), is_sparse=args.density<1, density=args.density, seq_layernames=seq_layernames, layerwise_times=layerwise_times, norm_clip=None, threshold=args.threshold, writer=None, gradient_path='./', momentum_correction=False, fp16=args.fp16, mgwfbp=args.mgwfbp, rdma=args.rdma, asc=args.asc)
-
-
-
 
 
 if hvd.rank() == 0:
@@ -429,6 +385,7 @@ except KeyboardInterrupt:
     print('-' * 89)     
     print('Exiting from training early') 
 
+
 if hvd.rank() == 0:     
     test_loss = evaluate(test_data)     
     print('=' * 89)     
@@ -436,8 +393,4 @@ if hvd.rank() == 0:
     print('=' * 89) 
     ppl_test = [math.exp(test_loss)]
 
-if hvd.rank() == 0:
-    import numpy as np           
-    time_arr = np.array(time_list)
-    ppl_arr = np.array(ppl_list)
-    ppl_test = np.array(ppl_test)
+

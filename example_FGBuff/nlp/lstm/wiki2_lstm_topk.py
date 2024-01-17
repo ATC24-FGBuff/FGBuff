@@ -116,14 +116,6 @@ parser.add_argument('--memory', type=str, default = 'residual', help='Error-feed
 
 
 parser.add_argument('--density', type=float, default=0.1, help='Density for sparsification')
-# parser.add_argument('--density', type=float, default=0.0101, help='Density for sparsification')
-# parser.add_argument('--density', type=float, default=0.0099, help='Density for sparsification')
-
-
-# Gaussiank + EF
-# parser.add_argument('--compressor', type=str, default='gaussian', choices=compressors.keys(), help='Specify the compressors if density < 1.0')
-# parser.add_argument('--density', type=float, default=0.01, help='Density for sparsification')
-
 
 
 args = parser.parse_args()
@@ -253,16 +245,7 @@ def train(optimizer, train_data):
     optimizer.synchronize_time= []
     optimizer.para_update_time= []
     optimizer.hook_time= []
-    
-    # optimizer._communicator.compressor.bias_gaussiank=[]
-    # optimizer._communicator.compressor.bias_dgc=[]
-    # optimizer._communicator.compressor.bias_redsync=[]
-    
-    # optimizer._communicator.compression_time_array=[]
-    # optimizer._communicator.decompression_time_array=[]
-    # optimizer._communicator.send_time_array=[]
-    # optimizer._communicator.receive_time_array=[]
-    # optimizer._communicator.synchronize_time_array=[]
+
 
     io_time_array= []
     forward_backforward_time_array= []
@@ -336,56 +319,6 @@ def train(optimizer, train_data):
         optimizer_synchronize_time_array.append(optimizer.handle_synchronize_time)
         optimizer.handle_synchronize_time= []
     
-    # end_time_epoch = time.time()
-    # x_train_epoch_time.append(end_time_epoch - modified_time)
-    
-    io_time=sum(io_time_array)
-    # forward_backforward_time=sum(forward_backforward_time_array)
-    forward_time=sum(forward_time_array)
-    backward_time=sum(backward_time_array)
-    step_time=sum(step_time_array)
-    update_time=sum(update_time_array)
-    
-    topk_time_array =optimizer._compression.topk_time
-    threshold_time_array =optimizer._compression.threshold_time
-    topk_time=sum(topk_time_array)
-    threshold_time=sum(threshold_time_array)
-    
-    synchronize_time=sum(optimizer.synchronize_time)
-    para_update_time=sum(optimizer.para_update_time)
-    hook_time=sum(optimizer.hook_time)
-    
-    if hvd.rank() == 0:
-        # datapath='/home/user/eurosys23/workspace/ACTopk/examples/plot_eurosys/compression_time/'
-        # np.savetxt(datapath + "topk_time/topk_time_"+str(epoch)+"_rank_"+str(hvd.rank())+".txt", topk_time_array)
-        # np.savetxt(datapath + "threshold_time/threshold_time_"+str(epoch)+"_rank_"+str(hvd.rank())+".txt", topk_time_array)
-        
-        # print('compression_time = ', compression_time)
-               
-        print('topk_time = ', topk_time)
-        print('threshold_time = ', threshold_time)
-                     
-        # print('send_time = ', send_time)        
-        # print('decompression_time = ', decompression_time)
-        # print('receive_time = ', receive_time)
-        # print('synchronize_time = ', synchronize_time)
-        
-        print('io_time = ', io_time)
-        print('forward_time = ', forward_time)
-        print('backward_time = ', backward_time-topk_time)
-        print('step_time = ', step_time)
-        # print('update_time = ', update_time)
-        print('communication_time = ', synchronize_time)
-        print('para_update_time = ', para_update_time)
-        print('hook_time = ', hook_time)
-        # print('buffer_time = ', buffer_time)
-        
-        
-        # print('backforward_time = ', forward_backforward_time-(send_time+receive_time+decompression_time+compression_time))
-        print('---------------------------------')
-        # print('optimizer_synchronize_time_array= ', optimizer_synchronize_time_array[:15])
-
-
 # Loop over epochs.
 best_val_loss = None
 lr=args.lr
@@ -394,19 +327,13 @@ optimizer = torch.optim.Adam(model.parameters(), lr=lr*hvd.size(), weight_decay=
 
 scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'min', factor=0.5, patience=3)
 
-from adtopk_lib.helper import get_communicator
+from gradce_lib.helper import get_communicator
 
 if args.density<1:
     communicator_str = 'allgather'
 else:
     communicator_str = 'allreduce'
     
-# params = {'compressor': args.compressor, 'memory': args.memory, 'density': args.density,'communicator': 'allgather','model_named_parameters':model.named_parameters()}
-
-# # communicator = get_communicator(params)
-# communicator = get_communicator(params)
-
-# optimizer = hvd.DistributedOptimizer(optimizer, communicator, named_parameters=model.named_parameters(), op=hvd.Average) 
 
 seq_layernames, layerwise_times = None, None
 optimizer = hvd.DistributedOptimizer(args.model_net, optimizer, 
@@ -468,11 +395,5 @@ if hvd.rank() == 0:
     print('| End of training | test loss {:5.2f} | test ppl {:8.2f}'.format(test_loss, math.exp(test_loss)))     
     print('=' * 89) 
     ppl_test = [math.exp(test_loss)]
-
-if hvd.rank() == 0:
-    import numpy as np           
-    time_arr = np.array(time_list)
-    ppl_arr = np.array(ppl_list)
-    ppl_test = np.array(ppl_test)
 
 
