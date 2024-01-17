@@ -20,7 +20,7 @@ os.environ['HOROVOD_CYCLE_TIME'] = '0'
 
 import sys
 sys.path.append("../../..") 
-import hv_distributed_optimizer as hvd
+import example_fgbuff.hv_distributed_optimizer as hvd
 from compression import compressors
 # from utils_model import get_network
 

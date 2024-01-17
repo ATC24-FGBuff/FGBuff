@@ -27,13 +27,13 @@ os.environ['HOROVOD_CYCLE_TIME'] = '0'
 
 import sys
 sys.path.append("../..") 
-import hv_distributed_optimizer_omgs as hvd
+import example_omgs.hv_distributed_optimizer_omgs as hvd
 from compression import compressors
 from utils_model import get_network
 
 import timeit
 import numpy as np
-from profiling_omgs import benchmark
+from example_omgs.profiling_omgs import benchmark
 
 
 

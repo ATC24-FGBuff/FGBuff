@@ -332,26 +332,3 @@ if hvd.rank() == 0:
     print('| End of training | test loss {:5.2f} | test ppl {:8.2f}'.format(test_loss, math.exp(test_loss)))     
     print('=' * 89) 
     ppl_test = [math.exp(test_loss)]
-
-if hvd.rank() == 0:
-    import numpy as np           
-    time_arr = np.array(time_list)
-    ppl_arr = np.array(ppl_list)
-    ppl_test = np.array(ppl_test)
-    np.savetxt("./data/time_baseline_single.txt", time_arr)
-    np.savetxt("./data/val_ppl_baseline_single.txt", ppl_arr)
-    np.savetxt("./data/test_ppl_baseline_single.txt", ppl_test)      
-    # np.savetxt("./data/time_baseline_8gpu.txt", time_arr)     
-    # np.savetxt("./data/val_ppl_baseline_8gpu.txt", ppl_arr)     
-    # np.savetxt("./data/test_ppl_baseline_8gpu.txt", ppl_test)      
-    # np.savetxt("./data/time_baseline_gtopk.txt", time_arr)          
-    # np.savetxt("./data/val_ppl_baseline_gtopk.txt", ppl_arr)          
-    # np.savetxt("./data/test_ppl_baseline_gtopk.txt", ppl_test)   
-
-    # np.savetxt("./data/time_baseline_actopk.txt", time_arr)               
-    # np.savetxt("./data/val_ppl_baseline_actopk.txt", ppl_arr)               
-    # np.savetxt("./data/test_ppl_baseline_actopk.txt", ppl_test)       
-
-    # np.savetxt("./data/time_baseline_allchanneltopk.txt", time_arr)               
-    # np.savetxt("./data/val_ppl_baseline_allchanneltopk.txt", ppl_arr)               
-    # np.savetxt("./data/test_ppl_baseline_allchanneltopk.txt", ppl_test)   

@@ -89,7 +89,7 @@ os.environ['HOROVOD_CYCLE_TIME'] = '0'
 
 import sys
 sys.path.append("../../../..") 
-import hv_distributed_optimizer_synea as  hvd
+import example_syncea.hv_distributed_optimizer_synea as  hvd
 from compression import compressors
 import numpy as np
 

@@ -71,7 +71,7 @@ from horovod.torch.mpi_ops import init, broadcast
 import time
 import torch
 import numpy as np
-import utils_omgs
+import example_omgs.utils_omgs as utils_omgs
 
 import collections
 from settings import logger, ADAPTIVE_MERGE, ADAPTIVE_SPARSE, DEBUG
