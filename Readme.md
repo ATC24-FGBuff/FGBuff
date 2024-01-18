@@ -57,8 +57,8 @@ bash run_cifar100_resnet50.sh
 To run NLP jobs:
 
 ```
-cd example/nlp/lstm
-bash wiki2_lstm.sh
+cd example/nlp/bert/scripts
+bash run_squad_bert.sh
 ```
 
 ## Papers
