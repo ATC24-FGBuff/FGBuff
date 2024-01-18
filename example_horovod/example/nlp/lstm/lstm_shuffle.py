@@ -237,7 +237,7 @@ optimizer = torch.optim.Adam(model.parameters(), lr=args.lr*hvd.size(),weight_de
 
 scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'min', factor=0.5, patience=3)
 
-from gradce_lib.helper import get_communicator
+from grace_lib.helper import get_communicator
 
 # Allgather 
 params = {'compressor': 'allchanneltopk', 'memory': 'residual', 'communicator': 'allgather','model_named_parameters': model.named_parameters()}

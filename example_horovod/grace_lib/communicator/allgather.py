@@ -1,6 +1,6 @@
 import torch
 import pprint
-from gradce_lib import Communicator
+from grace_lib import Communicator
 from horovod.torch import allgather, allgather_async, synchronize
 import horovod.torch as hvd
 import time

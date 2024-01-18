@@ -1,6 +1,6 @@
 import torch
 
-from gradce_lib import Memory
+from grace_lib import Memory
 from horovod.torch import allreduce_
 
 

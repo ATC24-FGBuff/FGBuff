@@ -1,4 +1,4 @@
-from gradce_lib import Memory
+from grace_lib import Memory
 
 class ResidualGlobalTopkMemory(Memory):
     def __init__(self, beta=1.0, gamma=1.0, afa=0):

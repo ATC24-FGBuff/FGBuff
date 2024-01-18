@@ -433,7 +433,7 @@ scheduler_warmup = WarmupLR(optimizer, warmup_steps=100, last_epoch = -1)
 # scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 1.0, gamma=0.95)
 
 
-from gradce_lib.helper import get_communicator
+from grace_lib.helper import get_communicator
 
 if args.density<1:
     communicator_str = 'allgather'

@@ -1,5 +1,5 @@
 import torch
-from gradce_lib import Compressor
+from grace_lib import Compressor
 
 
 class RandomKCompressor(Compressor):

@@ -11,7 +11,7 @@ import horovod.torch as hvd
 import os
 import math
 from tqdm import tqdm
-from gradce_lib.helper import get_communicator
+from grace_lib.helper import get_communicator
 
 
 import sys

@@ -1,6 +1,6 @@
 import torch
 
-from gradce_lib import Compressor
+from grace_lib import Compressor
 import random
 import horovod.torch as hvd
 import numpy as np

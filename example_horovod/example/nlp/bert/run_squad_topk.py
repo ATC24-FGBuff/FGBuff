@@ -1085,7 +1085,7 @@ def main():
         
         
         # optimizer = hvd.DistributedOptimizer(optimizer, named_parameters=model.named_parameters())
-        from gradce_lib.helper import get_communicator
+        from grace_lib.helper import get_communicator
 
         if args.density<1:
             communicator_str = 'allgather'

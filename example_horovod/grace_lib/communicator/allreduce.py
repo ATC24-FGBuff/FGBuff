@@ -1,4 +1,4 @@
-from gradce_lib import Communicator
+from grace_lib import Communicator
 from horovod.torch import allreduce_async_, synchronize
 import time
 

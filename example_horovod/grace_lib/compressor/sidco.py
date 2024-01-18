@@ -1,8 +1,8 @@
 import torch
 
-from gradce_lib import Compressor
+from grace_lib import Compressor
 import numpy as np
-import gradce_lib.sidcosettings as settings
+import grace_lib.sidcosettings as settings
 import math
 import sys
 
