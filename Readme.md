@@ -1,6 +1,6 @@
 # FGbuff
 
-__FGBuff__ is a fine-grained buffering scheme for merged gradient sparsification. We design a quantity-based inter-worker buffering method, which allows different workers to merge the same amount of sparsified gradients into buffers, so as to avoid the buffer synchronization waiting across workers. Meanwhile we also design an adaptive intra-worker buffering method, which maximizes the overlap of merging and communications, so as to speed up the pipeline within each worker. This repository contains __FGBuff__’s source code, as well as a set of benchmarking scripts for some popular open source distributed DNN training framework with state-of-the-art gradient merging schemes.
+__FGBuff__ is a fine-grained buffering scheme for merged gradient sparsification. We design a quantity-based inter-worker buffering method, which allows different workers to merge the same amount of sparsified gradients into buffers, so as to avoid the buffer synchronization waiting across workers. Meanwhile we also design an adaptive intra-worker buffering method, which maximizes the overlap of merging and communications, so as to speed up the pipeline within each worker. This repository contains __FGBuff__’s source code, as well as a set of benchmarking scripts for some popular open source data-parallel distributed DNN training framework with state-of-the-art gradient merging schemes.
 
 # Introduction
 
@@ -63,7 +63,7 @@ bash run_squad_bert.sh
 
 ## Papers
 
-FGBuff: Fine-Grained Buffering for Efficient Merged Gradient Sparsification in Distributed DNN Training Systems
+FGBuff: Fine-Grained Buffering for Efficient Merged Gradient Sparsification in Data-Parallel Distributed DNN Training Systems
 
 ## Referred Datasets
 
